@@ -4,24 +4,23 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.bank.user.domain.credential.UserCredential;
-
-import java.time.LocalDateTime;
+import org.bank.user.domain.DomainEntity;
+import org.bank.user.domain.DomainEvent;
 
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "userCredentialAccess")
-public class UserCredentialAccess {
+@Table(name = "access")
+public class UserCredentialAccess extends DomainEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private String actionType;
+    private String actionStatus;
     private String currentIP;
-    private LocalDateTime lastLoginDate;
-    private Integer accessAttempt;
+
+    @Lob
+    @Column(columnDefinition = "json")
+    private String payload;
 
 }

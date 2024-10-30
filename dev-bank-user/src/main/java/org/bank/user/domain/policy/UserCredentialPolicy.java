@@ -5,19 +5,18 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.bank.user.domain.DomainEntity;
 
+import java.security.Policy;
 import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "userCredentialPolicy")
-public class UserCredentialPolicy {
+@Table(name = "policy")
+public class UserCredentialPolicy extends DomainEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     private Boolean emailNotiEnabled;
     private Boolean smsNotiEnabled;
