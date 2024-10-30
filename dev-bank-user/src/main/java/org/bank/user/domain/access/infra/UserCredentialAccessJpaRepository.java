@@ -1,5 +1,6 @@
-package org.bank.user.domain.access;
+package org.bank.user.domain.access.infra;
 
+import org.bank.user.domain.access.UserCredentialAccess;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
