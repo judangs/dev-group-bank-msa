@@ -1,13 +1,14 @@
 package org.bank.user.application.usecase;
 
 
-import org.bank.user.dto.ActionGroupResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.bank.user.dto.credential.LoginActionRequest;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserAuthUseCase extends UseCase, UserDetailsService {
-    ActionGroupResponse login(LoginActionRequest request);
-    ActionGroupResponse logout(String token);
+    void login(LoginActionRequest request, HttpServletResponse response);
+    void logout(HttpServletRequest request);
 
     // 계정 관련
     //ActionGroupResponse findAllCredentials();

@@ -1,4 +1,4 @@
-package org.bank.user.domain.access.infra;
+package org.bank.user.domain.access.repository;
 
 import org.bank.user.domain.access.UserCredentialAccess;
 import org.springframework.data.jpa.repository.JpaRepository;
