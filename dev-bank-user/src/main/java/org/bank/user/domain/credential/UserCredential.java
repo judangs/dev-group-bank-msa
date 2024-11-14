@@ -11,7 +11,6 @@ import org.bank.user.domain.access.UserAuthEvent;
 import org.bank.user.domain.access.UserCredentialAccess;
 import org.bank.user.domain.policy.UserCredentialPolicy;
 import org.bank.user.domain.profile.UserProfile;
-import org.springframework.data.annotation.TypeAlias;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +42,7 @@ public class UserCredential extends DomainEntity {
     @JoinColumn(name = "userProfileID")
     private UserProfile userProfile;
 
+    @Builder.Default
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "userCredentialID")
     private List<UserCredentialAccess> credentialAccess = new ArrayList<>();
@@ -57,6 +57,10 @@ public class UserCredential extends DomainEntity {
 
     public void encryptPassword(String password) {
         this.password = password;
+    }
+
+    public void withdrawAccount() {
+        this.isDeleted = true;
     }
 
 

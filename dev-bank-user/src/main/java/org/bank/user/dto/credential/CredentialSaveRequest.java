@@ -2,10 +2,12 @@ package org.bank.user.dto.credential;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import lombok.Builder;
 import lombok.Getter;
 import org.bank.user.domain.credential.RoleClassification;
 
 @Getter
+@Builder
 public class CredentialSaveRequest {
 
     @NotNull
@@ -19,5 +21,10 @@ public class CredentialSaveRequest {
     @NotNull
     private String username;
 
+    @Builder.Default
     private RoleClassification.UserRole role = RoleClassification.UserRole.INDIVIDUAL;
+
+    public void defaultRole() {
+        this.role = RoleClassification.UserRole.INDIVIDUAL;
+    }
 }
