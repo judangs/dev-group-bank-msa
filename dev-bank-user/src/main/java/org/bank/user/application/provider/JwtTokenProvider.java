@@ -1,4 +1,4 @@
-package org.bank.user.application.util;
+package org.bank.user.application.provider;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

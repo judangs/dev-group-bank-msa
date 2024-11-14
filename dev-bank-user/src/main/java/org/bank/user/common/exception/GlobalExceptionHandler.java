@@ -13,9 +13,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(PermissionException.class)
     public ResponseEntity<ExceptionResponse> permissionException(PermissionException error) {
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error.toResponse());
-
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error.toResponse());
     }
 
 }

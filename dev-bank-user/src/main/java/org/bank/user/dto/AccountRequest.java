@@ -8,17 +8,23 @@ import org.bank.user.dto.credential.CredentialSaveRequest;
 import org.bank.user.dto.profile.ProfileSaveRequest;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Optional;
 
 @Getter
-public class CreateAccountRequest extends ActionRequest {
+public final class AccountRequest extends requestDto {
 
     private ProfileSaveRequest profile;
     private CredentialSaveRequest credential;
 
-    public CreateAccountRequest() {
+    public AccountRequest() {
+
         this.createAt = LocalDateTime.now();
+    }
+
+    public AccountRequest(final ProfileSaveRequest profile, final CredentialSaveRequest credential) {
+        this();
+        this.profile = profile;
+        this.credential = credential;
     }
 
     @Override

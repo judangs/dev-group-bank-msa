@@ -1,4 +1,4 @@
-package org.bank.user.application.util;
+package org.bank.user.application.provider;
 
 public interface KeyProvider {
 

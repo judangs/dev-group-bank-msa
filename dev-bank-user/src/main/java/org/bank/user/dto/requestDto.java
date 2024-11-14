@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Getter
-public abstract class ActionRequest {
+public abstract class requestDto {
 
     @JsonProperty("created_at")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

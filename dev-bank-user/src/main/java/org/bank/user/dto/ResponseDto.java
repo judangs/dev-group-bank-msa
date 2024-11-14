@@ -5,17 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 
 @Getter
-@SuperBuilder(toBuilder = true)
-public abstract class ActionResponse {
+@SuperBuilder
+public abstract class ResponseDto {
 
-    protected Integer status;
+    protected String code;
     protected String message;
-    protected String actionClass;
+    protected String responseClass;
 
     @JsonProperty("completed_at")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -23,10 +21,9 @@ public abstract class ActionResponse {
 
 
     @SuppressWarnings("unchecked")
-    public static <R extends  ActionResponse> ActionResponseBuilder<R, ?> from(Class<R> actionClass) {
+    public static <R extends ResponseDto> ResponseDtoBuilder<R, ?> from(Class<R> actionClass) {
         try {
-            Class<?> builderClass = Class.forName(actionClass.getName() + "Builder");
-            return (ActionResponseBuilder<R, ?>) builderClass.getDeclaredMethod("buidler").invoke(null);
+            return (ResponseDtoBuilder<R, ?>) actionClass.getDeclaredMethod("builder").invoke(null);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -14,11 +14,11 @@ public abstract class CommonException extends RuntimeException {
 
     @Getter
     public final class Field {
-        private String status;
+        private String code;
         private String message;
 
-        protected Field(String status, String message) {
-            this.status = status;
+        protected Field(String code, String message) {
+            this.code = code;
             this.message = message;
         }
     }
@@ -38,9 +38,9 @@ public abstract class CommonException extends RuntimeException {
                 .build();
     }
 
-    protected CommonException(ThrowType type, String status, String message) {
+    protected CommonException(ThrowType type, String code, String message) {
         this.type = type.name();
-        detail = new Field(status, message);
+        detail = new Field(code, message);
         createdAt = LocalDateTime.now();
     }
 }

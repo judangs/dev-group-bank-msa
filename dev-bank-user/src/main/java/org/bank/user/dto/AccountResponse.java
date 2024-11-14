@@ -5,5 +5,5 @@ import lombok.experimental.SuperBuilder;
 
 @Getter
 @SuperBuilder
-public class CreateAccountResponse extends ActionResponse {
+public final class AccountResponse extends ResponseDto {
 }

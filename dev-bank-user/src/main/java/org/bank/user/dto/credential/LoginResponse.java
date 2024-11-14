@@ -3,11 +3,11 @@ package org.bank.user.dto.credential;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
-import org.bank.user.dto.ActionResponse;
+import org.bank.user.dto.ResponseDto;
 
 @Getter
 @SuperBuilder
-public class LoginActionResponse extends ActionResponse {
+public class LoginResponse extends ResponseDto {
 
     private Token data;
 
