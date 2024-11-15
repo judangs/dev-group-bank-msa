@@ -4,11 +4,12 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.bank.user.application.service.fixture.TestFixtureProvider;
-import org.bank.user.application.util.JwtTokenProvider;
-import org.bank.user.domain.credential.UserCredential;
-import org.bank.user.domain.credential.repository.RefreshTokenRedisRepository;
-import org.bank.user.dto.credential.LoginActionRequest;
-import org.bank.user.exception.credential.PermissionException;
+import org.bank.user.core.auth.application.provider.JwtTokenProvider;
+import org.bank.user.core.auth.application.service.UserAuthService;
+import org.bank.user.core.user.domain.credential.UserCredential;
+import org.bank.user.core.auth.domain.repository.RefreshTokenRedisRepository;
+import org.bank.user.dto.credential.LoginRequest;
+import org.bank.user.global.exception.PermissionException;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,7 @@ class UserAuthServiceTest {
     @Order(1)
     public void login() {
 
-        LoginActionRequest request = new LoginActionRequest("dookie", "qpalzm1029!!");
+        LoginRequest request = new LoginRequest("dookie", "qpalzm1029!!");
 
         userAuthService.login(request, servletResponse);
         boolean exist = refreshTokenRedisRepository.existsById(
@@ -71,7 +72,7 @@ class UserAuthServiceTest {
     @DisplayName("일치하지 않는 패스워드를 입력하면 로그인에 권한과 관련한 예외가 발생해야 한다.")
     public void incorrect() {
 
-        LoginActionRequest request = new LoginActionRequest("dookie", "incorrect-password");
+        LoginRequest request = new LoginRequest("dookie", "incorrect-password");
         assertThrows(PermissionException.class, () -> userAuthService.login(request, servletResponse));
 
     }

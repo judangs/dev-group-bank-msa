@@ -2,13 +2,15 @@ package org.bank.user.application.service;
 
 
 import org.bank.user.application.service.fixture.TestFixtureProvider;
-import org.bank.user.domain.credential.RoleClassification;
-import org.bank.user.domain.credential.UserCredential;
-import org.bank.user.domain.profile.UserProfile;
+import org.bank.user.core.user.application.service.UserService;
+import org.bank.user.core.user.domain.credential.RoleClassification;
+import org.bank.user.core.user.domain.credential.UserCredential;
+import org.bank.user.core.user.domain.profile.UserProfile;
 import org.bank.user.dto.AccountRequest;
 import org.bank.user.dto.ResponseDto;
 import org.bank.user.dto.profile.ProfileSaveRequest;
-import org.bank.user.exception.credential.PermissionException;
+import org.bank.user.global.exception.PermissionException;
+import org.bank.user.global.response.ResponseMessage;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -56,6 +58,7 @@ class UserServiceTest {
         );
     }
 
+    @Deprecated
     @Test
     @DisplayName("사용자는 계정을 추가할 수 있어야 한다.")
     public void createAccount() {
@@ -87,7 +90,7 @@ class UserServiceTest {
         );
         assertAll(
                 "사용자 이메일 정보 수정 결과",
-                () -> assertEquals(200, response.getCode()),
+                () -> assertEquals(ResponseMessage.SUCCESS, response.getCode()),
                 () -> assertEquals("사용자 정보 변경이 완료되었습니다.", response.getMessage())
         );
     }
@@ -100,7 +103,7 @@ class UserServiceTest {
         ResponseDto response =  userService.withdrawAccount(credentialFixture.getUserid());
         assertAll(
                 "사용자 계정 탈퇴 결과",
-                () -> assertEquals(200, response.getCode()),
+                () -> assertEquals(ResponseMessage.SUCCESS, response.getCode()),
                 () -> assertEquals("사용자 계정 탈퇴가 완료되었습니다.", response.getMessage())
         );
 
