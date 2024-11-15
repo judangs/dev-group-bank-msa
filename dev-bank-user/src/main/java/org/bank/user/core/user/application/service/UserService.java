@@ -3,8 +3,8 @@ package org.bank.user.core.user.application.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.bank.user.core.user.application.provider.MailProvider;
+import org.bank.user.core.user.domain.credential.repository.MailPendingQueueCommandRepository;
 import org.bank.user.core.user.application.usecase.UserUseCase;
-import org.bank.user.global.response.ResponseCode;
 import org.bank.user.core.user.domain.credential.RoleClassification;
 import org.bank.user.core.user.domain.credential.UserCredential;
 import org.bank.user.core.user.domain.credential.repository.jpa.UserCredentialJpaRepository;
@@ -15,11 +15,15 @@ import org.bank.user.dto.AccountResponse;
 import org.bank.user.dto.ResponseDto;
 import org.bank.user.global.exception.InvalidArgumentException;
 import org.bank.user.global.exception.PermissionException;
+import org.bank.user.global.mail.CacheType;
+import org.bank.user.global.response.ResponseCode;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -30,6 +34,8 @@ public class UserService implements UserUseCase {
     private final UserCredentialJpaRepository userCredentialJpaRepository;
 
     private final MailProvider mailProvider;
+    private final MailPendingQueueCommandRepository mailPendingQueueReader;
+
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher eventPublisher;
 
@@ -46,10 +52,40 @@ public class UserService implements UserUseCase {
 
     @Override
     @Transactional
-    public void confirmAccountEmail(String confirmParam) {
+    public ResponseDto confirmAccountEmail(String confirmParam) {
 
-        UserCredential userCredential = mailProvider.confirmAccountMail(confirmParam);
-        userCredentialJpaRepository.save(userCredential);
+        ResponseDto responseBody;
+        try {
+
+            CacheType cacheType = mailPendingQueueReader.findForCacheTypeById(confirmParam);
+            responseBody = switch(cacheType) {
+                case CREATE_ACCOUNT -> {
+                    verifyAccountEmailForCreation(confirmParam);
+                    yield ResponseDto.success("사용자 계정 생성에 성공했습니다.");
+
+                }
+                case FIND_ACCOUNT_ID -> {
+                    List<String> useridList = verifyAccountEmailForID(confirmParam);
+                    yield AccountResponse.builder()
+                            .code(ResponseCode.SUCCESS)
+                            .message("사용자 계정의 아이디 조회에 성공했습니다.")
+                            .userid(useridList)
+                            .completedAt(LocalDateTime.now())
+                            .build();
+                }
+                case CHANGE_PASSWORD -> {
+                    verifyAccountEmailForChangePassword(confirmParam);
+                    yield ResponseDto.success("사용자 비밀번호를 수정할 수 있습니다.");
+                }
+            };
+
+            mailProvider.confirmAccountEmail(confirmParam);
+        } catch (NoSuchElementException e) {
+            // 시간초과로 캐시에서 제거.
+            throw new InvalidArgumentException("인증 제한 시간이 초과되었습니다.");
+        }
+
+        return responseBody;
     }
 
 
@@ -86,14 +122,10 @@ public class UserService implements UserUseCase {
 
         userProfile.createAccount(credential);
 
-        mailProvider.sendVerificationAccounttMail(credential, userProfile.getEmail());
+        mailProvider.sendVerificationAccountMailForCreate(credential, userProfile.getEmail());
 
 
-        return ResponseDto.from(AccountResponse.class)
-                .code(ResponseCode.SUCCESS)
-                .message("인증 메일이 전송되었습니다.")
-                .completedAt(LocalDateTime.now())
-                .build();
+        return ResponseDto.success("인증 메일이 전송되었습니다.");
     }
 
     @Override
@@ -111,13 +143,35 @@ public class UserService implements UserUseCase {
 
 
         // 이벤트 발행
-        return ResponseDto.from(AccountResponse.class)
-                .code(ResponseCode.SUCCESS)
-                .message("사용자 정보 변경이 완료되었습니다.")
-                .completedAt(LocalDateTime.now())
-                .build();
+        return ResponseDto.success("사용자 정보 변경이 완료되었습니다.");
     }
 
+    @Override
+    public ResponseDto findAccountIDs(String username, String email) {
+
+        Optional<UserProfile> existProfile = userProfileJpaRepository.findByNameAndEmail(username, email);
+        if(existProfile.isEmpty()) {
+            throw new InvalidArgumentException("등록된 사용자가 없습니다.");
+        }
+
+        List<UserCredential> credentials = existProfile.get().getUserCredentials();
+        mailProvider.sendVerificationAccountMailForFindID(credentials, email);
+
+        return ResponseDto.success("인증 메일이 전송되었습니다.");
+    }
+
+    @Override
+    public ResponseDto findAccountPassword(String userid, String email) {
+
+        Optional<UserCredential> existCredential = userCredentialJpaRepository.findByUserid(userid);
+        if(existCredential.isEmpty()) {
+            throw new InvalidArgumentException("등록된 사용자가 없습니다.");
+        }
+
+        mailProvider.sendVerificationAccountMailForUpdatePassword(existCredential.get(), email);
+        return ResponseDto.success("인증 메일이 전송되었습니다.");
+
+    }
 
     @Override
     @Transactional
@@ -130,12 +184,32 @@ public class UserService implements UserUseCase {
 
         credential.get().withdrawAccount();
 
-        return ResponseDto.from(AccountResponse.class)
-                .code(ResponseCode.SUCCESS)
-                .message("사용자 계정 탈퇴가 완료되었습니다.")
-                .completedAt(LocalDateTime.now())
-                .build();
+        return ResponseDto.success("사용자 계정 탈퇴가 완료되었습니다.");
     }
+
+    private void verifyAccountEmailForCreation(String confirmParam) {
+
+        UserCredential credential = mailPendingQueueReader.findyOneById(confirmParam);
+        userCredentialJpaRepository.save(credential);
+    }
+
+    private List<String> verifyAccountEmailForID(String confirmParam) {
+
+        List<String> useridList = mailPendingQueueReader.findById(confirmParam)
+                .stream().map(UserCredential::getUserid)
+                .toList();
+
+        return useridList;
+    }
+
+    private void verifyAccountEmailForChangePassword(String confirmParam) {
+
+        UserCredential credential = mailPendingQueueReader.findyOneById(confirmParam);
+        // 패스워드 수정 로직
+
+    }
+
+
 
 
 }

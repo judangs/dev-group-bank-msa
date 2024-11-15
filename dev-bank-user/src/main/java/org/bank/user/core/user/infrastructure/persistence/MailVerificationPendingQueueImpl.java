@@ -1,40 +1,33 @@
 package org.bank.user.core.user.infrastructure.persistence;
 
+import lombok.RequiredArgsConstructor;
 import org.bank.user.core.user.domain.credential.UserCredential;
 import org.bank.user.core.user.domain.credential.repository.MailVerificationPendingQueue;
 import org.bank.user.global.exception.InvalidArgumentException;
+import org.bank.user.global.mail.CacheType;
 import org.springframework.stereotype.Repository;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class MailVerificationPendingQueueImpl implements MailVerificationPendingQueue {
 
-    // 사용자 이메일 인증을 기다리는 대기 큐
-    private final Map<String, UserCredential> mailCache = new ConcurrentHashMap<>();
+    private final MailCacheStore mailCacheStore;
 
     @Override
-    public void save(String id, UserCredential credential) throws InvalidArgumentException {
-        if(this.existsById(id)) {
-            throw new InvalidArgumentException();
+    public void save(String id, CacheType type, List<UserCredential> credentials) throws InvalidArgumentException {
+        if(mailCacheStore.getMailCache().containsKey(id)) {
+            throw new InvalidArgumentException("메일 캐시가 이미 존재합니다.");
         }
 
-        mailCache.put(id, credential);
+        mailCacheStore.getMailCache().put(id, new MailCacheMeta(type, credentials));
     }
 
     @Override
     public void deleteById(String id) {
-        mailCache.remove(id);
+        mailCacheStore.getMailCache().remove(id);
     }
 
-    @Override
-    public boolean existsById(String id) {
-        return mailCache.containsKey(id);
-    }
 
-    @Override
-    public UserCredential findById(String id) {
-        return mailCache.get(id);
-    }
 }

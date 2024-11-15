@@ -1,9 +1,9 @@
 package org.bank.user.dto;
 
 import lombok.Getter;
-import org.bank.user.domain.DomainEntity;
-import org.bank.user.domain.credential.UserCredential;
-import org.bank.user.domain.profile.UserProfile;
+import org.bank.user.global.domain.base.DomainEntity;
+import org.bank.user.core.user.domain.credential.UserCredential;
+import org.bank.user.core.user.domain.profile.UserProfile;
 import org.bank.user.dto.credential.CredentialSaveRequest;
 import org.bank.user.dto.profile.ProfileSaveRequest;
 

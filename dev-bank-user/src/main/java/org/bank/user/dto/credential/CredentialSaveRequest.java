@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Getter;
-import org.bank.user.domain.credential.RoleClassification;
+import org.bank.user.core.user.domain.credential.RoleClassification;
 
 @Getter
 @Builder

@@ -3,7 +3,7 @@ package org.bank.user.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import org.bank.user.domain.DomainEntity;
+import org.bank.user.global.domain.base.DomainEntity;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

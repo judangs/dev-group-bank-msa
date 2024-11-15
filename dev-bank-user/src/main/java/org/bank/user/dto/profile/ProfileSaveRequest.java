@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
-import org.bank.user.domain.profile.Address;
+import org.bank.user.core.user.domain.profile.Address;
 
 @Getter
 @Builder

@@ -20,13 +20,24 @@ public class UserController {
     @PostMapping("/account-create")
     public ResponseEntity<? super AccountResponse> create(@RequestBody AccountRequest request) {
 
-        ResponseDto actions = userUseCase.createAccount(request);
-        return ResponseEntity.status(HttpStatus.OK).body(actions);
+        ResponseDto responseBody = userUseCase.createAccount(request);
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+    }
+
+    @GetMapping
+    public ResponseEntity<? super AccountResponse> findAccountUserid(
+            @RequestParam String username,
+            @RequestParam String email
+    ) {
+
+        ResponseDto responseBody = userUseCase.findAccountIDs(username, email);
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 
     @GetMapping("/confirm-mail")
-    public void confirm(@RequestParam String confirm) {
-        userUseCase.confirmAccountEmail(confirm);
+    public ResponseEntity<? super AccountResponse> confirmFinderMail(@RequestParam String confirm) {
+        ResponseDto responseBody = userUseCase.confirmAccountEmail(confirm);
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 
 }
