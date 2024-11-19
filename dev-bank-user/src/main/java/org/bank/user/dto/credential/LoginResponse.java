@@ -3,7 +3,7 @@ package org.bank.user.dto.credential;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
-import org.bank.user.dto.ResponseDto;
+import org.bank.user.global.dto.ResponseDto;
 
 @Getter
 @SuperBuilder

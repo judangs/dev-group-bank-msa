@@ -2,6 +2,7 @@ package org.bank.user.dto;
 
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
+import org.bank.user.global.dto.ResponseDto;
 
 import java.util.List;
 

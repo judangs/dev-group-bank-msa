@@ -1,9 +1,10 @@
-package org.bank.user.dto;
+package org.bank.user.global.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
+import org.bank.user.global.response.ResponseCode;
 import org.bank.user.global.response.ResponseMessage;
 
 import java.time.LocalDateTime;
@@ -23,6 +24,14 @@ public class ResponseDto {
     public static ResponseDto success(String message) {
         return ResponseDto.from(ResponseDto.class)
                 .code(ResponseMessage.SUCCESS)
+                .message(message)
+                .completedAt(LocalDateTime.now())
+                .build();
+    }
+
+    public static ResponseDto fail(String message) {
+        return ResponseDto.from(ResponseDto.class)
+                .code(ResponseCode.FAIL)
                 .message(message)
                 .completedAt(LocalDateTime.now())
                 .build();

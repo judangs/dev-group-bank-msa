@@ -1,4 +1,4 @@
-package org.bank.user.dto;
+package org.bank.user.global.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
