@@ -1,13 +1,12 @@
-package org.bank.user.application.service;
+package org.bank.user.core.user.application.service;
 
 
-import org.bank.user.application.service.fixture.TestFixtureProvider;
-import org.bank.user.core.user.application.service.UserService;
+import org.bank.user.fixture.TestFixtureProvider;
 import org.bank.user.core.user.domain.credential.RoleClassification;
 import org.bank.user.core.user.domain.credential.UserCredential;
 import org.bank.user.core.user.domain.profile.UserProfile;
 import org.bank.user.dto.AccountRequest;
-import org.bank.user.dto.ResponseDto;
+import org.bank.user.global.dto.ResponseDto;
 import org.bank.user.dto.profile.ProfileSaveRequest;
 import org.bank.user.global.exception.PermissionException;
 import org.bank.user.global.response.ResponseMessage;

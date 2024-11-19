@@ -1,11 +1,11 @@
-package org.bank.user.application.service.fixture;
+package org.bank.user.fixture;
 
-import org.bank.user.domain.credential.RoleClassification;
-import org.bank.user.domain.credential.UserCredential;
-import org.bank.user.domain.credential.repository.jpa.UserCredentialJpaRepository;
-import org.bank.user.domain.profile.Address;
-import org.bank.user.domain.profile.UserProfile;
-import org.bank.user.domain.profile.UserProfileJpaRepository;
+import org.bank.user.core.user.domain.credential.RoleClassification;
+import org.bank.user.core.user.domain.credential.UserCredential;
+import org.bank.user.core.user.domain.credential.repository.jpa.UserCredentialJpaRepository;
+import org.bank.user.core.user.domain.profile.Address;
+import org.bank.user.core.user.domain.profile.UserProfile;
+import org.bank.user.core.user.domain.profile.repository.jpa.UserProfileJpaRepository;
 import org.bank.user.dto.AccountRequest;
 import org.bank.user.dto.credential.CredentialSaveRequest;
 import org.bank.user.dto.profile.ProfileSaveRequest;

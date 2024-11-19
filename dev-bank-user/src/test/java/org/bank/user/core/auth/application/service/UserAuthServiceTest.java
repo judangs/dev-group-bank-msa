@@ -1,14 +1,13 @@
-package org.bank.user.application.service;
+package org.bank.user.core.auth.application.service;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.bank.user.application.service.fixture.TestFixtureProvider;
-import org.bank.user.core.auth.application.provider.JwtTokenProvider;
-import org.bank.user.core.auth.application.service.UserAuthService;
-import org.bank.user.core.user.domain.credential.UserCredential;
+import org.bank.user.core.auth.application.provider.JwtProvider;
 import org.bank.user.core.auth.domain.repository.RefreshTokenRedisRepository;
+import org.bank.user.core.user.domain.credential.UserCredential;
 import org.bank.user.dto.credential.LoginRequest;
+import org.bank.user.fixture.TestFixtureProvider;
 import org.bank.user.global.exception.PermissionException;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
@@ -38,7 +37,7 @@ class UserAuthServiceTest {
     private TestFixtureProvider fixtureProvider;
 
     @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    private JwtProvider jwtProvider;
 
     private HttpServletRequest servletRequest = Mockito.mock(HttpServletRequest.class);
     private HttpServletResponse servletResponse = Mockito.mock(HttpServletResponse.class);
@@ -62,7 +61,7 @@ class UserAuthServiceTest {
 
         userAuthService.login(request, servletResponse);
         boolean exist = refreshTokenRedisRepository.existsById(
-                jwtTokenProvider.createRefreshKeyWithJWT(() -> request.getUserid())
+                refreshTokenRedisRepository.createId(() -> request.getUserid())
         );
 
         assertTrue(exist);
@@ -81,18 +80,18 @@ class UserAuthServiceTest {
     @DisplayName("로그아웃이 진행된 이후 refresh 토큰은 redis에서 삭제되어야 한다.")
     public void logout() {
 
-        String refreshTokenKey = jwtTokenProvider.createRefreshKeyWithJWT(() -> credential.getUserid());
+        String tokenid = refreshTokenRedisRepository.createId(() -> credential.getUserid());
 
-        String refresh = refreshTokenRedisRepository.findById(refreshTokenKey).get();
+        String refresh = refreshTokenRedisRepository.findById(tokenid).get();
 
         assertNotNull(refresh);
 
-        Cookie cookie = new Cookie(jwtTokenProvider.REFRESH, refresh);
+        Cookie cookie = new Cookie(jwtProvider.REFRESH, refresh);
         when(servletRequest.getCookies()).thenReturn(new Cookie[]{cookie});
 
         userAuthService.logout(servletRequest);
 
-        boolean exist = refreshTokenRedisRepository.existsById(refreshTokenKey);
+        boolean exist = refreshTokenRedisRepository.existsById(tokenid);
         assertFalse(exist);
 
     }
