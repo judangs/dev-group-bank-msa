@@ -33,7 +33,9 @@ public final class UserProfile extends DomainEntity {
     private String phone;
 
     @Builder.Default
-    @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(
+            fetch = FetchType.EAGER,
+            mappedBy = "userProfile", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserCredential> userCredentials = new ArrayList<>();
 
 

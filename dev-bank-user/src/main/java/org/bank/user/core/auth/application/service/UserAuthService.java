@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.bank.user.core.auth.application.usecase.UserAuthUseCase;
-import org.bank.user.core.auth.application.provider.JwtTokenProvider;
+import org.bank.user.core.auth.application.provider.JwtProvider;
 import org.bank.user.core.user.domain.credential.RoleClassification;
 import org.bank.user.core.user.domain.credential.UserCredential;
 import org.bank.user.core.auth.domain.repository.RefreshTokenRedisRepository;
@@ -33,7 +33,7 @@ public class UserAuthService implements UserAuthUseCase {
     private final UserCredentialJpaRepository userCredentialJpaRepository;
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
 
 
@@ -73,46 +73,44 @@ public class UserAuthService implements UserAuthUseCase {
             throw new PermissionException("아이디나 패스워드가 일치하지 않습니다.");
         }
 
-        String refreshToken = jwtTokenProvider.generateToken(userCredential, JwtTokenProvider.REFRESH);
-        String accessToken = jwtTokenProvider.generateToken(userCredential, JwtTokenProvider.ACCESS);
+        String refreshToken = jwtProvider.generate(userCredential, JwtProvider.REFRESH);
+        String accessToken = jwtProvider.generate(userCredential, JwtProvider.ACCESS);
 
-        String refreshTokenKey = jwtTokenProvider.createRefreshKeyWithJWT(() ->
-                userCredential.getUserid());
-
-        refreshTokenRedisRepository.save(refreshTokenKey, refreshToken);
+        String tokenId = refreshTokenRedisRepository.createId(() -> userCredential.getUserid());
+        refreshTokenRedisRepository.save(tokenId, refreshToken);
         //userCredential.publish(new UserAuthEvent(DomainEvent.LOGIN, DomainEvent.SUCCESS));
 
-        jwtTokenProvider.addTokenToResponse(response, refreshToken, accessToken);
+        jwtProvider.addTokenToResponse(response, refreshToken, accessToken);
     }
 
     @Override
     public void logout(HttpServletRequest request) {
 
-        String refreshTokenKey;
+        String tokenid;
 
         Cookie[] cookies = request.getCookies();
-        Optional<Cookie> matchCookie  =  Arrays.stream(cookies)
-                .filter(cookie -> cookie.getName().equals(jwtTokenProvider.REFRESH))
+        Optional<Cookie> refreshCookie  =  Arrays.stream(cookies)
+                .filter(cookie -> cookie.getName().equals(jwtProvider.REFRESH))
                 .findFirst();
 
-        if(matchCookie.isEmpty()) {
+        if(refreshCookie.isEmpty()) {
 
-            String accessToken = request.getHeader("Authorization");
-            if(accessToken == null) {
+
+            Optional<String> accessToken = jwtProvider.getTokenFromRequest(request);
+
+            if(accessToken.isEmpty()) {
                 throw new PermissionException("전송된 인증 정보가 없습니다.");
             }
 
-            refreshTokenKey = jwtTokenProvider.createRefreshKeyWithJWT(() ->
-                    jwtTokenProvider.getUseridFromToken(accessToken));
+            tokenid = refreshTokenRedisRepository.createId(() -> jwtProvider.getUseridFromToken(accessToken.get()));
         }
         else {
 
-            String refreshToken = matchCookie.get().getValue();
-            refreshTokenKey = jwtTokenProvider.createRefreshKeyWithJWT(() ->
-                    jwtTokenProvider.getUseridFromToken(refreshToken));
+            String refreshToken = refreshCookie.get().getValue();
+            tokenid = refreshTokenRedisRepository.createId(() -> jwtProvider.getUseridFromToken(refreshToken));
         }
 
-        refreshTokenRedisRepository.delete(refreshTokenKey);
+        refreshTokenRedisRepository.delete(tokenid);
 
         // 로그아웃 이벤트 발행
     }

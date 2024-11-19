@@ -5,8 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.bank.user.core.auth.application.usecase.UserAuthUseCase;
-import org.bank.user.global.response.ResponseCode;
-import org.bank.user.dto.ActionGroupResponse;
+import org.bank.user.global.dto.ResponseDto;
 import org.bank.user.dto.credential.LoginRequest;
 import org.bank.user.dto.credential.LoginResponse;
 import org.springframework.http.HttpStatus;
@@ -28,18 +27,16 @@ public class UserAuthController {
 
         userAuthUseCase.login(request, response);
 
-        ActionGroupResponse actions = new ActionGroupResponse<>();
-        actions.nextAction(LoginResponse.class, ResponseCode.SUCCESS, "로그인이 완료되었습니다.");
-        return ResponseEntity.status(HttpStatus.OK).body(actions);
+        ResponseDto responseBody = ResponseDto.success("로그인에 성공했습니다.");
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ActionGroupResponse> logout(HttpServletRequest request) {
+    public ResponseEntity<? super LoginResponse> logout(HttpServletRequest request) {
         userAuthUseCase.logout(request);
 
-        ActionGroupResponse actions = new ActionGroupResponse<>();
-        actions.nextAction(LoginResponse.class, ResponseCode.SUCCESS, "로그아웃이 정상적으로 완료되었습니다.");
-        return ResponseEntity.status(HttpStatus.OK).body(actions);
+        ResponseDto responseBody = ResponseDto.success("로그아웃이 정상적으로 완료되었습니다.");
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 
 

@@ -1,78 +1,56 @@
 package org.bank.user.core.auth.application.provider;
 
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.bank.user.global.provider.KeyProvider;
-import org.bank.user.global.http.HeaderAttribute;
+import lombok.RequiredArgsConstructor;
 import org.bank.user.core.user.domain.credential.UserCredential;
+import org.bank.user.global.http.HeaderAttribute;
+import org.bank.user.global.property.JwtProperties;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.Optional;
 
 @Component
-public class JwtTokenProvider {
+@RequiredArgsConstructor
+public class JwtProvider {
 
+    private final JwtProperties jwtProperties;
 
-    private final int ACESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60;
-    private final int REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24;
-    private final String BEARER_PREFIX = "Bearer ";
-
-    public static final String REFRESH = "refresh-token";
-    public static final String ACCESS = "access-token";
+    public static final String ACCESS = "ACCESS-TOKEN";
+    public static final String REFRESH = "REFRESH-TOKEN";
 
     public static final String REFRESH_ID = "refresh:";
 
-    private SecretKey secretKey;
 
-    private enum PayloadField {
-        USERID,
-        ROLE;
-    }
-
-    @PostConstruct
-    public void init() {
-
-        this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    }
-
-    public String createRefreshKeyWithJWT(KeyProvider redisKeyProvider) {
-        String redisKey = new StringBuilder()
-                .append(REFRESH_ID)
-                .append(redisKeyProvider.createKey())
-                .toString();
-        return redisKey;
-    }
-
-    public String generateToken(UserCredential credential, String tokenType) {
+    public String generate(UserCredential credential, String tokenType) {
         Date now = new Date();
 
         Date expireDate = switch(tokenType) {
-            case ACCESS -> new Date(now.getTime() + ACESS_TOKEN_EXPIRATION_TIME);
-            case REFRESH -> new Date(now.getTime() + REFRESH_TOKEN_EXPIRATION_TIME);
+            case ACCESS -> new Date(now.getTime() + jwtProperties.getExpireAccess());
+            case REFRESH -> new Date(now.getTime() + jwtProperties.getExpireRefresh());
             default ->
                     throw new IllegalStateException("invalid Token Type:" + tokenType);
         };
 
         return Jwts.builder()
                 .setSubject(credential.getUsername())
-                .claim(PayloadField.USERID.name(), credential.getUserid())
-                .claim(PayloadField.ROLE.name(), credential.getUserType())
+                .claim(JwtProperties.Claims.USERID.name(), credential.getUserid())
+                .claim(JwtProperties.Claims.ROLE.name(), credential.getUserType())
                 .setIssuedAt(now)
                 .setExpiration(expireDate)
-                .signWith(secretKey)
+                .signWith(jwtProperties.getSecretKey())
                 .compact();
     }
 
-    public boolean validateToken(String token) {
+    public boolean validate(String token) {
 
         try {
             Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
+                    .setSigningKey(jwtProperties.getSecretKey())
                     .build()
                     .parseClaimsJws(token);
 
@@ -91,7 +69,7 @@ public class JwtTokenProvider {
     }
 
     public String getUseridFromToken(String token) {
-        return extractClaims(token).get(PayloadField.USERID.name(), String.class);
+        return extractClaims(token).get(JwtProperties.Claims.USERID.name(), String.class);
     }
 
     public void addTokenToResponse(HttpServletResponse response, String refresh, String access) {
@@ -99,24 +77,34 @@ public class JwtTokenProvider {
         addJwtToResponseCookie(response, refresh);
     }
 
+    public Optional<String> getTokenFromRequest(HttpServletRequest request) {
+
+        String token = request.getHeader("Authorization");
+        if(token == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(token.split(jwtProperties.getBearer())[1]);
+    }
+
     private void addJwtToResponseHeader(HttpServletResponse response, String token) {
         response.addHeader(HeaderAttribute.AUTHORIZATION,
-                BEARER_PREFIX + token);
+                jwtProperties.getBearer() + token);
     }
 
     private void addJwtToResponseCookie(HttpServletResponse response, String token) {
-        Cookie cookie = new Cookie(REFRESH, token);
+        Cookie cookie = new Cookie(jwtProperties.getRefresh(), token);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
-        cookie.setMaxAge(REFRESH_TOKEN_EXPIRATION_TIME);
+        cookie.setMaxAge(jwtProperties.getExpireRefresh());
 
         response.addCookie(cookie);
     }
 
     private Claims extractClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(secretKey)
+                .setSigningKey(jwtProperties.getSecretKey())
                 .build()
                 .parseClaimsJws(token).getBody();
     }

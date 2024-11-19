@@ -1,14 +1,18 @@
 package org.bank.user.core.auth.domain.repository;
 
 
+import org.bank.user.global.provider.KeyProvider;
+
 import java.util.Optional;
 
 public interface RefreshTokenRedisRepository {
 
-    public void save(String key, String value);
-    public void delete(String key);
-    public void deleteAll();
-    public Optional<String> findById(String key);
-    public boolean existsById(String key);
+    String createId(KeyProvider keyProvider);
+
+    void save(String id, String value);
+    void delete(String id);
+    void deleteAll();
+    Optional<String> findById(String id);
+    boolean existsById(String id);
 
 }
