@@ -1,0 +1,10 @@
+rootProject.name='bankMainProject'
+
+include ':dev-gateway'
+include ':dev-bank-user'
+
+include 'modules:common'
+include 'modules:module-config'
+findProject(':modules:module-config').name = 'module-config'
+findProject(':modules:common')?.name = 'common'
+
