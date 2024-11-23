@@ -1,9 +1,8 @@
 package org.bank.user.core.auth.application.service;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.bank.user.core.auth.application.provider.JwtProvider;
+import org.bank.common.constants.auth.AuthHeaders;
 import org.bank.user.core.auth.domain.repository.RefreshTokenRedisRepository;
 import org.bank.user.core.user.domain.credential.UserCredential;
 import org.bank.user.dto.credential.LoginRequest;
@@ -13,12 +12,13 @@ import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.TestPropertySource;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import java.util.ArrayList;
+import java.util.Set;
 
-;
+;import static org.junit.jupiter.api.Assertions.*;
 
 @Nested
 @DisplayName("사용자 인증 테스트")
@@ -36,17 +36,15 @@ class UserAuthServiceTest {
     @Autowired
     private TestFixtureProvider fixtureProvider;
 
-    @Autowired
-    private JwtProvider jwtProvider;
 
     private HttpServletRequest servletRequest = Mockito.mock(HttpServletRequest.class);
     private HttpServletResponse servletResponse = Mockito.mock(HttpServletResponse.class);
     private UserCredential credential;
 
+    private String authTokenId;
+
     @BeforeAll
     void setUp() {
-
-        refreshTokenRedisRepository.deleteAll();
 
         fixtureProvider.createProfileFixture("하루 두끼", "dookie2@github.com");
         credential = fixtureProvider.createCredentialFixture("하루 두끼","dookie", "qpalzm1029!!");
@@ -60,11 +58,10 @@ class UserAuthServiceTest {
         LoginRequest request = new LoginRequest("dookie", "qpalzm1029!!");
 
         userAuthService.login(request, servletResponse);
-        boolean exist = refreshTokenRedisRepository.existsById(
-                refreshTokenRedisRepository.createId(() -> request.getUserid())
-        );
+        Set<String> actual = refreshTokenRedisRepository.findByUser(request.getUserid());
 
-        assertTrue(exist);
+        authTokenId = new ArrayList<>(actual).get(0);
+        assertNotEquals(0, actual.size());
     }
 
     @Test
@@ -80,20 +77,26 @@ class UserAuthServiceTest {
     @DisplayName("로그아웃이 진행된 이후 refresh 토큰은 redis에서 삭제되어야 한다.")
     public void logout() {
 
-        String tokenid = refreshTokenRedisRepository.createId(() -> credential.getUserid());
+        MockHttpServletRequest request = new MockHttpServletRequest();
 
-        String refresh = refreshTokenRedisRepository.findById(tokenid).get();
+        String token = authTokenId.split(":")[1];
+        String userid = authTokenId.split(":")[2];
 
-        assertNotNull(refresh);
+        request.addHeader("Authorization", "Bearer " + token);
+        request.addHeader(AuthHeaders.USER_ID, userid);
 
-        Cookie cookie = new Cookie(jwtProvider.REFRESH, refresh);
-        when(servletRequest.getCookies()).thenReturn(new Cookie[]{cookie});
+        userAuthService.logout(request);
 
-        userAuthService.logout(servletRequest);
+        assertAll(
+                () -> assertTrue(refreshTokenRedisRepository.findById(authTokenId).isEmpty()),
+                () -> assertTrue(refreshTokenRedisRepository.findByUser(userid).isEmpty())
+        );
+    }
 
-        boolean exist = refreshTokenRedisRepository.existsById(tokenid);
-        assertFalse(exist);
-
+    @Test
+    @DisplayName("[로그아웃] 요청에 인증 헤더가 없거나 부적절한 경우 예외가 발생해야 한다.")
+    public void logoutException() {
+        assertThrows(PermissionException.class, () -> userAuthService.logout(servletRequest));
     }
 
 }
