@@ -1,6 +1,7 @@
 package org.bank.user.core.auth.infrastructure.persistence;
 
 import lombok.RequiredArgsConstructor;
+import org.bank.user.core.auth.domain.TokenPayload;
 import org.bank.user.core.auth.domain.repository.RefreshTokenRedisRepository;
 import org.bank.user.global.provider.KeyProvider;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -24,23 +25,42 @@ public class RefreshTokenRedisRepositoryImpl implements RefreshTokenRedisReposit
                 .toString();
     }
 
-    public void save(String id, String value) {
+    public void save(String id, String token) {
 
-        stringRedisTemplate.opsForValue().set(id, value);
+        stringRedisTemplate.opsForValue().set(id, token);
     }
 
-    public void delete(String id) {
-
-        stringRedisTemplate.delete(id);
-    }
-
-    public void deleteTokenByUser(String token, String userid) {
+    public void deleteByTokenAndUser(String token, String userid) {
 
         stringRedisTemplate.delete(String.join(":", token, userid));
         Set<String> keys = findByUser(userid);
         if(!keys.isEmpty()) {
             stringRedisTemplate.delete(keys);
         }
+    }
+
+    @Override
+    public Optional<String> findByToken(String token) {
+
+        String id = createId(() -> String.join(":", token, "*"));
+        Set<String> keys = stringRedisTemplate.keys(id);
+
+        if(keys.isEmpty()) {
+            return Optional.empty();
+        }
+        String refreshToken = stringRedisTemplate.opsForValue().get(keys.iterator().next());
+        return Optional.of(refreshToken);
+    }
+
+    @Override
+    public Optional<String> findByTokenAndUser(String token, TokenPayload payload) {
+        String value = stringRedisTemplate.opsForValue().get(
+                String.join(":", REPOSITORY_PREFIX, token, payload.getSubject()));
+
+        if(StringUtils.hasText(value)) {
+            return Optional.of(value);
+        }
+        return Optional.empty();
     }
 
     public Optional<String> findById(String id) {
@@ -53,15 +73,10 @@ public class RefreshTokenRedisRepositoryImpl implements RefreshTokenRedisReposit
         return Optional.empty();
     }
 
+    // Test용 메서드
+    @Override
     public Set<String> findByUser(String userid) {
         return stringRedisTemplate.keys("*" + userid);
     }
-
-    public boolean existsById(String id) {
-
-        return stringRedisTemplate.hasKey(id);
-    }
-
-
 }
 

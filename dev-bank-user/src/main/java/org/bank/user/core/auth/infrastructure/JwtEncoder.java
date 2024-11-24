@@ -46,6 +46,7 @@ public class JwtEncoder implements TokenEncoder {
                 .claim(TokenConstants.CLAIM_EMAIL, tokenPayload.getEmail())
                 .claim(TokenConstants.CLAIM_USERNAME, tokenPayload.getUsername())
                 .claim(TokenConstants.CLAIM_ROLE, tokenPayload.getRoles())
+                .setIssuer(jwtProperties.getIssuer())
                 .setIssuedAt(tokenPayload.getIssuedAt())
                 .setExpiration(tokenPayload.getExpiresAt())
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), SignatureAlgorithm.HS256)

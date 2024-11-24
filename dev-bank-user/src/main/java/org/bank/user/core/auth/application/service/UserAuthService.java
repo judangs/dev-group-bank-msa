@@ -1,12 +1,12 @@
 package org.bank.user.core.auth.application.service;
 
-import exception.MissingHeaderException;
-import jakarta.servlet.http.HttpServletRequest;
+import exception.TokenExpiredException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.bank.common.constants.auth.TokenConstants;
 import org.bank.user.core.auth.application.provider.JwtProvider;
 import org.bank.user.core.auth.application.usecase.UserAuthUseCase;
+import org.bank.user.core.auth.domain.TokenPayload;
 import org.bank.user.core.auth.domain.repository.RefreshTokenRedisRepository;
 import org.bank.user.core.user.domain.credential.UserCredential;
 import org.bank.user.core.user.domain.credential.repository.jpa.UserCredentialJpaRepository;
@@ -14,6 +14,8 @@ import org.bank.user.dto.credential.LoginRequest;
 import org.bank.user.global.exception.PermissionException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,26 +49,48 @@ public class UserAuthService implements UserAuthUseCase {
         String accessToken = jwtProvider.generate(userCredential, TokenConstants.ACCESS);
 
         // ex) refresh token id: accessToken:userid
-        String tokenId = refreshTokenRedisRepository.createId(() ->
+        String tokenid = refreshTokenRedisRepository.createId(() ->
                 String.join(":", accessToken, userCredential.getUserid()));
-        refreshTokenRedisRepository.save(tokenId, refreshToken);
+        refreshTokenRedisRepository.save(tokenid, refreshToken);
         //userCredential.publish(new UserAuthEvent(DomainEvent.LOGIN, DomainEvent.SUCCESS));
 
         jwtProvider.addJwtToResponseHeader(response, accessToken);
     }
 
     @Override
-    public void logout(HttpServletRequest request) {
+    public void logout(String authorization, String userid) {
+
+        String token = authorization.substring(TokenConstants.BEARER_PREFIX.length());
+        refreshTokenRedisRepository.deleteByTokenAndUser(token, userid);
+
+    }
+
+    @Override
+    public String reIssue(String token) throws PermissionException {
+
+        String accessToken = "";
+
+        Optional<String> refreshToken = refreshTokenRedisRepository.findByToken(token);
+        if(refreshToken.isEmpty()) {
+            throw new PermissionException("로그인 인증이 필요합니다.");
+        }
 
         try {
-            String accessToken = jwtProvider.getTokenFromRequest(request);
-            String userid = jwtProvider.getUseridFromRequest(request);
+            TokenPayload payload = jwtProvider.decode(refreshToken.get());
+            accessToken = jwtProvider.generate(payload);
 
-            refreshTokenRedisRepository.deleteTokenByUser(accessToken, userid);
-            // 로그아웃 이벤트 발행
+            String finalAccessToken = accessToken;
+            String tokenid = refreshTokenRedisRepository.createId(() ->
+                    String.join(":", finalAccessToken, payload.getSubject()));
 
-        } catch (MissingHeaderException e) {
-            throw new PermissionException("부적절한 인증 정보입니다.");
+
+            refreshTokenRedisRepository.deleteByTokenAndUser(token, payload.getSubject());
+            refreshTokenRedisRepository.save(tokenid, refreshToken.get());
+
+        } catch (TokenExpiredException e) {
+            throw new PermissionException("인증 기간이 만료되었습니다. 사용자 인증이 필요합니다.");
         }
+
+        return accessToken;
     }
 }
