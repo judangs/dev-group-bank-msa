@@ -7,20 +7,20 @@ import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FamillyTest {
+class FamilyTest {
 
-    private Familly familly = new Familly();
+    private Family family = new Family();
     private MemberClaims leader = new MemberClaims("fixture-id", "fixture", "fixture@bank.com", Instant.now());
 
     @Test
     @DisplayName("패밀리를 생성합니다.")
     void createFamilly() {
 
-        familly.createFamilly(leader);
+        family.createFamilly(leader);
 
         assertAll(
-                () -> assertEquals(leader, familly.getLeader()),
-                () -> assertFalse(familly.getParticipants().isEmpty())
+                () -> assertEquals(leader, family.getLeader()),
+                () -> assertFalse(family.getParticipants().isEmpty())
         );
     }
 
@@ -29,10 +29,10 @@ class FamillyTest {
     void addMember() {
         MemberClaims newMeber = new MemberClaims("new-fuxture", "new", "new@bank.com", Instant.now());
 
-        int participants = familly.getParticipants().size();
-        familly.addMember(newMeber);
+        int participants = family.getParticipants().size();
+        family.addMember(newMeber);
 
-        assertEquals(familly.getParticipants().size(), participants + 1);
+        assertEquals(family.getParticipants().size(), participants + 1);
     }
 
     @Test
@@ -42,11 +42,11 @@ class FamillyTest {
         MemberClaims newMeber = new MemberClaims("new-fuxture", "new", "new@bank.com", Instant.now());
 
         assertAll(
-                () -> assertThrows(IllegalArgumentException.class, () -> familly.changeLeader(newMeber)),
+                () -> assertThrows(IllegalArgumentException.class, () -> family.changeLeader(newMeber)),
                 () -> {
-                    familly.addMember(newMeber);
-                    familly.changeLeader(newMeber);
-                    assertEquals(familly.getLeader(), newMeber);
+                    family.addMember(newMeber);
+                    family.changeLeader(newMeber);
+                    assertEquals(family.getLeader(), newMeber);
                 }
         );
     }
