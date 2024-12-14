@@ -11,7 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Card extends DomainEntity {
+public class PaymentCard extends DomainEntity {
 
     @Id
     @GeneratedValue
@@ -27,4 +27,12 @@ public class Card extends DomainEntity {
     private String cvc;
     private String passwordStartwith;
     private String cardName;
+
+    public void updateCardAlias(String newCardName) {
+        this.cardName = newCardName;
+    }
+
+    private String maskCard() {
+        return cardNumber.substring(cardNumber.length() - 4);
+    }
 }
