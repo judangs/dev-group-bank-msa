@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Getter
 @Entity
-public class Familly extends DomainEntity {
+public class Family extends DomainEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -36,26 +36,35 @@ public class Familly extends DomainEntity {
     public void addMember(MemberClaims newMember) {
         try {
             participants.add(newMember);
-            FamillyConstraints.validateParticipantsLimit(this);
+            FamilyConstraints.validateParticipantsLimit(this);
         }catch (IllegalArgumentException e) {
             participants.remove(newMember);
             throw e;
         }
     }
 
+    public void ejectMember(UUID memberId) {
+        this.participants.remove(memberId);
+    }
+
     public void changeLeader(MemberClaims newLeader) {
-        FamillyConstraints.validateParticipantContaining(this, newLeader);
+        FamilyConstraints.validateParticipantContaining(this, newLeader);
         this.leader = newLeader;
     }
 
-    public void transferCashToFamilyCash(Money cashToTransfer) {
-        FamillyConstraints.validateCashRemaining(this, cashToTransfer);
-        this.famillyCredit.getCredit().add(cashToTransfer.getCredit());
+    public void transferCashToFamily(Money cashToTransfer) {
+        famillyCredit.deposit(cashToTransfer.getBalance());
+        FamilyConstraints.validateCashRemaining(this, cashToTransfer);
+    }
+
+    public void transferCashFromFamily(Money cashToTransfer) {
+        famillyCredit.withdraw(cashToTransfer.getBalance());
+        FamilyConstraints.validateCashRemaining(this, cashToTransfer);
     }
 
     public void requestPaymentToLeader(Money amount) {
 
-        FamillyConstraints.validateCashRemaining(this, amount);
+        FamilyConstraints.validateCashRemaining(this, amount);
         // 결제 요청 로직 (예시: 리더에게 알림을 보내거나, 결제 요청을 기록)
         System.out.println("패밀리 리더 " + leader.getUserid() + "에게 " + amount + " 결제를 요청했습니다.");
     }
@@ -63,7 +72,7 @@ public class Familly extends DomainEntity {
     public void inviteMemberToFamily(MemberClaims leader, MemberClaims newMember) {
 
         isFamillyLeader(leader);
-        FamillyConstraints.validateParticipantsLimit(this);
+        FamilyConstraints.validateParticipantsLimit(this);
         participants.add(newMember);
     }
 
