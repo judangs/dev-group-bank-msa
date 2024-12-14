@@ -24,7 +24,7 @@ public abstract class PayHistory extends DomainEntity {
     protected Money payMoney;
 
     @Enumerated(EnumType.STRING)
-    protected payMethod method;
+    protected PayMethod method;
 
     protected Instant transactionDate;
     protected Instant rollbackDate;
