@@ -12,20 +12,17 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @Table(name = "membership")
 public class MemberShip extends DomainEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "membership_id", columnDefinition = "BINARY(16)")
     private UUID membershipId;
 
     @Embedded
     private Billing payment;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private MemberShipState state;
 
     private Instant enrollmentDate;

@@ -6,10 +6,15 @@ import java.math.BigDecimal;
 
 @Getter
 public class Money {
+
     private BigDecimal balance;
 
     public Money() {
         balance = BigDecimal.ZERO;
+    }
+
+    public Money(BigDecimal balance) {
+        this.balance = balance;
     }
 
     public void deposit(BigDecimal amount) {

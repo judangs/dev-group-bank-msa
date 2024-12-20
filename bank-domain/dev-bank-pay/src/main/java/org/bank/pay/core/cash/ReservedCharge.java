@@ -5,7 +5,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bank.pay.core.onwer.PaymentCard;
@@ -16,7 +15,6 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity

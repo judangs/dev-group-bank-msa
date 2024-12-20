@@ -12,4 +12,10 @@ import org.bank.core.auth.AuthClaims;
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class OwnerClaims extends AuthClaims {
     private String roles;
+
+
+    public OwnerClaims(String userid, String username, String email) {
+        super(userid, username, email);
+    }
+
 }
