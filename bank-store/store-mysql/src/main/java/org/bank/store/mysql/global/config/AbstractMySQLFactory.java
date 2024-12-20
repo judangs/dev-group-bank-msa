@@ -19,7 +19,8 @@ public abstract class AbstractMySQLFactory {
             return new MySQLContainer<>(DockerImageName.parse(property.getDocker().getImage()))
                     .withDatabaseName(property.getDatabase().getName())
                     .withUsername(property.getDatabase().getHikari().getUsername())
-                    .withPassword(property.getDatabase().getHikari().getPassword());
+                    .withPassword(property.getDatabase().getHikari().getPassword())
+                    .withReuse(true);
         };
         MySQLContainer<?> getContainer();
         MySQLContainer<?> getContainer(boolean readOnly);
@@ -29,6 +30,9 @@ public abstract class AbstractMySQLFactory {
 
     protected MySQLContainer<?> createContainer(DataSourceProperty property, MySQLContainerConfigurer configurer) {
         MySQLContainer<?> container = configurer.configureContainer(property);
+
+        if(!container.isRunning())
+            container.start();
         return container;
     }
 
