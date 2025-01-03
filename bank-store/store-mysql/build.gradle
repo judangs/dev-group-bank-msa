@@ -6,6 +6,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'com.mysql:mysql-connector-j'
 
-    compileOnly(project(':bank-domain:dev-bank-pay'))
-    compileOnly(project(':bank-core'))
+
+    implementation(project(':bank-core'))
+    compileOnly(project(':bank-domain:bank-pay-domain'))
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    testImplementation(project(':bank-domain:bank-pay-domain'))
+
+
 }

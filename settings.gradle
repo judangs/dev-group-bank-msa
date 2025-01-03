@@ -1,10 +1,28 @@
 rootProject.name='bankMainProject'
 
+include ':bank-api'
+include ':bank-application'
+include ':bank-domain'
+include ':bank-store'
+
+include ':bank-core'
+
 include ':dev-gateway'
 include ':dev-bank-user'
-
 include 'modules:common'
 include 'modules:module-config'
 findProject(':modules:module-config').name = 'module-config'
 findProject(':modules:common')?.name = 'common'
+
+include 'bank-api:dev-bank-pay'
+findProject(':bank-api:dev-bank-pay')?.name = 'bank-pay-api'
+include 'bank-application:dev-bank-pay'
+//findProject(':bank-application:dev-bank-pay')?.name = 'bank-pay-application'
+findProject(':bank-application:dev-bank-pay')?.name = 'dev-bank-pay'
+include 'bank-domain:dev-bank-pay'
+findProject(':bank-domain:dev-bank-pay')?.name = 'bank-pay-domain'
+include 'bank-store:store-mongo'
+findProject(':bank-store:store-mongo')?.name = 'store-mongo'
+include 'bank-store:store-mysql'
+findProject(':bank-store:store-mysql')?.name = 'store-mysql'
 
