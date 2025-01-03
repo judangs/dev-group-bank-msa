@@ -4,13 +4,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class FamilyTest {
 
     private Family family = new Family();
-    private MemberClaims leader = new MemberClaims("fixture-id", "fixture", "fixture@bank.com", Instant.now());
+    private MemberClaims leader = new MemberClaims("fixture-id", "fixture", "fixture@bank.com");
 
     @Test
     @DisplayName("패밀리를 생성합니다.")
@@ -27,7 +28,7 @@ class FamilyTest {
     @Test
     @DisplayName("패밀리 멤버를 추가합니다.")
     void addMember() {
-        MemberClaims newMeber = new MemberClaims("new-fuxture", "new", "new@bank.com", Instant.now());
+        MemberClaims newMeber = new MemberClaims("new-fuxture", "new", "new@bank.com");
 
         int participants = family.getParticipants().size();
         family.addMember(newMeber);
@@ -39,7 +40,7 @@ class FamilyTest {
     @DisplayName("패밀리 리더를 변경합니다.")
     void changeLeader() {
 
-        MemberClaims newMeber = new MemberClaims("new-fuxture", "new", "new@bank.com", Instant.now());
+        MemberClaims newMeber = new MemberClaims("new-fuxture", "new", "new@bank.com");
 
         assertAll(
                 () -> assertThrows(IllegalArgumentException.class, () -> family.changeLeader(newMeber)),
