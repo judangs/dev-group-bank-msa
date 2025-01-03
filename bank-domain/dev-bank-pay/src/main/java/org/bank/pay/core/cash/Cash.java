@@ -64,7 +64,7 @@ public class Cash extends DomainEntity {
         credit.withdraw(amount);
     }
 
-    public void refreshDailyUsageCredit() {
+    public void refreshDailyCurrency() {
         dailyCurrency = new Money();
     }
 

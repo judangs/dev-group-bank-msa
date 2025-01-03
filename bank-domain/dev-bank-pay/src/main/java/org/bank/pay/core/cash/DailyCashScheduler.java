@@ -1,13 +1,13 @@
 package org.bank.pay.core.cash;
 
 import lombok.RequiredArgsConstructor;
-import org.bank.pay.core.cash.repository.DaillySpentStore;
+import org.bank.pay.core.cash.repository.CashReader;
 import org.bank.pay.core.cash.repository.ReservedCashReader;
+import org.springframework.data.domain.Page;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -15,33 +15,53 @@ public class DailyCashScheduler {
 
     private final CashChargeService cashChargeService;
 
-    private final DaillySpentStore daillySpentStore;
+    private final CashReader cashReader;
     private final ReservedCashReader reservedCashReader;
 
     @Scheduled(cron = "0 0 0 * * ?")
     public void resetDailyCashUsage() {
-        daillySpentStore.resetDailySpent();
+
+        int page = 0;
+        Page<Cash> cashes;
+        while((cashes = cashReader.findAll(page++)).hasContent()) {
+            cashes.getContent()
+                    .forEach(cashChargeService::refreshDaillyCurrency);
+        }
     }
 
 
     @Scheduled(cron = "0 0 0 * * ?")
     public void isEligibleForDateBasedCharge() {
-        List<ReservedCharge> reservedCharges = reservedCashReader.findAllReservedCharges();
-        reservedCharges.stream()
-                .filter((reservedCharge) -> isEligibleForDateBasedCharge(reservedCharge))
-                .forEach(reservedCharge -> {
-                    cashChargeService.chargeCash(reservedCharge.getCash(), reservedCharge.getCard(), reservedCharge.getAmount());
-                });
+
+        int page = 0;
+        Page<ReservedCharge> reservedCharges;
+
+        while((reservedCharges = reservedCashReader.findAllReservedCharges(page++)).hasContent()) {
+
+            reservedCharges.getContent().stream()
+                    .filter(this::isEligibleForDateBasedCharge)
+                    .forEach(reservedCharge -> {
+                        cashChargeService.chargeCash(reservedCharge.getCash(), reservedCharge.getCard(), reservedCharge.getAmount());
+                    });
+
+        }
     }
 
     @Scheduled(fixedRate = 60000) // 1분마다 실행
     public void checkAndTriggerCharges() {
-        List<ReservedCharge> reservedCharges = reservedCashReader.findAllReservedCharges();
-        reservedCharges.stream()
-                .filter((reservedCharge) ->isEligibleForBalanceBasedCharge(reservedCharge))
-                .forEach(reservedCharge -> {
-                    cashChargeService.chargeCash(reservedCharge.getCash(), reservedCharge.getCard(), reservedCharge.getAmount());
-                });
+
+        int page = 0;
+        Page<ReservedCharge> reservedCharges;
+
+        while((reservedCharges = reservedCashReader.findAllReservedCharges(page++)).hasContent()) {
+
+            reservedCharges.getContent().stream()
+                    .filter(this::isEligibleForBalanceBasedCharge)
+                    .forEach(reservedCharge -> {
+                        cashChargeService.chargeCash(reservedCharge.getCash(), reservedCharge.getCard(), reservedCharge.getAmount());
+                    });
+
+        }
     }
 
     private boolean isEligibleForBalanceBasedCharge(ReservedCharge charge) {

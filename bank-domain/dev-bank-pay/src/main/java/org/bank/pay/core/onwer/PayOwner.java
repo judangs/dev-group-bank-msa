@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bank.pay.core.cash.Cash;
+import org.bank.pay.global.domain.DomainEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,16 +16,17 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Table(name = "owner")
-public class PayOwner {
+public class PayOwner extends DomainEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "BINARY(16)", unique = true)
     private UUID ownerId;
 
     @Embedded
     private OwnerClaims claims;
 
-    @OneToMany(mappedBy = "payOwner", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "payOwner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PaymentCard> paymentCards = new ArrayList<>();
 
     @OneToOne(mappedBy = "payOwner")
@@ -41,6 +43,7 @@ public class PayOwner {
 
     public void addPaymentCard(PaymentCard paymentCard) {
         paymentCards.add(paymentCard);
+        paymentCard.setPayOwner(this);
     }
 
     public void updateCardAlias(UUID cardId, String newAlias) {

@@ -1,16 +1,22 @@
 package org.bank.pay.core.onwer;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.bank.pay.global.domain.DomainEntity;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
-@Entity
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Entity
+@Table(name = "payment-card")
 public class PaymentCard extends DomainEntity {
 
     @Id
@@ -21,12 +27,29 @@ public class PaymentCard extends DomainEntity {
     @JoinColumn(name = "owner_id", nullable = false)
     private PayOwner payOwner;
 
-    private String cardOwner;
     private String cardNumber;
-    private String expireDate;
     private String cvc;
     private String passwordStartwith;
+    private String expireDate;
     private String cardName;
+
+
+    public static PaymentCard of(String cardName, String cardNumber, String cVC, String passwordStartwith, LocalDate dateOfExpiry) {
+        return PaymentCard.builder()
+                .cardName(cardName)
+                .cardNumber(cardNumber)
+                .cvc(cVC)
+                .passwordStartwith(passwordStartwith)
+                .expireDate(dateOfExpiry.format(DateTimeFormatter.ofPattern("yyyy-MM")))
+                .build();
+
+    }
+
+    public void setPayOwner(PayOwner payOwner) {
+        this.payOwner = payOwner;
+    }
+
+
 
     public void updateCardAlias(String newCardName) {
         this.cardName = newCardName;

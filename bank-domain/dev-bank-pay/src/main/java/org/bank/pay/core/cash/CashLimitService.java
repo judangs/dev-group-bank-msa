@@ -1,7 +1,11 @@
 package org.bank.pay.core.cash;
 
 import lombok.RequiredArgsConstructor;
+import org.bank.core.auth.AuthClaims;
+import org.bank.pay.core.cash.repository.CashReader;
+import org.bank.pay.core.onwer.OwnerClaims;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -9,15 +13,20 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 public class CashLimitService {
 
+    private final CashReader cashReader;
 
+    @Transactional
+    public void setPaymentLimits(AuthClaims authClaims, BigDecimal perOnceLimitAmount, BigDecimal perDailyLimitAmount) {
 
-    public void setPaymentLimits(Cash cash, BigDecimal perOnceLimitAmount, BigDecimal perDailyLimitAmount) {
+        Cash cash = cashReader.findByOwnerClaims((OwnerClaims) authClaims);
         validateLimits(perOnceLimitAmount, perDailyLimitAmount);
         cash.updatePaymentLimits(perOnceLimitAmount, perDailyLimitAmount);
     }
 
 
-    public void clearPaymentLimits(Cash cash) {
+    @Transactional
+    public void clearPaymentLimits(AuthClaims authClaims) {
+        Cash cash = cashReader.findByOwnerClaims((OwnerClaims) authClaims);
         cash.clearPaymentLimits();
     }
 

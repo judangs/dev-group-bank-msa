@@ -19,9 +19,13 @@ public class FamilyService {
     private final FamilyReader familyReader;
     private final FamilyStore familyStore;
 
+    @Transactional
     public void createFamily(OwnerClaims leaderClaims) {
         MemberClaims memberClaims = MemberClaims.of(leaderClaims);
-        familyStore.saveFamily(memberClaims);
+        Family family = new Family();
+        family.createFamilly(memberClaims);
+
+        familyStore.saveFamily(family);
     }
 
     @Transactional

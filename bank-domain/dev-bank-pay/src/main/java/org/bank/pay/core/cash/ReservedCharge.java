@@ -1,10 +1,8 @@
 package org.bank.pay.core.cash;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bank.pay.core.onwer.PaymentCard;
@@ -17,10 +15,12 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 public class ReservedCharge extends DomainEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
     @OneToOne
@@ -30,14 +30,30 @@ public class ReservedCharge extends DomainEntity {
     private PaymentCard card;
 
     private BigDecimal amount;
-    private BigDecimal triggerBalance;
-    private LocalDate scheduledDate;
 
-    public void setTriggerBalance(BigDecimal balance) {
-        this.triggerBalance = balance;
+    @Enumerated(EnumType.STRING)
+    private ReservationType type;
+
+    private LocalDate scheduledDate;
+    private BigDecimal triggerBalance;
+
+    public static ReservedCharge of(Cash cash, PaymentCard card, BigDecimal amount, ReservationType type, LocalDate scheduledDate) {
+        return ReservedCharge.builder()
+                .cash(cash)
+                .card(card)
+                .amount(amount)
+                .type(type)
+                .scheduledDate(scheduledDate)
+                .build();
     }
 
-    public void setScheduledDate(LocalDate scheduledDate) {
-        this.scheduledDate = scheduledDate;
+    public static ReservedCharge of(Cash cash, PaymentCard card, BigDecimal amount, ReservationType type, BigDecimal triggerBalance) {
+        return ReservedCharge.builder()
+                .cash(cash)
+                .card(card)
+                .amount(amount)
+                .type(type)
+                .triggerBalance(triggerBalance)
+                .build();
     }
 }
