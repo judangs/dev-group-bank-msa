@@ -1,0 +1,18 @@
+plugins {
+    id 'java'
+}
+
+ext {
+    set('springCloudVersion', "2023.0.3")
+}
+
+
+subprojects {
+    dependencies {
+
+        compileOnly(project(':bank-core'))
+
+        implementation("org.springframework.boot:spring-boot-starter-validation")
+        implementation('org.springframework.boot:spring-boot-starter-web')
+    }
+}

@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class HistoryReadService {
+public class HistoryReader {
 
 
     private final HistoryService historyService;
