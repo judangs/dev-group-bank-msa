@@ -2,8 +2,7 @@ package org.bank.store.mysql.core.pay.history;
 
 import org.bank.core.cash.PayMethod;
 import org.bank.pay.core.history.PayHistory;
-import org.bank.pay.core.history.repository.HistoryReader;
-import org.bank.pay.core.history.repository.HistoryStore;
+import org.bank.pay.core.history.repository.HistoryRepository;
 import org.bank.pay.core.onwer.OwnerClaims;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -14,7 +13,7 @@ import java.time.Instant;
 import java.util.Collections;
 
 @Repository
-public class MockHistoryRepository implements HistoryReader, HistoryStore {
+public class MockHistoryRepository implements HistoryRepository {
     @Override
     public PayHistory findRecordById(OwnerClaims claims, Long id) {
         return new PayHistory(){};

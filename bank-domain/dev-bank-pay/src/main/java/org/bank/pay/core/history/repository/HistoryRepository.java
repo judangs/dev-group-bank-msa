@@ -7,8 +7,9 @@ import org.springframework.data.domain.Page;
 
 import java.time.Instant;
 
-public interface HistoryReader {
+public interface HistoryRepository {
 
     PayHistory findRecordById(OwnerClaims claims, Long id);
     Page<PayHistory> findAllRecordsByMethodAndBetweenDate(OwnerClaims claims, PayMethod method, Instant from, Instant to, int page);
+    void saveHistory(PayHistory history);
 }
