@@ -6,7 +6,7 @@ import org.bank.core.dto.response.ResponseDto;
 import org.bank.pay.core.onwer.OwnerClaims;
 import org.bank.pay.core.onwer.PaymentCard;
 import org.bank.pay.core.onwer.PaymentCardService;
-import org.bank.pay.dto.request.ChargeRequest;
+import org.bank.pay.dto.service.request.ChargeRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
