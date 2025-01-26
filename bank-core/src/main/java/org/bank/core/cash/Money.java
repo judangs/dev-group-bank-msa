@@ -13,8 +13,16 @@ public class Money {
         balance = BigDecimal.ZERO;
     }
 
+    public Money(Integer balance) {
+        this.balance = new BigDecimal(balance);
+    }
+
     public Money(BigDecimal balance) {
         this.balance = balance;
+    }
+
+    public Integer toInteger() {
+        return balance.intValue();
     }
 
     public void deposit(BigDecimal amount) {
