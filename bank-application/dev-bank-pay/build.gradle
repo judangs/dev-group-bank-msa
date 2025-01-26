@@ -1,11 +1,9 @@
 dependencies {
-
-
     implementation(project(':bank-core'))
     implementation(project(':bank-domain:bank-pay-domain'))
     implementation(project(':bank-store:store-mysql'))
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.kafka:spring-kafka'
 
-//    testRuntimeOnly(project(':bank-store:store-mysql'))
 }
