@@ -8,8 +8,8 @@ import org.bank.core.dto.response.ResponseDto;
 import org.bank.core.dto.response.ResponseMessage;
 import org.bank.pay.core.cash.repository.CashReader;
 import org.bank.pay.core.onwer.OwnerClaims;
-import org.bank.pay.dto.request.CashLimitRequest;
-import org.bank.pay.dto.response.CashBalanceResponse;
+import org.bank.pay.dto.service.request.CashLimitRequest;
+import org.bank.pay.dto.service.response.CashBalanceResponse;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

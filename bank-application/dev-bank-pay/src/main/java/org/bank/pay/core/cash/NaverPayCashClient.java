@@ -7,7 +7,7 @@ import org.bank.core.dto.response.ResponseCode;
 import org.bank.core.dto.response.ResponseMessage;
 import org.bank.pay.client.CashClient;
 import org.bank.pay.core.onwer.PaymentCard;
-import org.bank.pay.dto.response.NaverPaymentResponse;
+import org.bank.pay.dto.service.response.NaverPaymentResponse;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;

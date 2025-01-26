@@ -10,8 +10,8 @@ import org.bank.pay.client.CashClient;
 import org.bank.pay.core.history.HistoryService;
 import org.bank.pay.core.onwer.PaymentCard;
 import org.bank.pay.core.onwer.PaymentCardService;
-import org.bank.pay.dto.request.ChargeRequest;
-import org.bank.pay.dto.request.ReservedChargeRequest;
+import org.bank.pay.dto.service.request.ChargeRequest;
+import org.bank.pay.dto.service.request.ReservedChargeRequest;
 import org.bank.pay.global.exception.PaymentException;
 import org.springframework.stereotype.Service;
 

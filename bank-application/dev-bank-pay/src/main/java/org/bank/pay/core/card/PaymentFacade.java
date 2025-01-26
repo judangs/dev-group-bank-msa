@@ -6,9 +6,9 @@ import org.bank.core.dto.response.ResponseDto;
 import org.bank.pay.client.PaymentCardClient;
 import org.bank.pay.core.onwer.PaymentCard;
 import org.bank.pay.core.onwer.PaymentCardService;
-import org.bank.pay.dto.request.PaymentRequest;
-import org.bank.pay.dto.request.UpdateCardAliasRequest;
-import org.bank.pay.dto.response.PaymentCardsListResponse;
+import org.bank.pay.dto.service.request.PaymentRequest;
+import org.bank.pay.dto.service.request.UpdateCardAliasRequest;
+import org.bank.pay.dto.service.response.PaymentCardsListResponse;
 import org.bank.pay.global.exception.PaymentException;
 import org.springframework.stereotype.Service;
 

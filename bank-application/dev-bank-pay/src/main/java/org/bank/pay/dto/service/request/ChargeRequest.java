@@ -1,4 +1,4 @@
-package org.bank.pay.dto.request;
+package org.bank.pay.dto.service.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

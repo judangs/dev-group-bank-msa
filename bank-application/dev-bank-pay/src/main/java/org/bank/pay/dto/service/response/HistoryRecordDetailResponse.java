@@ -1,4 +1,4 @@
-package org.bank.pay.dto.response;
+package org.bank.pay.dto.service.response;
 
 import lombok.Builder;
 import lombok.Data;
