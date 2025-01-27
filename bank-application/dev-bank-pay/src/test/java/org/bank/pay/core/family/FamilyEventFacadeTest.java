@@ -53,7 +53,7 @@ class FamilyEventFacadeTest {
         userRegisterTask.initialize(leader);
         familyService.createFamily((OwnerClaims) leader);
 
-        MemberClaims familyLeader = new MemberClaims("fixture-id", "fixture", "fixture@email.com");
+        MemberClaims familyLeader = MemberClaims.of(leader);
         family = familyReader.findByUserIsLeader(familyLeader).get();
     }
 
@@ -62,7 +62,7 @@ class FamilyEventFacadeTest {
     void 새로운_멤버를_초대합니다() {
 
         Assertions.assertThat(family).isNotNull();
-        Assertions.assertThatCode(() -> familyEventFacade.inviteMember(family.getFamilyId(), follower))
+        Assertions.assertThatCode(() -> familyEventFacade.inviteMember(family.getFamilyId(), leader, follower))
                         .doesNotThrowAnyException();
     }
 
