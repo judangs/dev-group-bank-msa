@@ -2,6 +2,9 @@ package org.bank.pay.core.familly;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.bank.core.auth.AuthClaims;
 import org.bank.core.cash.Money;
 import org.bank.pay.global.domain.DomainEntity;
 import org.hibernate.annotations.Cascade;
@@ -13,6 +16,7 @@ import java.util.UUID;
 
 @Getter
 @Entity
+@NoArgsConstructor
 public class Family extends DomainEntity {
 
     @Id
@@ -28,72 +32,24 @@ public class Family extends DomainEntity {
     @Cascade(CascadeType.ALL)
     private Set<MemberClaims> participants = new HashSet<>();
 
+    @Setter
     @Embedded
     private MemberClaims leader;
 
     @Embedded
-    private Money famillyCredit;
+    @AttributeOverrides({
+            @AttributeOverride(name = "balance", column = @Column(name = "credit", precision = 30, scale = 10))
+    })
+    private Money familyCredit;
 
-    public void createFamilly(MemberClaims leader) {
+    private void create(AuthClaims leader) {
 
-        this.leader = leader;
-        participants.add(leader);
-        famillyCredit = new Money();
+        this.leader = MemberClaims.of(leader);
+        participants.add(this.leader);
+        familyCredit = new Money();
     }
 
-    public void addMember(MemberClaims newMember) {
-        try {
-            participants.add(newMember);
-            FamilyConstraints.validateParticipantsLimit(this);
-        }catch (IllegalArgumentException e) {
-            participants.remove(newMember);
-            throw e;
-        }
+    public Family(AuthClaims leader) {
+        create(leader);
     }
-
-    public void ejectMember(UUID memberId) {
-        this.participants.remove(memberId);
-    }
-
-    public void changeLeader(MemberClaims newLeader) {
-        FamilyConstraints.validateParticipantContaining(this, newLeader);
-        this.leader = newLeader;
-    }
-
-    public void transferCashToFamily(Money cashToTransfer) {
-        famillyCredit.deposit(cashToTransfer.getBalance());
-        FamilyConstraints.validateCashRemaining(this, cashToTransfer);
-    }
-
-    public void transferCashFromFamily(Money cashToTransfer) {
-        famillyCredit.withdraw(cashToTransfer.getBalance());
-        FamilyConstraints.validateCashRemaining(this, cashToTransfer);
-    }
-
-    public void requestPaymentToLeader(Money amount) {
-
-        FamilyConstraints.validateCashRemaining(this, amount);
-        // 결제 요청 로직 (예시: 리더에게 알림을 보내거나, 결제 요청을 기록)
-        System.out.println("패밀리 리더 " + leader.getUserid() + "에게 " + amount + " 결제를 요청했습니다.");
-    }
-
-    public void inviteMemberToFamily(MemberClaims leader, MemberClaims newMember) {
-
-        isFamillyLeader(leader);
-        FamilyConstraints.validateParticipantsLimit(this);
-        participants.add(newMember);
-    }
-
-    // 패밀리 해체
-    public void dissolveFamily() {
-        participants.clear();
-        deleteEntity();
-    }
-
-    private void isFamillyLeader(MemberClaims participant) {
-        if(!this.leader.equals(participant)) {
-            throw new IllegalStateException("패밀리 대표만 멤버를 초대할 수 있습니다.");
-        }
-    }
-
 }

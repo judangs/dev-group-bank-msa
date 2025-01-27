@@ -5,11 +5,13 @@ import org.bank.core.auth.AuthClaims;
 import org.bank.core.cash.Money;
 import org.bank.pay.core.familly.repository.FamilyReader;
 import org.bank.pay.core.familly.repository.FamilyStore;
-import org.bank.pay.core.onwer.OwnerClaims;
+import org.bank.pay.core.onwer.repository.PayOwnerReader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -19,47 +21,71 @@ public class FamilyService {
     private final FamilyReader familyReader;
     private final FamilyStore familyStore;
 
-    @Transactional
-    public void createFamily(OwnerClaims leaderClaims) {
-        MemberClaims memberClaims = MemberClaims.of(leaderClaims);
-        Family family = new Family();
-        family.createFamilly(memberClaims);
+    private final PayOwnerReader payOwnerReader;
 
+    @Transactional
+    public Family createFamily(AuthClaims claims) {
+        MemberClaims leader = MemberClaims.of(claims);
+        Family family = new Family(leader);
         familyStore.saveFamily(family);
+
+        return family;
     }
 
     @Transactional
-    public void addMemberToFamily(UUID familyId, AuthClaims newMember) {
-        Family family = findById(familyId);
-        family.addMember(MemberClaims.of(newMember));
-        familyStore.saveFamily(family);
+    public void addMemberToFamily(UUID familyId, AuthClaims member) {
+        Family family = isExist(familyId);
+        Set<MemberClaims> participants = family.getParticipants();
+
+        try {
+            FamilyConstraints.validateParticipantsLimit(family);
+            participants.add(MemberClaims.of(member));
+        }catch (IllegalArgumentException e) {
+            participants.remove(MemberClaims.of(member));
+            throw e;
+        }
     }
 
     @Transactional
-    public void ejectMemberFromFamily(UUID familyId, UUID memberId) {
-        Family family = findById(familyId);
-        family.ejectMember(memberId);
+    public void ejectMemberFromFamily(UUID familyId, AuthClaims member) {
+        Family family = isExist(familyId);
+
+        Set<MemberClaims> participants = family.getParticipants();
+        participants.remove(member);
     }
 
     @Transactional
-    public void changeFamilyLeader(UUID familyId, MemberClaims newLeader) {
-        Family family = findById(familyId);
-        family.changeLeader(newLeader);
+    public void changeFamilyLeader(UUID familyId, AuthClaims newLeader) {
+        Family family = isExist(familyId);
+
+        Set<MemberClaims> participants = family.getParticipants();
+        MemberClaims leader = participants.stream().filter(participant -> participant.equals(newLeader))
+                .findFirst().orElseThrow(NoSuchElementException::new);
+        FamilyConstraints.validateParticipantContaining(family, leader);
+
+        family.setLeader(leader);
     }
 
     @Transactional
-    public void depositCashToFamily(UUID familyId, Money cashToTransfer) {
-        Family family = findById(familyId);
-        family.transferCashToFamily(cashToTransfer);
+    public void depositCashToFamily(UUID familyId, AuthClaims from, Money cash) {
+
+//        PayOwner remitter = payOwnerReader.findByUserClaims(from).orElseThrow();
+//        Cash remitterCredit = remitter.getCash();
+//        remitterCredit.pay(cash);
+
+        Money familyCredit = isExist(familyId).getFamilyCredit();
+        familyCredit.deposit(cash);
     }
 
     @Transactional
     public void withdrawCashFromFamily(UUID familyId, Money cashToTransfer) {
-        Family family = findById(familyId);
-        family.transferCashFromFamily(cashToTransfer);
+        Family family = isExist(familyId);
+        Money familyCredit = family.getFamilyCredit();
+
+        familyCredit.withdraw(cashToTransfer);
     }
 
-    private Family findById(UUID familyId) {
+    private Family isExist(UUID familyId) {
         Optional<Family> ownerFamily = familyReader.findById(familyId);
         if(ownerFamily.isEmpty()) {
             throw new IllegalArgumentException("생성된 패밀리가 없습니다.");

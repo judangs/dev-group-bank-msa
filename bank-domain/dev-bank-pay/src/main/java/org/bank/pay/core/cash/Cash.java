@@ -59,6 +59,11 @@ public class Cash extends DomainEntity {
     }
 
 
+    public void pay(Money amount) {
+        CashConstraints.validatePayLimits(limits, amount.getBalance());
+        credit.withdraw(amount);
+    }
+
     public void pay(BigDecimal amount) {
         CashConstraints.validatePayLimits(limits, amount);
         credit.withdraw(amount);

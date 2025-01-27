@@ -13,9 +13,21 @@ import org.bank.core.auth.AuthClaims;
 public class OwnerClaims extends AuthClaims {
     private String roles;
 
-
     public OwnerClaims(String userid, String username, String email) {
         super(userid, username, email);
+    }
+
+    public OwnerClaims(String userid, String username, String email, String roles) {
+        super(userid, username, email);
+        this.roles = roles;
+    }
+
+    public static OwnerClaims of(AuthClaims claims) {
+        return new OwnerClaims(claims.getUserid(), claims.getUsername(), claims.getEmail());
+    }
+
+    public static OwnerClaims of(AuthClaims claims, String roles) {
+        return new OwnerClaims(claims.getUserid(), claims.getUsername(), claims.getEmail(), roles);
     }
 
 }
