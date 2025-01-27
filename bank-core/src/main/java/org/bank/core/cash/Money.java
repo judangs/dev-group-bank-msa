@@ -3,6 +3,7 @@ package org.bank.core.cash;
 import lombok.Getter;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Getter
 public class Money {
@@ -14,7 +15,7 @@ public class Money {
     }
 
     public Money(Integer balance) {
-        this.balance = new BigDecimal(balance);
+        this.balance = new BigDecimal(balance).setScale(10, RoundingMode.HALF_UP);
     }
 
     public Money(BigDecimal balance) {
@@ -25,9 +26,25 @@ public class Money {
         return balance.intValue();
     }
 
+    public void deposit(Money amount) {
+        validatePositiveAmount(amount.getBalance());
+        this.balance = this.balance.add(amount.getBalance());
+    }
+
     public void deposit(BigDecimal amount) {
         validatePositiveAmount(amount);
         this.balance = this.balance.add(amount);
+    }
+
+    public void withdraw(Money amount) {
+        validatePositiveAmount(amount.getBalance());
+
+        BigDecimal afterBalance = this.balance.subtract(amount.getBalance());
+        if(afterBalance.compareTo(BigDecimal.ZERO) < 0) {
+            throw new InsufficientBalanceException(this);
+        }
+
+        this.balance = this.balance.subtract(amount.getBalance());
     }
 
     public void withdraw(BigDecimal amount) {
@@ -45,7 +62,7 @@ public class Money {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Money money = (Money) o;
-        return balance.compareTo(money.balance) == 0;
+        BigDecimal money = ((Money) o).getBalance();
+        return balance.equals(money);
     }
 }
