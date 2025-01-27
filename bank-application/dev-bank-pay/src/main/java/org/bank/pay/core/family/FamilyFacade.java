@@ -19,13 +19,13 @@ public class FamilyFacade {
         return ResponseDto.success("작업을 완료했습니다.");
     }
 
-    public ResponseDto changeLeader(UUID familyId, UUID newLeaderId) {
-        familyService.changeFamilyLeader(familyId, newLeaderId);
+    public ResponseDto changeLeader(UUID familyId, AuthClaims newLeader) {
+        familyService.changeFamilyLeader(familyId, newLeader);
         return ResponseDto.success("작업을 완료했습니다.");
     }
 
-    public ResponseDto ejectMember(UUID familyId, UUID memberId) {
-        familyService.ejectMemberFromFamily(familyId, memberId);
+    public ResponseDto ejectMember(UUID familyId, AuthClaims member) {
+        familyService.ejectMemberFromFamily(familyId, member);
         return ResponseDto.success("작업을 완료했습니다.");
     }
 

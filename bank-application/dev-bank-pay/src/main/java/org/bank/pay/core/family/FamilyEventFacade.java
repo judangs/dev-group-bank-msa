@@ -2,10 +2,12 @@ package org.bank.pay.core.family;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.bank.core.auth.AuthClaims;
 import org.bank.core.cash.Money;
 import org.bank.core.kafka.KafkaEvent;
 import org.bank.core.payment.Product;
 import org.bank.pay.core.familly.Family;
+import org.bank.pay.core.familly.FamilyConstraints;
 import org.bank.pay.core.familly.MemberClaims;
 import org.bank.pay.core.familly.kafka.event.CashConversionEvent;
 import org.bank.pay.core.familly.kafka.event.InviteEvent;
@@ -21,15 +23,19 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FamilyEventFacade {
 
+
+
     private final FamilyQueryRepository familyQueryRepository;
     private final KafkaTemplate<String, KafkaEvent> kafkaTemplate;
 
     @Transactional
-    public void inviteMember(UUID familyId, MemberClaims follower) {
+    public void inviteMember(UUID familyId, AuthClaims leader, AuthClaims follower) {
         Family family = familyQueryRepository.findById(familyId)
                 .orElseThrow(() -> new EntityNotFoundException("family를 찾을 수 없습니다."));
 
-        kafkaTemplate.send("family.invitation", new InviteEvent(family.getFamilyId(), follower));
+
+        FamilyConstraints.isEligibleForInvitation(family, MemberClaims.of(leader));
+        kafkaTemplate.send("family.invitation", new InviteEvent(family.getFamilyId(), MemberClaims.of(follower)));
     }
 
     @Transactional
