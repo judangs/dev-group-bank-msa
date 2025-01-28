@@ -1,0 +1,10 @@
+dependencies {
+
+    compileOnly(project(':bank-core'))
+    testCompileOnly(project(':bank-core'))
+
+    implementation(project(':bank-domain:bank-pay-domain'))
+    implementation(project(':bank-store:store-mysql'))
+
+    implementation 'org.springframework.kafka:spring-kafka'
+}
