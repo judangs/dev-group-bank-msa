@@ -1,17 +1,20 @@
 package org.bank.core.cash;
 
+import jakarta.persistence.Embeddable;
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 @Getter
-public class Money {
+@Embeddable
+public class Money implements Serializable {
 
     private BigDecimal balance;
 
     public Money() {
-        balance = BigDecimal.ZERO;
+        balance = new BigDecimal(0).setScale(10, RoundingMode.HALF_UP);
     }
 
     public Money(Integer balance) {
@@ -40,7 +43,7 @@ public class Money {
         validatePositiveAmount(amount.getBalance());
 
         BigDecimal afterBalance = this.balance.subtract(amount.getBalance());
-        if(afterBalance.compareTo(BigDecimal.ZERO) < 0) {
+        if(afterBalance.compareTo(new Money(0).getBalance()) < 0) {
             throw new InsufficientBalanceException(this);
         }
 

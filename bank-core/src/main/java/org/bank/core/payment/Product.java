@@ -1,23 +1,38 @@
 package org.bank.core.payment;
 
+import jakarta.persistence.MappedSuperclass;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.bank.core.cash.Money;
 
-@Getter
-public class Product {
+import java.io.Serializable;
 
-    private String productName;
-    private Money amount;
+@Getter
+@MappedSuperclass
+@EqualsAndHashCode
+@NoArgsConstructor
+public class Product implements Serializable {
+
+    @EqualsAndHashCode.Include
+    private String name;
+    private Money price;
     private Integer quantity;
 
-    public Product(String productName, Integer amount, Integer quantity) {
-        this.productName = productName;
-        this.amount = new Money(amount);
+    public Product(String name, Integer price, Integer quantity) {
+        this.name = name;
+        this.price = new Money(price);
+        this.quantity = quantity;
+    }
+
+    public Product(String name, Money price, Integer quantity) {
+        this.name = name;
+        this.price = price;
         this.quantity = quantity;
     }
 
     public Integer calculateTotalAmount() {
-        return Integer.valueOf(amount.toInteger() * quantity);
+        return Integer.valueOf(price.toInteger() * quantity);
     }
 
 }
