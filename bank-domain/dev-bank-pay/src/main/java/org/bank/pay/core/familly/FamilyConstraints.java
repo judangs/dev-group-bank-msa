@@ -17,8 +17,8 @@ public class FamilyConstraints {
     }
 
     // 다뤄지는 멤버가 패밀리에 포함되어 있는지 검증한다.
-    public static void validateParticipantContaining(Family family, MemberClaims newLeader) {
-        if (!family.getParticipants().contains(newLeader)) {
+    public static void validateParticipantContaining(Family family, MemberClaims member) {
+        if (!family.getParticipants().contains(member)) {
             throw new IllegalArgumentException("패밀리 멤버이어야 합니다.");
         }
     }

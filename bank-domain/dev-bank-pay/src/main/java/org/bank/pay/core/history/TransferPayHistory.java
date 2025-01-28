@@ -5,6 +5,10 @@ import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.bank.core.cash.PayMethod;
+import org.bank.pay.core.familly.event.kafka.CashConversionEvent;
+
+import java.time.LocalDateTime;
 
 @Getter
 @SuperBuilder
@@ -14,5 +18,31 @@ import lombok.experimental.SuperBuilder;
 public class TransferPayHistory extends PayHistory {
 
     private String transferTo;
+
+    public static TransferPayHistory of(CashConversionEvent event) {
+        return TransferPayHistory.builder()
+                .transferTo(event.getFamilyId().toString())
+                .payName("그룹 캐시 전환")
+                .payMoney(event.getAmount())
+                .transactionDate(LocalDateTime.now())
+                .method(PayMethod.TRANSFER)
+                .userId(event.getFrom().getUserid())
+                .build();
+    }
+    public static TransferPayHistory of(CashConversionEvent event, boolean rollback) {
+        TransferPayHistory history = TransferPayHistory.builder()
+                .transferTo(event.getFamilyId().toString())
+                .payName("그룹 캐시 전환")
+                .payMoney(event.getAmount())
+                .transactionDate(LocalDateTime.now())
+                .method(PayMethod.TRANSFER)
+                .userId(event.getFrom().getUserid())
+                .build();
+
+        if(rollback)
+            history.isDeleted();
+
+        return history;
+    }
 
 }

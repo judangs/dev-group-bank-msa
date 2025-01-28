@@ -15,8 +15,8 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "pay_payment_card_tb")
 @Entity
-@Table(name = "payment-card")
 public class PaymentCard extends DomainEntity {
 
     @Id

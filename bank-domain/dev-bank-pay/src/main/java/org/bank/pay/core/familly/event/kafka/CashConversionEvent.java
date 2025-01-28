@@ -1,13 +1,14 @@
-package org.bank.pay.core.familly.kafka.event;
+package org.bank.pay.core.familly.event.kafka;
 
+import lombok.Getter;
 import org.bank.core.cash.Money;
 import org.bank.pay.core.familly.MemberClaims;
 
 import java.util.UUID;
 
+@Getter
 public class CashConversionEvent extends FamilyEvent {
 
-    private UUID familyId;
     private MemberClaims from;
     private Money amount;
 

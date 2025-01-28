@@ -14,8 +14,8 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "pay_cash_tb")
 @Entity
-@Table(name = "cash")
 public class Cash extends DomainEntity {
 
     @Id
@@ -52,6 +52,10 @@ public class Cash extends DomainEntity {
         credit = new Money();
         dailyCurrency = new Money();
         limits = new PayLimit();
+    }
+
+    public void charge(Money amount) {
+        credit.deposit(amount);
     }
 
     public void charge(BigDecimal amount) {

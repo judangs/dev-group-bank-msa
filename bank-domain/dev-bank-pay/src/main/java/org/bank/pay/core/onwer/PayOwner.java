@@ -14,8 +14,8 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "pay_owner_tb")
 @Entity
-@Table(name = "owner")
 public class PayOwner extends DomainEntity {
 
     @Id
@@ -48,7 +48,7 @@ public class PayOwner extends DomainEntity {
 
     public void updateCardAlias(UUID cardId, String newAlias) {
         PaymentCard paymentCard = paymentCards.stream().filter(card -> card.getCardId().equals(cardId))
-                .findFirst().orElseThrow(IllegalArgumentException::new);
+                .findFirst().orElseThrow(EntityNotFoundException::new);
 
         paymentCard.updateCardAlias(newAlias);
     }

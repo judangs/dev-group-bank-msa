@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "history_type")
+@Table(name = "pay_history_tb")
 @Entity
 public abstract class PayHistory extends DomainEntity {
 
@@ -35,4 +36,5 @@ public abstract class PayHistory extends DomainEntity {
 
     protected LocalDateTime transactionDate;
     protected LocalDateTime rollbackDate;
+
 }

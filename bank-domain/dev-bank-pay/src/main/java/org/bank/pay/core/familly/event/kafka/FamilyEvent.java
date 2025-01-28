@@ -1,4 +1,4 @@
-package org.bank.pay.core.familly.kafka.event;
+package org.bank.pay.core.familly.event.kafka;
 
 import lombok.Data;
 import org.bank.core.kafka.KafkaEvent;

@@ -16,6 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Table(name = "pay_cash_reserved_charge_tb")
 @Entity
 public class ReservedCharge extends DomainEntity {
     @Id
