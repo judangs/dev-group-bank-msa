@@ -4,7 +4,6 @@ import org.bank.core.auth.AuthClaims;
 import org.bank.pay.core.familly.repository.FamilyReader;
 import org.bank.pay.core.familly.repository.FamilyStore;
 import org.bank.pay.core.onwer.OwnerClaims;
-import org.bank.pay.core.onwer.repository.PayOwnerReader;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,8 +29,7 @@ class FamilyServiceTest {
     private FamilyReader familyReader;
     @Mock
     private FamilyStore familyStore;
-    @Mock
-    private PayOwnerReader payOwnerReader;
+
     private FamilyService familyService;
 
     private final AuthClaims leader = new OwnerClaims("fixture-id", "fixture", "fixture@email.com");
@@ -42,7 +40,7 @@ class FamilyServiceTest {
     @BeforeAll
     public void setup() {
         MockitoAnnotations.openMocks(this);
-        familyService = new FamilyService(familyReader, familyStore, payOwnerReader);
+        familyService = new FamilyService(familyReader, familyStore);
 
         family = new Family(leader);
 

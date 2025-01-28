@@ -51,7 +51,7 @@ class FamilyEventFacadeTest {
     @BeforeAll
     public void setup() {
         userRegisterTask.initialize(leader);
-        familyService.createFamily((OwnerClaims) leader);
+        familyService.createFamily(leader);
 
         MemberClaims familyLeader = MemberClaims.of(leader);
         family = familyReader.findByUserIsLeader(familyLeader).get();

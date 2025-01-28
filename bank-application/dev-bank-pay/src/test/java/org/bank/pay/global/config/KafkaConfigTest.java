@@ -4,7 +4,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.bank.core.kafka.KafkaEvent;
 import org.bank.pay.core.familly.MemberClaims;
-import org.bank.pay.core.familly.kafka.event.InviteEvent;
+import org.bank.pay.core.familly.event.kafka.InviteEvent;
 import org.bank.pay.global.kafka.KafkaEventSerializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
