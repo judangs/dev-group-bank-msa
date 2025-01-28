@@ -1,11 +1,11 @@
 package org.bank.pay.core.familly;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.bank.core.auth.AuthClaims;
 import org.bank.core.cash.Money;
 import org.bank.pay.core.familly.repository.FamilyReader;
 import org.bank.pay.core.familly.repository.FamilyStore;
-import org.bank.pay.core.onwer.repository.PayOwnerReader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,8 +20,6 @@ public class FamilyService {
 
     private final FamilyReader familyReader;
     private final FamilyStore familyStore;
-
-    private final PayOwnerReader payOwnerReader;
 
     @Transactional
     public Family createFamily(AuthClaims claims) {
@@ -69,10 +67,6 @@ public class FamilyService {
     @Transactional
     public void depositCashToFamily(UUID familyId, AuthClaims from, Money cash) {
 
-//        PayOwner remitter = payOwnerReader.findByUserClaims(from).orElseThrow();
-//        Cash remitterCredit = remitter.getCash();
-//        remitterCredit.pay(cash);
-
         Money familyCredit = isExist(familyId).getFamilyCredit();
         familyCredit.deposit(cash);
     }
@@ -85,10 +79,10 @@ public class FamilyService {
         familyCredit.withdraw(cashToTransfer);
     }
 
-    private Family isExist(UUID familyId) {
+    public Family isExist(UUID familyId) {
         Optional<Family> ownerFamily = familyReader.findById(familyId);
         if(ownerFamily.isEmpty()) {
-            throw new IllegalArgumentException("생성된 패밀리가 없습니다.");
+            throw new EntityNotFoundException("생성된 패밀리가 없습니다.");
         }
 
         return ownerFamily.get();

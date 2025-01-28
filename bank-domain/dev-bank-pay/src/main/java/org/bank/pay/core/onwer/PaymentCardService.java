@@ -41,8 +41,6 @@ public class PaymentCardService {
         return paymentCard;
     }
 
-
-
     @Transactional(readOnly = true)
     public List<PaymentCard> getRegisteredCards(AuthClaims claims) {
 
@@ -64,15 +62,15 @@ public class PaymentCardService {
     }
 
     @Transactional
-    public void updateCardAlias(AuthClaims claims, UUID cardId, String newCardName) throws IllegalArgumentException, EntityNotFoundException {
-
+    public void updateCardAlias(AuthClaims claims, UUID cardId, String newCardName) throws IllegalArgumentException {
         OwnerClaims ownerClaims = (OwnerClaims) claims;
         try {
             PayOwner payOwner = payOwnerReader.findByUserClaims(ownerClaims).orElseThrow(() -> new EntityNotFoundException("사용자가 존재하지 않습니다."));
             payOwner.updateCardAlias(cardId, newCardName);
-        } catch (IllegalArgumentException e) {
-            throw new EntityNotFoundException("등록되지 않은 카드 정보입니다.");
+        } catch (EntityNotFoundException e) {
+            throw new IllegalArgumentException("등록되지 않은 카드 정보입니다.");
         }
+
     }
 
     @Transactional

@@ -19,6 +19,11 @@ public class HistoryService {
     private final HistoryRepository historyRepository;
 
 
+    public void saveHistory(PayHistory history) {
+        historyRepository.saveHistory(history);
+    }
+
+
     public void saveReChargeHistory(AuthClaims authClaims, ChargeResponse chargeResponse, String paymentCardNumber) {
         PayHistory reChargePayHistory = ReChargePayHistory.of(authClaims, chargeResponse, paymentCardNumber);
         historyRepository.saveHistory(reChargePayHistory);

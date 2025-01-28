@@ -27,16 +27,16 @@ public class CashChargeService {
     private final ReservedCashStore reservedCashStore;
 
     @Transactional
-    public void initializeCash(AuthClaims ownerClaims) {
-        PayOwner payOwner = new PayOwner((OwnerClaims) ownerClaims);
+    public void initializeCash(AuthClaims claims) {
+        PayOwner payOwner = new PayOwner(OwnerClaims.of(claims));
         Cash cash = new Cash(payOwner);
         cashStore.save(cash);
     }
 
     @Transactional
-    public void chargeCash(AuthClaims authClaims, PaymentCard card, BigDecimal amount) {
+    public void chargeCash(AuthClaims claims, PaymentCard card, BigDecimal amount) {
         validateCharge(card, amount);
-        Cash cash = cashReader.findByOwnerClaims((OwnerClaims) authClaims);
+        Cash cash = cashReader.findByOwnerClaims(OwnerClaims.of(claims));
         cash.charge(amount);
     }
 
