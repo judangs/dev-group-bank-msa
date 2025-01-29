@@ -1,8 +1,8 @@
 package org.bank.store.mysql.core.pay.cash.infrastructure;
 
 import lombok.RequiredArgsConstructor;
-import org.bank.pay.core.cash.ReservedCharge;
-import org.bank.pay.core.cash.repository.ReservedCashReader;
+import org.bank.pay.core.domain.cash.ReservedCharge;
+import org.bank.pay.core.domain.cash.repository.ReservedCashReader;
 import org.bank.store.mysql.core.pay.cash.JpaReservedCashCashRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

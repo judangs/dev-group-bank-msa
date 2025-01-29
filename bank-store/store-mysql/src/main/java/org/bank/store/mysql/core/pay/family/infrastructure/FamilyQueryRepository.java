@@ -1,9 +1,9 @@
 package org.bank.store.mysql.core.pay.family.infrastructure;
 
 import lombok.RequiredArgsConstructor;
-import org.bank.pay.core.familly.Family;
-import org.bank.pay.core.familly.MemberClaims;
-import org.bank.pay.core.familly.repository.FamilyReader;
+import org.bank.pay.core.domain.familly.Family;
+import org.bank.pay.core.domain.familly.MemberClaims;
+import org.bank.pay.core.domain.familly.repository.FamilyReader;
 import org.bank.store.mysql.core.pay.family.JpaFamilyRepository;
 import org.springframework.stereotype.Repository;
 

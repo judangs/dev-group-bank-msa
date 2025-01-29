@@ -1,6 +1,6 @@
 package org.bank.store.mysql.core.pay.cash.infrastructure;
 
-import org.bank.pay.core.cash.ReservedCharge;
+import org.bank.pay.core.domain.cash.ReservedCharge;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;

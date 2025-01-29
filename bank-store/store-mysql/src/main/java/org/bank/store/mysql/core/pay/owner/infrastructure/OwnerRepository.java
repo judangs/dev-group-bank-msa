@@ -1,12 +1,14 @@
 package org.bank.store.mysql.core.pay.owner.infrastructure;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.bank.pay.core.cash.repository.CashStore;
-import org.bank.pay.core.onwer.OwnerClaims;
-import org.bank.pay.core.onwer.PayOwner;
-import org.bank.pay.core.onwer.PaymentCard;
-import org.bank.pay.core.onwer.repository.PayOwnerReader;
-import org.bank.pay.core.onwer.repository.PayOwnerStore;
+import org.bank.core.auth.AuthClaims;
+import org.bank.pay.core.domain.cash.repository.CashStore;
+import org.bank.pay.core.domain.onwer.OwnerClaims;
+import org.bank.pay.core.domain.onwer.PayOwner;
+import org.bank.pay.core.domain.onwer.PaymentCard;
+import org.bank.pay.core.domain.onwer.repository.PayOwnerReader;
+import org.bank.pay.core.domain.onwer.repository.PayOwnerStore;
 import org.bank.store.mysql.core.pay.owner.JpaClaimsRepository;
 import org.springframework.stereotype.Repository;
 
@@ -24,8 +26,23 @@ public class OwnerRepository implements PayOwnerReader, PayOwnerStore {
 
     @Override
     public Optional<PayOwner> findByUserClaims(OwnerClaims claims) {
-        return jpaClaimsRepository.findByClaimsFromOwner(claims);
+        Optional<PayOwner> payOwner = jpaClaimsRepository.findByClaimsFromOwner(claims);
+        if(payOwner.isEmpty()) {
+            throw new EntityNotFoundException("정보를 찾을 수 없습니다.");
+        }
+        return payOwner;
     }
+
+    @Override
+    public Optional<PayOwner> findByUserClaims(AuthClaims claims) {
+        return findByUserClaims(OwnerClaims.of(claims));
+    }
+
+    @Override
+    public Optional<PayOwner> findByUserClaimsAndRoles(AuthClaims claims, String roles) {
+        return jpaClaimsRepository.findByClaimsFromOwner(OwnerClaims.of(claims, roles));
+    }
+
 
     @Override
     public List<PaymentCard> findAllPaymentCardsByOwner(PayOwner payOwner) {

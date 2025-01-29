@@ -2,16 +2,22 @@ package org.bank.store.mysql.core.pay.family.infrastructure;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
-import org.bank.pay.core.familly.event.FamilyInvitation;
-import org.bank.pay.core.familly.event.FamilyPaymentRequest;
-import org.bank.pay.core.familly.repository.FamilyEventStore;
+import org.bank.core.auth.AuthClaims;
+import org.bank.pay.core.event.family.FamilyInvitation;
+import org.bank.pay.core.event.family.FamilyPayment;
+import org.bank.pay.core.domain.familly.repository.FamilyEventReader;
+import org.bank.pay.core.domain.familly.repository.FamilyEventStore;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Repository
 @RequiredArgsConstructor
-public class FamilyEventRepository implements FamilyEventStore {
+public class FamilyEventRepository implements FamilyEventStore, FamilyEventReader {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -28,11 +34,39 @@ public class FamilyEventRepository implements FamilyEventStore {
 
     @Override
     @Transactional
-    public void store(FamilyPaymentRequest paymentRequest) {
+    public void store(FamilyPayment paymentRequest) {
         if (paymentRequest.getId() == null) {
             entityManager.persist(paymentRequest);
         } else {
             entityManager.merge(paymentRequest);
         }
+    }
+
+    @Override
+    public Optional<FamilyInvitation> findInvitationEventByUser(AuthClaims user) {
+
+        String jpql = "SELECT fi FROM FamilyInvitation fi WHERE fi.to = :user";
+
+        TypedQuery<FamilyInvitation> query = entityManager.createQuery(jpql, FamilyInvitation.class);
+        query.setParameter("user", user);
+
+        return Optional.ofNullable(query.getSingleResult());
+    }
+
+    @Override
+    public Optional<FamilyInvitation> findInvitationEventById(UUID id) {
+        FamilyInvitation familyInvitation = entityManager.find(FamilyInvitation.class, id);
+        return Optional.ofNullable(familyInvitation);
+    }
+
+    @Override
+    public Optional<FamilyPayment> findPaymentRequestEventByFamilyAndId(UUID familyId, UUID id) {
+        String jpql = "SELECT fp FROM FamilyPayment fp WHERE fp.id = :id AND fp.familyId = :familyId" ;
+
+        TypedQuery<FamilyPayment> query = entityManager.createQuery(jpql, FamilyPayment.class);
+        query.setParameter("familyId", familyId);
+        query.setParameter("id", id);
+
+        return Optional.ofNullable(query.getSingleResult());
     }
 }

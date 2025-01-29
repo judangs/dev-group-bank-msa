@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.bank.core.kafka.KafkaEvent;
-import org.bank.pay.core.familly.event.kafka.CashConversionEvent;
-import org.bank.pay.core.familly.event.kafka.InviteEvent;
-import org.bank.pay.core.familly.event.kafka.RequestPaymentEvent;
+import org.bank.pay.core.event.family.kafka.CashConversionEvent;
+import org.bank.pay.core.event.family.kafka.InviteEvent;
+import org.bank.pay.core.event.family.kafka.PaymentEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -49,7 +49,7 @@ public class FamilyEventConsumer {
             groupId = "request-payment-group")
     public void requestPayment(ConsumerRecord<String, KafkaEvent> record) {
         try {
-            RequestPaymentEvent event = objectMapper.convertValue(record.value(), RequestPaymentEvent.class);
+            PaymentEvent event = objectMapper.convertValue(record.value(), PaymentEvent.class);
             familyEventTask.processRequestPayment(event);
 
         } catch (Exception e) {

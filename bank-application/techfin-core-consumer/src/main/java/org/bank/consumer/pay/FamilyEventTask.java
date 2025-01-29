@@ -2,18 +2,18 @@ package org.bank.consumer.pay;
 
 import lombok.RequiredArgsConstructor;
 import org.bank.core.cash.PaymentProcessingException;
-import org.bank.pay.core.cash.Cash;
-import org.bank.pay.core.familly.FamilyService;
-import org.bank.pay.core.familly.event.FamilyInvitation;
-import org.bank.pay.core.familly.event.FamilyPaymentRequest;
-import org.bank.pay.core.familly.event.kafka.CashConversionEvent;
-import org.bank.pay.core.familly.event.kafka.InviteEvent;
-import org.bank.pay.core.familly.event.kafka.RequestPaymentEvent;
-import org.bank.pay.core.familly.repository.FamilyEventStore;
-import org.bank.pay.core.history.HistoryService;
-import org.bank.pay.core.history.TransferPayHistory;
-import org.bank.pay.core.onwer.PayOwner;
-import org.bank.pay.core.onwer.repository.PayOwnerReader;
+import org.bank.pay.core.domain.cash.Cash;
+import org.bank.pay.core.domain.familly.FamilyService;
+import org.bank.pay.core.event.family.FamilyInvitation;
+import org.bank.pay.core.event.family.FamilyPayment;
+import org.bank.pay.core.event.family.kafka.CashConversionEvent;
+import org.bank.pay.core.event.family.kafka.InviteEvent;
+import org.bank.pay.core.event.family.kafka.PaymentEvent;
+import org.bank.pay.core.domain.familly.repository.FamilyEventStore;
+import org.bank.pay.core.domain.history.HistoryService;
+import org.bank.pay.core.domain.history.TransferPayHistory;
+import org.bank.pay.core.domain.onwer.PayOwner;
+import org.bank.pay.core.domain.onwer.repository.PayOwnerReader;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,8 +53,8 @@ public class FamilyEventTask {
         }
     }
 
-    public void processRequestPayment(RequestPaymentEvent event) {
-        FamilyPaymentRequest paymentRequest = FamilyPaymentRequest.of(event);
+    public void processRequestPayment(PaymentEvent event) {
+        FamilyPayment paymentRequest = FamilyPayment.of(event);
         familyEventStore.store(paymentRequest);
     }
 }

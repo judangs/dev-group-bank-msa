@@ -3,7 +3,7 @@ package org.bank.pay.core.cash;
 import lombok.RequiredArgsConstructor;
 import org.bank.core.auth.AuthClaims;
 import org.bank.core.dto.response.ResponseDto;
-import org.bank.pay.dto.request.ReservedChargeRequest;
+import org.bank.pay.dto.service.request.ReservedChargeRequest;
 import org.bank.pay.global.http.AuthenticationClaims;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

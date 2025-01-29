@@ -4,15 +4,15 @@ import org.bank.core.auth.AuthClaims;
 import org.bank.core.cash.InsufficientBalanceException;
 import org.bank.core.cash.Money;
 import org.bank.core.payment.Product;
-import org.bank.pay.core.cash.CashChargeService;
-import org.bank.pay.core.familly.Family;
-import org.bank.pay.core.familly.FamilyService;
-import org.bank.pay.core.familly.MemberClaims;
-import org.bank.pay.core.familly.event.kafka.CashConversionEvent;
-import org.bank.pay.core.familly.event.kafka.InviteEvent;
-import org.bank.pay.core.familly.event.kafka.RequestPaymentEvent;
-import org.bank.pay.core.onwer.PayOwner;
-import org.bank.pay.core.onwer.repository.PayOwnerReader;
+import org.bank.pay.core.domain.cash.CashChargeService;
+import org.bank.pay.core.domain.familly.Family;
+import org.bank.pay.core.domain.familly.FamilyService;
+import org.bank.pay.core.domain.familly.MemberClaims;
+import org.bank.pay.core.event.family.kafka.CashConversionEvent;
+import org.bank.pay.core.event.family.kafka.InviteEvent;
+import org.bank.pay.core.event.family.kafka.PaymentEvent;
+import org.bank.pay.core.domain.onwer.PayOwner;
+import org.bank.pay.core.domain.onwer.repository.PayOwnerReader;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,7 +44,7 @@ class FamilyEventTaskTest {
 
     private Family family;
     private InviteEvent inviteEvent;
-    private RequestPaymentEvent requestPaymentEvent;
+    private PaymentEvent paymentEvent;
     private CashConversionEvent cashConversionEvent;
 
     @BeforeAll
@@ -55,7 +55,7 @@ class FamilyEventTaskTest {
         family = familyService.createFamily(leader);
 
         inviteEvent = new InviteEvent(family.getFamilyId(), follower);
-        requestPaymentEvent = new RequestPaymentEvent(family.getFamilyId(), MemberClaims.of(follower), Arrays.asList(new Product("테스트 결제", 10000, 1)));
+        paymentEvent = new PaymentEvent(family.getFamilyId(), MemberClaims.of(follower), Arrays.asList(new Product("테스트 결제", 10000, 1)));
         cashConversionEvent = new CashConversionEvent(family.getFamilyId(), MemberClaims.of(follower), new Money(1000));
     }
 
@@ -69,7 +69,7 @@ class FamilyEventTaskTest {
     @Test
     @DisplayName("결제 요청 이벤트를 처리합니다")
     void 결제_요청_이벤트를_처리합니다() {
-        assertThatCode(() -> familyEventTask.processRequestPayment(requestPaymentEvent))
+        assertThatCode(() -> familyEventTask.processRequestPayment(paymentEvent))
                 .doesNotThrowAnyException();
     }
 

@@ -1,8 +1,8 @@
 package org.bank.store.mysql.core.pay.owner.infrastructure;
 
-import org.bank.pay.core.onwer.OwnerClaims;
-import org.bank.pay.core.onwer.PayOwner;
-import org.bank.pay.core.onwer.PaymentCard;
+import org.bank.pay.core.domain.onwer.OwnerClaims;
+import org.bank.pay.core.domain.onwer.PayOwner;
+import org.bank.pay.core.domain.onwer.PaymentCard;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

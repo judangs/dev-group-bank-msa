@@ -1,9 +1,9 @@
 package org.bank.store.mysql.core.pay.cash.infrastructure;
 
 import org.bank.core.cash.Money;
-import org.bank.pay.core.cash.Cash;
-import org.bank.pay.core.onwer.OwnerClaims;
-import org.bank.pay.core.onwer.PayOwner;
+import org.bank.pay.core.domain.cash.Cash;
+import org.bank.pay.core.domain.onwer.OwnerClaims;
+import org.bank.pay.core.domain.onwer.PayOwner;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

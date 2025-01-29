@@ -1,5 +1,7 @@
 package org.bank.pay.core.onwer;
 
+import org.bank.pay.core.domain.onwer.PayOwner;
+import org.bank.pay.core.domain.onwer.PaymentCard;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

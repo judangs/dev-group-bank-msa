@@ -6,7 +6,7 @@ import lombok.experimental.SuperBuilder;
 import org.bank.core.cash.Money;
 import org.bank.core.cash.PayMethod;
 import org.bank.core.dto.response.ResponseDto;
-import org.bank.pay.core.history.PayHistory;
+import org.bank.pay.core.domain.history.PayHistory;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

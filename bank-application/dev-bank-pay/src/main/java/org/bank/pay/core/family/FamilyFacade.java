@@ -3,7 +3,7 @@ package org.bank.pay.core.family;
 import lombok.RequiredArgsConstructor;
 import org.bank.core.auth.AuthClaims;
 import org.bank.core.dto.response.ResponseDto;
-import org.bank.pay.core.familly.FamilyService;
+import org.bank.pay.core.domain.familly.FamilyService;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;

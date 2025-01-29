@@ -6,7 +6,7 @@ import org.bank.core.dto.pay.ChargeResponse;
 import org.bank.core.dto.response.ResponseCode;
 import org.bank.core.dto.response.ResponseMessage;
 import org.bank.pay.client.CashClient;
-import org.bank.pay.core.onwer.PaymentCard;
+import org.bank.pay.core.domain.onwer.PaymentCard;
 import org.springframework.stereotype.Component;
 
 @Component(value = "mockCashClient")

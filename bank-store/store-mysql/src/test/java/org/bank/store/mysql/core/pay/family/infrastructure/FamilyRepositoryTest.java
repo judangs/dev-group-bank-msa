@@ -1,8 +1,8 @@
 package org.bank.store.mysql.core.pay.family.infrastructure;
 
-import org.bank.pay.core.familly.Family;
-import org.bank.pay.core.familly.MemberClaims;
-import org.bank.pay.core.onwer.OwnerClaims;
+import org.bank.pay.core.domain.familly.Family;
+import org.bank.pay.core.domain.familly.MemberClaims;
+import org.bank.pay.core.domain.onwer.OwnerClaims;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

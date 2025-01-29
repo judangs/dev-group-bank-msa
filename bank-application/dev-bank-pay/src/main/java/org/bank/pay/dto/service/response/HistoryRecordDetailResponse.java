@@ -6,10 +6,10 @@ import lombok.experimental.SuperBuilder;
 import org.bank.core.cash.Money;
 import org.bank.core.cash.PayMethod;
 import org.bank.core.dto.response.ResponseDto;
-import org.bank.pay.core.history.OrderPayHistory;
-import org.bank.pay.core.history.PayHistory;
-import org.bank.pay.core.history.ReChargePayHistory;
-import org.bank.pay.core.history.TransferPayHistory;
+import org.bank.pay.core.domain.history.OrderPayHistory;
+import org.bank.pay.core.domain.history.PayHistory;
+import org.bank.pay.core.domain.history.ReChargePayHistory;
+import org.bank.pay.core.domain.history.TransferPayHistory;
 
 import java.time.LocalDateTime;
 

@@ -3,6 +3,8 @@ package org.bank.pay.core.history;
 import lombok.RequiredArgsConstructor;
 import org.bank.core.auth.AuthClaims;
 import org.bank.core.dto.response.ResponseDto;
+import org.bank.pay.core.domain.history.HistoryService;
+import org.bank.pay.core.domain.history.PayHistory;
 import org.bank.pay.dto.service.request.HistoryRecordRequest;
 import org.bank.pay.dto.service.response.HistoryRecordDetailResponse;
 import org.bank.pay.dto.service.response.HistoryRecordResponse;

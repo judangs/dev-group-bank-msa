@@ -2,9 +2,12 @@ package org.bank.pay.core.familly;
 
 import org.bank.core.auth.AuthClaims;
 import org.bank.core.cash.Money;
-import org.bank.pay.core.familly.repository.FamilyReader;
-import org.bank.pay.core.familly.repository.FamilyStore;
-import org.bank.pay.core.onwer.OwnerClaims;
+import org.bank.pay.core.domain.familly.Family;
+import org.bank.pay.core.domain.familly.FamilyService;
+import org.bank.pay.core.domain.familly.MemberClaims;
+import org.bank.pay.core.domain.familly.repository.FamilyReader;
+import org.bank.pay.core.domain.familly.repository.FamilyStore;
+import org.bank.pay.core.domain.onwer.OwnerClaims;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

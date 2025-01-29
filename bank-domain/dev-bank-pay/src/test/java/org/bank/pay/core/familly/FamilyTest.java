@@ -1,5 +1,7 @@
 package org.bank.pay.core.familly;
 
+import org.bank.pay.core.domain.familly.Family;
+import org.bank.pay.core.domain.familly.MemberClaims;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

@@ -1,8 +1,8 @@
 package org.bank.store.mysql.core.pay.cash.infrastructure;
 
 import lombok.RequiredArgsConstructor;
-import org.bank.pay.core.cash.Cash;
-import org.bank.pay.core.cash.repository.CashStore;
+import org.bank.pay.core.domain.cash.Cash;
+import org.bank.pay.core.domain.cash.repository.CashStore;
 import org.bank.store.mysql.core.pay.cash.JpaCashRepository;
 import org.springframework.stereotype.Repository;
 

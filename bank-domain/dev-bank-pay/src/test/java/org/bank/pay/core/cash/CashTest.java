@@ -1,5 +1,7 @@
 package org.bank.pay.core.cash;
 
+import org.bank.pay.core.domain.cash.Cash;
+import org.bank.pay.core.domain.cash.PayLimit;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

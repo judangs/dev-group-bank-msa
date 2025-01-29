@@ -1,7 +1,7 @@
 package org.bank.store.mysql.core.pay.owner;
 
-import org.bank.pay.core.onwer.OwnerClaims;
-import org.bank.pay.core.onwer.PayOwner;
+import org.bank.pay.core.domain.onwer.OwnerClaims;
+import org.bank.pay.core.domain.onwer.PayOwner;
 import org.bank.store.mysql.global.infrastructure.JpaBaseRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
