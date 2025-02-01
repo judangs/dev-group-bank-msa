@@ -12,9 +12,9 @@ import lombok.experimental.SuperBuilder;
 public abstract class BaseEntity {
 
     @Builder.Default
-    protected boolean isDeleted = false;
+    protected boolean deleted = false;
 
     public void deleteEntity() {
-        isDeleted = true;
+        deleted = true;
     }
 }
