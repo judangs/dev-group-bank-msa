@@ -1,0 +1,7 @@
+dependencies {
+    compileOnly(project(':bank-core'))
+    testCompileOnly(project(':bank-core'))
+
+    implementation(project(':bank-domain:techfin-user-domain'))
+    implementation(project(':bank-store:store-mysql'))
+}
