@@ -1,5 +1,6 @@
 package org.bank.core.auth;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.MappedSuperclass;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.Getter;
 @Getter
 @MappedSuperclass
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@JsonDeserialize(as = AuthClaims.ConcreteAuthClaims.class)
 public abstract class AuthClaims {
 
     @EqualsAndHashCode.Include
@@ -21,5 +23,12 @@ public abstract class AuthClaims {
     }
 
     public AuthClaims() {
+    }
+
+
+    public static class ConcreteAuthClaims extends AuthClaims{
+        public ConcreteAuthClaims(String userid, String username, String email) {
+            super(userid, username, email);
+        }
     }
 }
