@@ -11,6 +11,7 @@ subprojects {
     dependencies {
 
         compileOnly(project(':bank-core'))
+        testCompileOnly(project(':bank-core'))
 
         implementation("org.springframework.boot:spring-boot-starter-validation")
         implementation('org.springframework.boot:spring-boot-starter-web')
