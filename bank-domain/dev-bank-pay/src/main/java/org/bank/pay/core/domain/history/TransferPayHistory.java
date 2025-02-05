@@ -40,7 +40,7 @@ public class TransferPayHistory extends PayHistory {
                 .build();
 
         if(rollback)
-            history.isDeleted();
+            history.deleteEntity();
 
         return history;
     }

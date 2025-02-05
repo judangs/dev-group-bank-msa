@@ -14,7 +14,7 @@ public abstract class BaseEntity {
     @Builder.Default
     protected boolean deleted = false;
 
-    public void deleteEntity() {
+    protected void deleteEntity() {
         deleted = true;
     }
 }
