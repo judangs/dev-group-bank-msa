@@ -12,6 +12,7 @@ import java.util.UUID;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Credential extends DomainEntity {
 
     @Id
@@ -19,6 +20,7 @@ public class Credential extends DomainEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     protected UUID id;
 
+    @EqualsAndHashCode.Include
     @Column(nullable = false)
     private String userid;
 
