@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CryptoTest {
 
     @Configuration
-    @ComponentScan(basePackages = "org.bank.user.core.domain.auth.crypto")
+    @ComponentScan(basePackages = "org.bank.user.core.domain.crypto")
     static class CryptoUnitTest { }
 
     @Autowired
