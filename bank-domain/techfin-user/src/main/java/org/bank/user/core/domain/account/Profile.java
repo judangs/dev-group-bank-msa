@@ -60,9 +60,10 @@ public final class Profile extends DomainEntity {
         credential.setProfile(this);
     }
 
-    public void initializeProfileWithResidentNumber(Credential credential, String residentNumber) {
+    public void initializeUniqueProfile(Credential credential, String residentNumber, String email) {
         create(credential);
         this.residentNumber = residentNumber;
+        this.email = email;
     }
 
     public void replace(Profile profile) {

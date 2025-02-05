@@ -49,7 +49,15 @@ public class UserServiceImpl implements AccountManagerService, AccountRecoverySe
             return ResponseCodeV2.FORBIDDEN;
         }
 
-        profileRepository.save(profile);
+
+        profileRepository.findByNameAndResidentNumber(profile.getName(), profile.getResidentNumber())
+                .ifPresentOrElse(
+                        (userProfile) -> {},
+                        () -> {
+                            profileRepository.save(profile);
+                        }
+                );
+
 
         passwordProvider.encode(credential);
         profile.create(credential);
@@ -103,7 +111,7 @@ public class UserServiceImpl implements AccountManagerService, AccountRecoverySe
         if(existCredential.isEmpty())
             return ResponseCodeV2.NOT_FOUND;
 
-        existCredential.ifPresent(credential -> authMailPublisher.sendVerificationAccountMailForUpdatePassword(credential, email));
+        existCredential.ifPresent(credential -> authMailPublisher.sendVerificationAccountMailForUpdatePassword(credential, credential.getProfile().getEmail()));
         return ResponseCodeV2.SUCCESS;
     }
 }

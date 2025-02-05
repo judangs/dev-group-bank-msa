@@ -24,8 +24,9 @@ class AccountTest {
         Profile profile = new Profile();
         Credential credential = new Credential();
         String residentNumber = "000000-0000000";
+        String email = "123@naver.com";
 
-        profile.initializeProfileWithResidentNumber(credential, residentNumber);
+        profile.initializeUniqueProfile(credential, residentNumber, email);
         assertThat(profile.getResidentNumber()).isEqualTo(residentNumber);
         assertThat(profile.getCredentials().contains(credential)).isTrue();
     }

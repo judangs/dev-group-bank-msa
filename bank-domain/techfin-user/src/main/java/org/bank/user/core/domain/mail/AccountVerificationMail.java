@@ -32,13 +32,18 @@ public class AccountVerificationMail {
         private String userid;
         private String password;
         private String username;
+
+        private String email;
         private String residentNumber;
 
         public static VerifierInfo of(Credential credential) {
+
             return VerifierInfo.builder()
                     .userid(credential.getUserid())
                     .password(credential.getPassword())
                     .username(credential.getUsername())
+                    .residentNumber(credential.getProfile().getResidentNumber())
+                    .email(credential.getProfile().getEmail())
                     .build();
         }
 
@@ -48,6 +53,7 @@ public class AccountVerificationMail {
                     .userid(credential.getUserid())
                     .password(credential.getPassword())
                     .username(credential.getUsername())
+                    .email(profile.getEmail())
                     .residentNumber(profile.getResidentNumber())
                     .build();
         }
@@ -59,8 +65,8 @@ public class AccountVerificationMail {
                     .username(verifierInfo.getUsername())
                     .build();
 
-            if(Objects.nonNull(verifierInfo.getResidentNumber()))
-                credential.getProfile().initializeProfileWithResidentNumber(credential, verifierInfo.getResidentNumber());
+            if(Objects.nonNull(verifierInfo.getEmail()) && Objects.nonNull(verifierInfo.getResidentNumber()))
+                credential.getProfile().initializeUniqueProfile(credential, verifierInfo.getResidentNumber(), verifierInfo.getEmail());
 
             return credential;
         }

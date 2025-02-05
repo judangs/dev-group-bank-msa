@@ -15,9 +15,9 @@ public class CredentialService {
     private final ProfileRepository profileRepository;
 
     public String createTemporalPassword(Credential credential) {
-        passwordProvider.generate(credential);
+        String password = passwordProvider.generate(credential);
         save(credential);
-        return credential.getPassword();
+        return password;
     }
 
     public void save(Credential credential) {

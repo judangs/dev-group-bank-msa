@@ -35,7 +35,7 @@ public class PasswordProvider {
         return passwordEncoder.encode(password.toString());
     }
 
-    public void generate(Credential credential) {
+    public String generate(Credential credential) {
         SecureRandom random = new SecureRandom();
         StringBuilder password = new StringBuilder(PASSWORD_LENGTH);
         for (int i = 0; i < PASSWORD_LENGTH; i++) {
@@ -44,6 +44,8 @@ public class PasswordProvider {
 
         String encryptPassword = passwordEncoder.encode(password.toString());
         credential.setPassword(encryptPassword);
+
+        return password.toString();
     }
 
 }
