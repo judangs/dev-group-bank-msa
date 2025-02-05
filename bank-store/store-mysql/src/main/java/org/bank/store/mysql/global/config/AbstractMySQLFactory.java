@@ -11,6 +11,8 @@ import static org.bank.store.mysql.global.config.DataSourceProperties.DataSource
 
 public abstract class AbstractMySQLFactory {
 
+    protected MySQLContainer<?> container;
+
     @PreDestroy
     public void destroy() {}
 
