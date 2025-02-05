@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.bank.core.auth.AuthenticationException;
 import org.bank.core.dto.response.ResponseCodeV2;
 import org.bank.core.dto.response.ResponseDtoV2;
+import org.bank.user.core.domain.mail.AccountVerificationMail;
 import org.bank.user.core.domain.mail.VerificationReason;
 import org.bank.user.core.domain.mail.service.AccountAuthMailService;
+import org.bank.user.core.producer.registration.AccountRegistrationEventPublisher;
 import org.bank.user.dto.service.response.AccountIdListResponse;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ import java.util.List;
 public class AccountMailFacade {
 
     private final AccountAuthMailService accountAuthMailService;
+    private final AccountRegistrationEventPublisher accountRegistrationEventPublisher;
 
     public ResponseDtoV2 confirmAccountEmail(String token) throws AuthenticationException {
 
@@ -24,7 +27,8 @@ public class AccountMailFacade {
 
         ResponseDtoV2 responseBody = switch(reason) {
             case CREATE_ACCOUNT -> {
-                accountAuthMailService.verifyAccountEmailForCreation(token);
+                AccountVerificationMail verify = accountAuthMailService.verifyAccountEmailForCreation(token);
+                accountRegistrationEventPublisher.userCreated(verify);
                 yield ResponseDtoV2.success("사용자 계정 생성에 성공했습니다.");
             }
             case FIND_ACCOUNT_ID -> {
