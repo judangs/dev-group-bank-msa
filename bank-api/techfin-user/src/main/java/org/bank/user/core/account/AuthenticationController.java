@@ -11,6 +11,7 @@ import org.bank.user.core.facade.account.UserAccountAuthenticationFacade;
 import org.bank.user.dto.service.request.LoginRequest;
 import org.bank.user.dto.service.response.LoginResponse;
 import org.bank.user.global.resolver.AuthorizationHeaderResolver;
+import org.bank.user.global.swagger.spec.UserAuthenticationSwaggerSpec;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user/auth")
-public class AuthenticationController {
+public class AuthenticationController implements UserAuthenticationSwaggerSpec {
 
     private final AuthorizationHeaderResolver authorizationHeaderResolver;
     private final UserAccountAuthenticationFacade userAccountAuthenticationFacade;

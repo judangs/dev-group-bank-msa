@@ -8,6 +8,7 @@ import org.bank.core.dto.response.ResponseDtoV2;
 import org.bank.user.core.facade.account.UserAccountManagementFacade;
 import org.bank.user.dto.service.request.AccountRequest;
 import org.bank.user.dto.service.response.AccountIdListResponse;
+import org.bank.user.global.swagger.spec.UserAccountSwaggerSpec;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/user/account")
 @RequiredArgsConstructor
-public class AccountController {
+public class AccountController implements UserAccountSwaggerSpec {
 
     private final UserAccountManagementFacade userAccountManagementFacade;
 

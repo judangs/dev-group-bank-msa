@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.bank.core.dto.response.ResponseDtoV2;
 import org.bank.user.core.facade.account.UserAccountRecoveryFacade;
 import org.bank.user.dto.service.response.AccountIdListResponse;
+import org.bank.user.global.swagger.spec.UserAccountRecoverySwaggerSpec;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/user/account")
 @RequiredArgsConstructor
-public class AccountRecoveryController {
+public class AccountRecoveryController implements UserAccountRecoverySwaggerSpec {
 
     private final UserAccountRecoveryFacade userAccountRecoveryFacade;
 
