@@ -4,4 +4,8 @@ dependencies {
 
     implementation(project(':bank-domain:techfin-user-domain'))
     implementation(project(':bank-store:store-mysql'))
+
+    implementation('org.springframework.kafka:spring-kafka')
+
+    testImplementation(testFixtures(project(':bank-domain:techfin-user-domain')))
 }
