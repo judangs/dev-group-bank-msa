@@ -1,4 +1,4 @@
-package org.bank.store.route.domain.user.docker;
+package org.bank.store.route.domain.user;
 
 import org.bank.store.source.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -2,13 +2,16 @@ package org.bank.store.route.domain.pay.docker;
 
 import jakarta.persistence.EntityManagerFactory;
 import org.bank.core.domain.DomainNames;
+import org.bank.store.route.domain.pay.PayDataSourceProperties;
 import org.bank.store.source.AbstractDockerContainerFacotry;
+import org.bank.store.source.DataSourceProperties.SourceConfig;
+import org.bank.store.source.DataSourceType;
+import org.bank.store.source.NamedHikariDataSource;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -30,16 +33,29 @@ import javax.sql.DataSource;
 public class PayDataSourceContainer extends AbstractDockerContainerFacotry {
 
     @Bean(name = "payDataSource")
-    public DataSource userDataSource(PayDataSourceProperties payDataSourceProperties) {
+    public DataSource payDataSource(PayDataSourceProperties payDataSourceProperties) {
         container = createContainer(payDataSourceProperties, this.MySQLContainerConfigurer());
         return createDataSourceFromContainer(container, payDataSourceProperties.getHikari());
     }
 
+    @DependsOn("payDataSource")
+    @Bean(name = "payHikariDataSource")
+    public NamedHikariDataSource payHikariDataSource(@Qualifier("payDataSource") DataSource payDataSource, PayDataSourceProperties payDataSourceProperties) {
+
+        SourceConfig sourceConfig = payDataSourceProperties.getSource();
+
+        if(sourceConfig.getType().equals(DataSourceType.READONLY)) {
+            return NamedHikariDataSource.asReadOnly(payDataSource, sourceConfig.getDomain());
+        }
+
+        return NamedHikariDataSource.asReadWrite(payDataSource, sourceConfig.getDomain(), sourceConfig.getType());
+    }
+
     @Override
     @Bean(name = "payEntityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder, DataSource payDataSource, JpaProperties jpaProperties) {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder, @Qualifier("payDataSource") DataSource payDataSource, JpaProperties jpaProperties) {
         String[] entityPackages = {"org.bank.core.domain", "org.bank.pay.core.domain"};
-        return createEntityManagerFactory(builder, payDataSource, DomainNames.PAY, jpaProperties, entityPackages);
+        return createEntityManagerFactory(builder, payDataSource, DomainNames.PAY.name(), jpaProperties, entityPackages);
     }
 
     @Override
