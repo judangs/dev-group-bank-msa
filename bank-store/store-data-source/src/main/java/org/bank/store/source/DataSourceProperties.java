@@ -2,6 +2,7 @@ package org.bank.store.source;
 
 import com.zaxxer.hikari.HikariConfig;
 import lombok.Data;
+import org.bank.core.domain.DomainNames;
 
 
 @Data
@@ -13,12 +14,9 @@ public class DataSourceProperties {
 
     @Data
     public static class SourceConfig {
-        private String domain;
-        private SourceType type;
+        private DomainNames domain;
+        private DataSourceType type;
 
-        public enum SourceType {
-            READONLY, WRITEONLY, READWRITE
-        }
     }
 
     @Data
