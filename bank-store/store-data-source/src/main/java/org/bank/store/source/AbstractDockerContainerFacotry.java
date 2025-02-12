@@ -32,7 +32,7 @@ public abstract class AbstractDockerContainerFacotry {
     public interface MySQLContainerConfigurer {
         default MySQLContainer<?> configureContainer(DataSourceProperties property) {
             return new MySQLContainer<>(DockerImageName.parse(property.getDocker().getImage()))
-                    .withDatabaseName(property.getSource().getDomain())
+                    .withDatabaseName(property.getSource().getDomain().name())
                     .withUsername(property.getHikari().getUsername())
                     .withPassword(property.getHikari().getPassword())
                     .withReuse(true);
