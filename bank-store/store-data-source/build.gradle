@@ -1,0 +1,21 @@
+dependencies {
+
+    implementation 'org.testcontainers:mysql'
+
+    implementation 'org.springframework.data:spring-data-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    implementation 'com.mysql:mysql-connector-j'
+
+    compileOnly(project(':bank-core'))
+    runtimeOnly(project(':bank-core'))
+    testCompileOnly(project(':bank-core'))
+    testRuntimeOnly(project(':bank-core'))
+
+    runtimeOnly(project(':bank-domain:bank-pay-domain'))
+    runtimeOnly(project(':bank-domain:techfin-user-domain'))
+
+    runtimeOnly(project(':bank-store:store-mysql'))
+
+}
