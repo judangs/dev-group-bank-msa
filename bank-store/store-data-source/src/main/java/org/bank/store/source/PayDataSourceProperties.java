@@ -1,6 +1,5 @@
-package org.bank.store.route.domain.pay;
+package org.bank.store.source;
 
-import org.bank.store.source.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "spring.datasource.pay-readwrite-docker")

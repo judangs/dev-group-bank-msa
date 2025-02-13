@@ -1,6 +1,5 @@
-package org.bank.store.route.domain.user;
+package org.bank.store.source;
 
-import org.bank.store.source.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 

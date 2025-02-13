@@ -3,9 +3,6 @@ package org.bank.store.source;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import jakarta.annotation.PreDestroy;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.spi.PersistenceProvider;
-import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
@@ -13,14 +10,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
-import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import javax.sql.DataSource;
-import java.util.Properties;
 
 public abstract class AbstractDockerContainerFacotry {
 
@@ -43,7 +39,7 @@ public abstract class AbstractDockerContainerFacotry {
 
     protected abstract MySQLContainerConfigurer MySQLContainerConfigurer();
     public abstract LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder, DataSource dataSource, JpaProperties jpaProperties);
-    public abstract PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory);
+    public abstract PlatformTransactionManager transactionManager(LocalContainerEntityManagerFactoryBean entityManagerFactory);
 
     @Configuration
     @PropertySource("classpath:jpa-hibernate.properties")
@@ -54,22 +50,15 @@ public abstract class AbstractDockerContainerFacotry {
             return new JpaProperties();
         }
 
+
         @Bean
         public EntityManagerFactoryBuilder entityManagerFactoryBuilder() {
-            return new EntityManagerFactoryBuilder(new JpaVendorAdapter() {
-                @Override
-                public PersistenceProvider getPersistenceProvider() {
-                    return new HibernatePersistenceProvider();
-
-                }
-            }, jpaProperties().getProperties(), null);
+            return new EntityManagerFactoryBuilder(new HibernateJpaVendorAdapter(),
+                    jpaProperties().getProperties(), null);
         }
     }
 
     protected LocalContainerEntityManagerFactoryBean createEntityManagerFactory(EntityManagerFactoryBuilder builder, DataSource dataSource, String persistenceUnitName, JpaProperties jpaProperties, String... packages) {
-        Properties properties = new Properties();
-        properties.putAll(jpaProperties.getProperties());
-
         return builder.dataSource(dataSource).packages(packages)
                 .persistenceUnit(persistenceUnitName)
                 .properties(jpaProperties.getProperties())

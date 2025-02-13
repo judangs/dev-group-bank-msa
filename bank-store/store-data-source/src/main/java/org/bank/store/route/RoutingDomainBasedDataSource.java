@@ -1,4 +1,4 @@
-package org.bank.store.route.domain;
+package org.bank.store.route;
 
 
 import jakarta.persistence.TransactionRequiredException;

@@ -1,4 +1,4 @@
-package org.bank.store.route.domain;
+package org.bank.store.route;
 
 import org.bank.store.source.NamedHikariDataSource;
 import org.springframework.context.annotation.*;
@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 
 @Configuration
+@ComponentScan(basePackages = "org.bank.store.domain")
 @EnableAspectJAutoProxy
 public class RoutingDataSourceSourceWithDockerConfiguration {
 

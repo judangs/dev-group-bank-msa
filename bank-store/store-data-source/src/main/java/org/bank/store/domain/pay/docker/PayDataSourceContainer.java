@@ -1,8 +1,7 @@
-package org.bank.store.route.domain.pay.docker;
+package org.bank.store.domain.pay.docker;
 
-import jakarta.persistence.EntityManagerFactory;
 import org.bank.core.domain.DomainNames;
-import org.bank.store.route.domain.pay.PayDataSourceProperties;
+import org.bank.store.source.PayDataSourceProperties;
 import org.bank.store.source.AbstractDockerContainerFacotry;
 import org.bank.store.source.DataSourceProperties.SourceConfig;
 import org.bank.store.source.DataSourceType;
@@ -11,7 +10,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.testcontainers.containers.MySQLContainer;
 
 import javax.sql.DataSource;
+import java.util.Objects;
 
 @Configuration
 @EnableTransactionManagement
@@ -60,8 +63,11 @@ public class PayDataSourceContainer extends AbstractDockerContainerFacotry {
 
     @Override
     @Bean(name = "payTransactionManager")
-    public PlatformTransactionManager transactionManager(EntityManagerFactory payEntityManagerFactory) {
-        return new JpaTransactionManager(payEntityManagerFactory);
+    public PlatformTransactionManager transactionManager(@Qualifier("payEntityManagerFactory") LocalContainerEntityManagerFactoryBean payEntityManagerFactory) {
+
+        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager(Objects.requireNonNull(payEntityManagerFactory.getObject()));
+        jpaTransactionManager.setPersistenceUnitName(payEntityManagerFactory.getPersistenceUnitName());
+        return jpaTransactionManager;
     }
 
     @Override
