@@ -2,6 +2,7 @@ package org.bank.user.core.event.registration;
 
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.bank.core.auth.AuthClaims;
 import org.bank.core.kafka.KafkaEvent;
 import org.bank.user.core.domain.mail.AccountVerificationMail;
@@ -9,6 +10,7 @@ import org.bank.user.core.domain.mail.AccountVerificationMail;
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
 public class AccountCreatedEvent extends KafkaEvent {
 
     private AuthClaims credential;
