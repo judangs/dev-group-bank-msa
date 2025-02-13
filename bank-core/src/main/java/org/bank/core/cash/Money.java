@@ -14,11 +14,11 @@ public class Money implements Serializable {
     private BigDecimal balance;
 
     public Money() {
-        balance = new BigDecimal(0).setScale(10, RoundingMode.HALF_UP);
+        balance = new BigDecimal(0).setScale(2, RoundingMode.HALF_UP);
     }
 
     public Money(Integer balance) {
-        this.balance = new BigDecimal(balance).setScale(10, RoundingMode.HALF_UP);
+        this.balance = new BigDecimal(balance).setScale(2, RoundingMode.HALF_UP);
     }
 
     public Money(BigDecimal balance) {
