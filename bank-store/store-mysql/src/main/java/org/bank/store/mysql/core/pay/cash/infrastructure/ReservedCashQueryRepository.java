@@ -1,9 +1,12 @@
 package org.bank.store.mysql.core.pay.cash.infrastructure;
 
 import lombok.RequiredArgsConstructor;
+import org.bank.core.domain.DomainNames;
 import org.bank.pay.core.domain.cash.ReservedCharge;
 import org.bank.pay.core.domain.cash.repository.ReservedCashReader;
 import org.bank.store.mysql.core.pay.cash.JpaReservedCashCashRepository;
+import org.bank.store.source.DataSourceType;
+import org.bank.store.source.NamedRepositorySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
+@NamedRepositorySource(domain = DomainNames.PAY, type = DataSourceType.READWRITE)
 @RequiredArgsConstructor
 public class ReservedCashQueryRepository implements ReservedCashReader {
 

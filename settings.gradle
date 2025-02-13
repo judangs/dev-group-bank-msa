@@ -36,5 +36,8 @@ include 'bank-store:store-mongo'
 findProject(':bank-store:store-mongo')?.name = 'store-mongo'
 include 'bank-store:store-mysql'
 findProject(':bank-store:store-mysql')?.name = 'store-mysql'
-
+include 'bank-store:store-data-source'
+findProject(':bank-store:store-data-source')?.name = 'store-data-source'
+include 'bank-store:store-core'
+findProject(':bank-store:store-core')?.name = 'store-core'
 

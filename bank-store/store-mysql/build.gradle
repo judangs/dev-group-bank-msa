@@ -1,21 +1,14 @@
 dependencies {
-    implementation 'org.testcontainers:mysql'
-
-    implementation 'org.springframework:spring-jdbc'
-    implementation 'org.springframework.data:spring-data-jdbc'
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-    implementation 'com.mysql:mysql-connector-j'
-
-
-    compileOnly(project(':bank-core'))
-    compileOnly(project(':bank-domain:bank-pay-domain'))
-    compileOnly(project(':bank-domain:techfin-user-domain'))
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-    testImplementation(project(':bank-domain:bank-pay-domain'))
+    compileOnly(project(':bank-core'))
+    testCompileOnly(project(':bank-core'))
+
+    compileOnly(project(':bank-domain:bank-pay-domain'))
+    testCompileOnly(project(':bank-domain:bank-pay-domain'))
+    compileOnly(project(':bank-domain:techfin-user-domain'))
     testCompileOnly(project(':bank-domain:techfin-user-domain'))
 
-
-
+    api(project(':bank-store:store-core'))
 }

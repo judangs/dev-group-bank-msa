@@ -1,6 +1,6 @@
 package org.bank.store.mysql.core.user.account.jpa;
 
-import org.bank.store.mysql.global.infrastructure.JpaBaseRepository;
+import org.bank.store.mysql.global.jpa.JpaBaseRepository;
 import org.bank.user.core.domain.account.Profile;
 import org.springframework.stereotype.Repository;
 

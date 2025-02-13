@@ -1,7 +1,7 @@
 package org.bank.store.mysql.core.pay.family;
 
 import org.bank.pay.core.domain.familly.Family;
-import org.bank.store.mysql.global.infrastructure.JpaBaseRepository;
+import org.bank.store.mysql.global.jpa.JpaBaseRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
