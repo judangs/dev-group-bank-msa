@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AccountRegistrationEventPublisher {
 
-    private final String USER_CREATED_TOPIC = "user-created";
+    private final String USER_CREATED_TOPIC = "user.account.created";
 
     private final KafkaTemplate<String, KafkaEvent> kafkaTemplate;
 
