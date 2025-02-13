@@ -3,9 +3,9 @@ dependencies {
     testCompileOnly(project(':bank-core'))
 
     implementation(project(':bank-domain:techfin-user-domain'))
-    implementation(project(':bank-store:store-mysql'))
+    testImplementation(testFixtures(project(':bank-domain:techfin-user-domain')))
+
+    runtimeOnly(project(':bank-store:store-data-source'))
 
     implementation('org.springframework.kafka:spring-kafka')
-
-    testImplementation(testFixtures(project(':bank-domain:techfin-user-domain')))
 }
