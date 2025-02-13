@@ -11,3 +11,4 @@ public @interface NamedRepositorySource {
     DomainNames domain() default DomainNames.NONE;
     DataSourceType type() default DataSourceType.READWRITE;
 }
+
