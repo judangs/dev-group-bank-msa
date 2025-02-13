@@ -5,10 +5,13 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.bank.core.auth.AuthClaims;
-import org.bank.pay.core.event.family.FamilyInvitation;
-import org.bank.pay.core.event.family.FamilyPayment;
+import org.bank.core.domain.DomainNames;
 import org.bank.pay.core.domain.familly.repository.FamilyEventReader;
 import org.bank.pay.core.domain.familly.repository.FamilyEventStore;
+import org.bank.pay.core.event.family.FamilyInvitation;
+import org.bank.pay.core.event.family.FamilyPayment;
+import org.bank.store.source.DataSourceType;
+import org.bank.store.source.NamedRepositorySource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,10 +19,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
+@NamedRepositorySource(domain = DomainNames.PAY, type = DataSourceType.READWRITE)
 @RequiredArgsConstructor
 public class FamilyEventRepository implements FamilyEventStore, FamilyEventReader {
 
-    @PersistenceContext
+    @PersistenceContext(unitName = "payEntityManagerFactory")
     private EntityManager entityManager;
 
     @Override

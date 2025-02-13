@@ -3,6 +3,7 @@ package org.bank.store.mysql.core.pay.owner.infrastructure;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.bank.core.auth.AuthClaims;
+import org.bank.core.domain.DomainNames;
 import org.bank.pay.core.domain.cash.repository.CashStore;
 import org.bank.pay.core.domain.onwer.OwnerClaims;
 import org.bank.pay.core.domain.onwer.PayOwner;
@@ -10,6 +11,8 @@ import org.bank.pay.core.domain.onwer.PaymentCard;
 import org.bank.pay.core.domain.onwer.repository.PayOwnerReader;
 import org.bank.pay.core.domain.onwer.repository.PayOwnerStore;
 import org.bank.store.mysql.core.pay.owner.JpaClaimsRepository;
+import org.bank.store.source.DataSourceType;
+import org.bank.store.source.NamedRepositorySource;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
@@ -18,6 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
+@NamedRepositorySource(domain = DomainNames.PAY, type = DataSourceType.READWRITE)
 @RequiredArgsConstructor
 public class OwnerRepository implements PayOwnerReader, PayOwnerStore {
 

@@ -2,8 +2,11 @@ package org.bank.store.mysql.core.user.account;
 
 
 import lombok.RequiredArgsConstructor;
+import org.bank.core.domain.DomainNames;
 import org.bank.store.mysql.core.user.account.jpa.CredentialJpaRepository;
 import org.bank.store.mysql.core.user.account.jpa.ProfileJpaRepository;
+import org.bank.store.source.DataSourceType;
+import org.bank.store.source.NamedRepositorySource;
 import org.bank.user.core.domain.account.Credential;
 import org.bank.user.core.domain.account.Profile;
 import org.bank.user.core.domain.account.repository.CredentialRepository;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
+@NamedRepositorySource(domain = DomainNames.USER, type = DataSourceType.READWRITE)
 @RequiredArgsConstructor
 public class AccountRepository implements ProfileRepository, CredentialRepository {
 

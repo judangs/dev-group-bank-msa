@@ -1,4 +1,4 @@
-package org.bank.store.mysql.global.infrastructure;
+package org.bank.store.mysql.global.jpa;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
