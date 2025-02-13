@@ -1,9 +1,9 @@
 package org.bank.store.route.domain;
 
 import org.bank.core.domain.DomainNames;
-import org.bank.store.route.domain.pay.PayDataSourceProperties;
+import org.bank.store.source.PayDataSourceProperties;
 import org.bank.store.route.domain.stub.Repository;
-import org.bank.store.route.domain.user.UserDataSourceProperties;
+import org.bank.store.source.UserDataSourceProperties;
 import org.bank.store.source.DataSourceType;
 import org.bank.store.source.NamedHikariDataSource;
 import org.junit.jupiter.api.Test;
