@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.MappedSuperclass;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @MappedSuperclass
@@ -26,7 +27,8 @@ public abstract class AuthClaims {
     }
 
 
-    public static class ConcreteAuthClaims extends AuthClaims{
+    @NoArgsConstructor
+    public static class ConcreteAuthClaims extends AuthClaims {
         public ConcreteAuthClaims(String userid, String username, String email) {
             super(userid, username, email);
         }

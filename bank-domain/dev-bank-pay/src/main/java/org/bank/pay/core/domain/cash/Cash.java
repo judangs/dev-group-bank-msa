@@ -30,14 +30,14 @@ public class Cash extends DomainEntity {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "balance", column = @Column(name = "currency", precision = 30, scale = 10))
+            @AttributeOverride(name = "balance", column = @Column(name = "currency", precision = 30, scale = 2))
     })
     private Money dailyCurrency;
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "perOnce", column = @Column(name = "perOnce", precision = 30, scale = 10)),
-            @AttributeOverride(name = "perDaily", column = @Column(name = "perDaily", precision = 30, scale = 10))
+            @AttributeOverride(name = "perOnce", column = @Column(name = "perOnce", precision = 30, scale = 2)),
+            @AttributeOverride(name = "perDaily", column = @Column(name = "perDaily", precision = 30, scale = 2))
     })
     private PayLimit limits;
 
