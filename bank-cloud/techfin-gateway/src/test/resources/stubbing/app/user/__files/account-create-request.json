@@ -1,0 +1,21 @@
+{
+  "profile": {
+    "name" : "test",
+    "residentNumber" : "000000-1010101",
+    "age" : 26,
+    "address" : {
+      "city" : "서울",
+      "district" : "강동구",
+      "street" : "도로명 주소",
+      "postCode" : "우편번호",
+      "detailed" : "상세주소"
+    },
+    "email" : "eotjd228@naver.com",
+    "phone" : "010-1234-1234"
+  },
+  "credential" : {
+    "userid" : "testuser",
+    "password" : "testuser",
+    "username" : "test"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "code": "SUCCESS",
+  "message": "success",
+  "token": {
+    "access": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImVtYWlsIjoiZW90amQyMjhAbmF2ZXIuY29tIiwidXNlcm5hbWUiOiLthYzsiqTtirgiLCJyb2xlIjoiSU5ESVZJRFVBTCIsImlzcyI6ImFwcGxpY2F0aW9uLnVzZXIiLCJpYXQiOjE3Mzk3NDcyMzYsImV4cCI6MTczOTc1MDgzNn0.NXO2yJtsbUCLSKQwEvjYqxbKRltp7CMELWjbVpDaaa4"
+  },
+  "completed_at": "2025-02-17 08:07:16"
+}
