@@ -1,3 +1,12 @@
+ext {
+    runnable = true
+    mainClass = 'org.bank.gateway.GatewayApplication'
+
+    archiveBaseName = 'gateway-application'
+    version = '1.0.0'
+    type = 'boot'
+}
+
 dependencies {
 
     implementation 'org.springframework.ws:spring-ws-core'

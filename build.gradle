@@ -64,10 +64,6 @@ subprojects {
     test {
         useJUnitPlatform()
     }
-
-    tasks.named('bootJar') {
-        enabled = false
-    }
 }
 
 project(':bank-cloud').subprojects {
