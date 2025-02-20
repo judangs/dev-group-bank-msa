@@ -1,39 +1,8 @@
 rootProject.name='bankMainProject'
 
 include ':bank-core'
-include ':bank-api'
-include ':bank-application'
-include ':bank-domain'
-include ':bank-store'
 include ':bank-cloud'
-
-include 'bank-api:dev-bank-pay'
-findProject(':bank-api:dev-bank-pay')?.name = 'bank-pay-api'
-include 'bank-api:techfin-user'
-findProject(':bank-api:techfin-user')?.name = 'techfin-user-api'
-
-include 'bank-application:dev-bank-pay'
-findProject(':bank-application:dev-bank-pay')?.name = 'bank-pay-application'
-include 'bank-application:techfin-user'
-findProject(':bank-application:techfin-user')?.name = 'techfin-user-application'
-include 'bank-application:techfin-core-consumer'
-findProject(':bank-application:techfin-core-consumer')?.name = 'techfin-core-consumer'
-
-include 'bank-domain:dev-bank-pay'
-findProject(':bank-domain:dev-bank-pay')?.name = 'bank-pay-domain'
-include 'bank-domain:techfin-user'
-findProject(':bank-domain:techfin-user')?.name = 'techfin-user-domain'
 
 include 'bank-cloud:techfin-gateway'
 findProject(':bank-cloud:techfin-gateway')?.name = 'techfin-gateway'
-
-include 'bank-store:store-core'
-findProject(':bank-store:store-core')?.name = 'store-core'
-include 'bank-store:store-mongo'
-findProject(':bank-store:store-mongo')?.name = 'store-mongo'
-include 'bank-store:store-mysql'
-findProject(':bank-store:store-mysql')?.name = 'store-mysql'
-include 'bank-store:store-data-source'
-findProject(':bank-store:store-data-source')?.name = 'store-data-source'
-
 
