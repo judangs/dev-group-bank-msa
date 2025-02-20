@@ -5,8 +5,6 @@ dependencies {
     compileOnly(project(':bank-core'))
     testCompileOnly(project(':bank-core'))
 
-    compileOnly(project(':bank-domain:bank-pay-domain'))
-    testCompileOnly(project(':bank-domain:bank-pay-domain'))
     compileOnly(project(':bank-domain:techfin-user-domain'))
     testCompileOnly(project(':bank-domain:techfin-user-domain'))
 

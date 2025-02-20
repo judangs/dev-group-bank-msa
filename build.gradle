@@ -65,17 +65,3 @@ subprojects {
         useJUnitPlatform()
     }
 }
-
-project(':bank-cloud').subprojects {
-
-    ext {
-        wiremockVersion = '2.31.0'
-    }
-
-    dependencyManagement {
-        imports {
-            mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.3"
-        }
-    }
-
-}
