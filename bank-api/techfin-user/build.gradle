@@ -1,3 +1,12 @@
+ext {
+    runnable = true
+    mainClassEntryPoint = 'org.bank.user.UserApplication'
+
+    archiveBaseName = 'external-user-auth-api'
+    version = '1.0.0'
+    type = 'boot'
+}
+
 dependencies {
     implementation(project(':bank-application:techfin-user-application'))
 }
