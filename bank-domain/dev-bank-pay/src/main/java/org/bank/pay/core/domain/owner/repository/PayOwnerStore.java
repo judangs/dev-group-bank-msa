@@ -1,6 +1,6 @@
-package org.bank.pay.core.domain.onwer.repository;
+package org.bank.pay.core.domain.owner.repository;
 
-import org.bank.pay.core.domain.onwer.PayOwner;
+import org.bank.pay.core.domain.owner.PayOwner;
 
 import java.util.UUID;
 
