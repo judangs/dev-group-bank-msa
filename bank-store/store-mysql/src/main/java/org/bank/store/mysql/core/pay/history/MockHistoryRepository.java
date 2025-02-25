@@ -4,7 +4,7 @@ import org.bank.core.cash.PayMethod;
 import org.bank.core.domain.DomainNames;
 import org.bank.pay.core.domain.history.PayHistory;
 import org.bank.pay.core.domain.history.repository.HistoryRepository;
-import org.bank.pay.core.domain.onwer.OwnerClaims;
+import org.bank.pay.core.domain.owner.OwnerClaims;
 import org.bank.store.source.DataSourceType;
 import org.bank.store.source.NamedRepositorySource;
 import org.springframework.data.domain.Page;
