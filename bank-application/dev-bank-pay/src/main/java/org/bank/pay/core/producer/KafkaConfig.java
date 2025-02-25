@@ -1,8 +1,7 @@
-package org.bank.pay.global.config;
+package org.bank.pay.core.producer;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.bank.core.kafka.KafkaEvent;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -20,11 +19,9 @@ import java.util.Map;
 @EnableConfigurationProperties(KafkaProperties.class)
 public class KafkaConfig {
 
-    @Autowired
-    private KafkaProperties kafkaProperties;
 
     @Bean
-    public ProducerFactory<String, KafkaEvent> producerFactory() {
+    public ProducerFactory<String, KafkaEvent> producerFactory(KafkaProperties kafkaProperties) {
 
         KafkaProperties.Producer producerProperties = kafkaProperties.getProducer();
 
