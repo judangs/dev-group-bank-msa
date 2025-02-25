@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.bank.pay.core.domain.onwer.PaymentCard;
+import org.bank.pay.core.domain.owner.PaymentCard;
 import org.bank.pay.global.domain.DomainEntity;
 
 import java.math.BigDecimal;

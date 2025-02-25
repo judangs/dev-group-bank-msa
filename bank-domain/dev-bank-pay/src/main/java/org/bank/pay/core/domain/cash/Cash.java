@@ -2,10 +2,11 @@ package org.bank.pay.core.domain.cash;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bank.core.cash.Money;
-import org.bank.pay.core.domain.onwer.PayOwner;
+import org.bank.pay.core.domain.owner.PayOwner;
 import org.bank.pay.global.domain.DomainEntity;
 
 import java.math.BigDecimal;
@@ -16,10 +17,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @Table(name = "pay_cash_tb")
 @Entity
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 public class Cash extends DomainEntity {
 
     @Id
     @GeneratedValue
+    @EqualsAndHashCode.Include
     private UUID cashId;
 
     @Embedded
@@ -41,13 +44,11 @@ public class Cash extends DomainEntity {
     })
     private PayLimit limits;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private PayOwner payOwner;
+    private String userid;
 
     public Cash(PayOwner payOwner) {
 
-        this.payOwner = payOwner;
-        this.payOwner.setCash(this);
+        this.userid = payOwner.getClaims().getUserid();
 
         credit = new Money();
         dailyCurrency = new Money();
@@ -78,7 +79,7 @@ public class Cash extends DomainEntity {
     }
 
 
-    public void updatePaymentLimits(BigDecimal perOnceAmount, BigDecimal perDailyAmount) {
+    public void limits(BigDecimal perOnceAmount, BigDecimal perDailyAmount) {
         CashConstraints.validatePayLimits(perOnceAmount, perDailyAmount);
         limits.updateLimits(perOnceAmount, perDailyAmount);
     }
