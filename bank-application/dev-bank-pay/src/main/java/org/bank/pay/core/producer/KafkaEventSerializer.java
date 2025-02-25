@@ -1,4 +1,4 @@
-package org.bank.pay.global.kafka;
+package org.bank.pay.core.producer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
