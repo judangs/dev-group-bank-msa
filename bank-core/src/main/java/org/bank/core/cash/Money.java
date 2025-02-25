@@ -22,7 +22,7 @@ public class Money implements Serializable {
     }
 
     public Money(BigDecimal balance) {
-        this.balance = balance;
+        this(balance.intValue());
     }
 
     public Integer toInteger() {
@@ -67,5 +67,13 @@ public class Money implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         BigDecimal money = ((Money) o).getBalance();
         return balance.equals(money);
+    }
+
+    public boolean isGreaterThan(Money other) {
+        return balance.compareTo(other.getBalance()) > 0;
+    }
+
+    public boolean isLowerThan(Money other) {
+        return balance.compareTo(other.getBalance()) <= 0;
     }
 }
