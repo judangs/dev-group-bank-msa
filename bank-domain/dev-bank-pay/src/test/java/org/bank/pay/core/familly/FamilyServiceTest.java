@@ -6,7 +6,7 @@ import org.bank.pay.core.domain.familly.FamilyService;
 import org.bank.pay.core.domain.familly.MemberClaims;
 import org.bank.pay.core.domain.familly.repository.FamilyReader;
 import org.bank.pay.core.domain.familly.repository.FamilyStore;
-import org.bank.pay.core.domain.onwer.OwnerClaims;
+import org.bank.pay.core.domain.owner.OwnerClaims;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
