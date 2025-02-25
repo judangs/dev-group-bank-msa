@@ -1,10 +1,12 @@
-package org.bank.pay.core.domain.owner;
+package org.bank.pay.core.domain.owner.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.bank.core.auth.AuthClaims;
 import org.bank.core.auth.AuthenticationException;
+import org.bank.pay.core.domain.owner.PayOwner;
+import org.bank.pay.core.domain.owner.PaymentCard;
 import org.bank.pay.core.domain.owner.repository.PayOwnerReader;
+import org.bank.pay.core.domain.owner.repository.PayOwnerStore;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,32 +16,30 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class PaymentCardManager implements PayCardService{
+public class PaymentCardManager implements PayCardService {
 
+    private final PayOwnerStore payOwnerStore;
     private final PayOwnerReader payOwnerReader;
 
     @Transactional
-    public PaymentCard register(AuthClaims user, PaymentCard card) throws AuthenticationException{
+    public PaymentCard register(AuthClaims user, PaymentCard card) {
         Optional<PayOwner> payOwner = payOwnerReader.findByUserClaims(user);
-
-        payOwner.ifPresentOrElse(
-                owner -> {
-                    if(owner.match(card).isEmpty()) {
-                        owner.addPaymentCard(card);
-                    }
-                },
-                () -> new AuthenticationException("존재하지 않는 사용자입니다."));
+        payOwner.ifPresent(owner -> {
+            if(owner.match(card).isEmpty()) {
+                owner.addPaymentCard(card);
+            }
+        });
 
         return card;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<PaymentCard> gets(AuthClaims user) throws AuthenticationException{
+    public List<PaymentCard> gets(AuthClaims user) throws AuthenticationException {
 
         try {
             return payOwnerReader.findPaymentCardsByUser(user);
-        } catch (EntityNotFoundException e) {
+        } catch (IllegalArgumentException e) {
             throw new AuthenticationException("사용자가 존재하지 않습니다.");
         }
     }

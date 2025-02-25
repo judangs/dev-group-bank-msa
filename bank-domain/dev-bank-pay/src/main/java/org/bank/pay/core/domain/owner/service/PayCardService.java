@@ -1,6 +1,7 @@
-package org.bank.pay.core.domain.owner;
+package org.bank.pay.core.domain.owner.service;
 
 import org.bank.core.auth.AuthClaims;
+import org.bank.pay.core.domain.owner.PaymentCard;
 
 import java.util.List;
 import java.util.UUID;

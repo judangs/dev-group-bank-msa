@@ -20,7 +20,7 @@ import java.util.UUID;
 public class PaymentCard extends DomainEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     @EqualsAndHashCode.Include
     private UUID cardId;
 

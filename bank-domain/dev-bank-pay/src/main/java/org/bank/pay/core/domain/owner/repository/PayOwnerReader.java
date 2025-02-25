@@ -13,8 +13,8 @@ public interface PayOwnerReader {
 
     Optional<PayOwner> findByUserClaims(OwnerClaims claims);
     Optional<PayOwner> findByUserClaims(AuthClaims claims);
-    Optional<PayOwner> findByUserClaimsAndRoles(AuthClaims claims, String roles);
     List<PaymentCard> findAllPaymentCardsByOwner(PayOwner payOwner);
     List<PaymentCard> findPaymentCardsByUser(AuthClaims user);
+    Optional<PaymentCard> findPaymentCardByOwnerAndCard(AuthClaims user, UUID cardId);
     Optional<PaymentCard> findPaymentCardByOwnerAndCard(PayOwner payOwner, UUID cardId);
 }

@@ -21,7 +21,7 @@ public class PayOwner extends DomainEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(columnDefinition = "BINARY(16)", unique = true)
+    @Column(name = "owner_id", columnDefinition = "BINARY(16)", unique = true)
     private UUID ownerId;
 
     @Embedded
