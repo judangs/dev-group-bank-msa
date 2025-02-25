@@ -2,18 +2,17 @@ package org.bank.pay.dto.service.response;
 
 import lombok.Data;
 import org.bank.core.cash.Money;
-import org.bank.core.dto.response.ResponseDto;
+import org.bank.core.dto.response.ResponseDtoV2;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Data
-public class CashBalanceResponse extends ResponseDto {
+public class CashBalanceResponse extends ResponseDtoV2 {
 
     BigDecimal balance;
 
-    public CashBalanceResponse(String code, String message, Money credit) {
-        super(code, message, LocalDateTime.now());
+    public CashBalanceResponse(Money credit) {
+        super();
         this.balance = credit.getBalance();
     }
 }

@@ -2,7 +2,7 @@ package org.bank.pay.core.domain.history.repository;
 
 import org.bank.core.cash.PayMethod;
 import org.bank.pay.core.domain.history.PayHistory;
-import org.bank.pay.core.domain.onwer.OwnerClaims;
+import org.bank.pay.core.domain.owner.OwnerClaims;
 import org.springframework.data.domain.Page;
 
 import java.time.Instant;

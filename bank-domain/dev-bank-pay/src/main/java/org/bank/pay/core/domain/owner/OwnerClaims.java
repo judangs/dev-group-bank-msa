@@ -1,4 +1,4 @@
-package org.bank.pay.core.domain.onwer;
+package org.bank.pay.core.domain.owner;
 
 import jakarta.persistence.Embeddable;
 import lombok.*;

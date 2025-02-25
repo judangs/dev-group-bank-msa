@@ -18,13 +18,13 @@ public class PayLimit {
         setToMaxLimits();
     }
 
-    public void updateLimits(BigDecimal perOnceAmount, BigDecimal perDailyAmount) {
+    void updateLimits(BigDecimal perOnceAmount, BigDecimal perDailyAmount) {
 
         this.perOnce = perOnceAmount;
         this.perDaily = perDailyAmount;
     }
 
-    public void setToMaxLimits() {
+    void setToMaxLimits() {
         this.perOnce = MAX_PAYMENT_LIMIT;
         this.perDaily = MAX_PAYMENT_LIMIT;
     }

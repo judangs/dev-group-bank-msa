@@ -3,9 +3,8 @@ package org.bank.pay.core.domain.history;
 import lombok.RequiredArgsConstructor;
 import org.bank.core.auth.AuthClaims;
 import org.bank.core.cash.PayMethod;
-import org.bank.core.dto.pay.ChargeResponse;
 import org.bank.pay.core.domain.history.repository.HistoryRepository;
-import org.bank.pay.core.domain.onwer.OwnerClaims;
+import org.bank.pay.core.domain.owner.OwnerClaims;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +20,6 @@ public class HistoryService {
 
     public void saveHistory(PayHistory history) {
         historyRepository.saveHistory(history);
-    }
-
-
-    public void saveReChargeHistory(AuthClaims authClaims, ChargeResponse chargeResponse, String paymentCardNumber) {
-        PayHistory reChargePayHistory = ReChargePayHistory.of(authClaims, chargeResponse, paymentCardNumber);
-        historyRepository.saveHistory(reChargePayHistory);
     }
 
     public List<PayHistory> getPayRecords(AuthClaims authClaims, PayMethod method, Instant startDate, Instant endDate, int page) {

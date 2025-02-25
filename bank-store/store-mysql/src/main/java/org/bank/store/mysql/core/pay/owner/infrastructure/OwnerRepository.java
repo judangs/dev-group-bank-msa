@@ -1,15 +1,13 @@
 package org.bank.store.mysql.core.pay.owner.infrastructure;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.bank.core.auth.AuthClaims;
 import org.bank.core.domain.DomainNames;
-import org.bank.pay.core.domain.cash.repository.CashStore;
-import org.bank.pay.core.domain.onwer.OwnerClaims;
-import org.bank.pay.core.domain.onwer.PayOwner;
-import org.bank.pay.core.domain.onwer.PaymentCard;
-import org.bank.pay.core.domain.onwer.repository.PayOwnerReader;
-import org.bank.pay.core.domain.onwer.repository.PayOwnerStore;
+import org.bank.pay.core.domain.owner.OwnerClaims;
+import org.bank.pay.core.domain.owner.PayOwner;
+import org.bank.pay.core.domain.owner.PaymentCard;
+import org.bank.pay.core.domain.owner.repository.PayOwnerReader;
+import org.bank.pay.core.domain.owner.repository.PayOwnerStore;
 import org.bank.store.mysql.core.pay.owner.JpaClaimsRepository;
 import org.bank.store.source.DataSourceType;
 import org.bank.store.source.NamedRepositorySource;
@@ -26,25 +24,15 @@ import java.util.UUID;
 public class OwnerRepository implements PayOwnerReader, PayOwnerStore {
 
     private final JpaClaimsRepository jpaClaimsRepository;
-    private final CashStore cashStore;
 
     @Override
     public Optional<PayOwner> findByUserClaims(OwnerClaims claims) {
-        Optional<PayOwner> payOwner = jpaClaimsRepository.findByClaimsFromOwner(claims);
-        if(payOwner.isEmpty()) {
-            throw new EntityNotFoundException("정보를 찾을 수 없습니다.");
-        }
-        return payOwner;
+        return jpaClaimsRepository.findByClaimsFromOwner(claims);
     }
 
     @Override
     public Optional<PayOwner> findByUserClaims(AuthClaims claims) {
         return findByUserClaims(OwnerClaims.of(claims));
-    }
-
-    @Override
-    public Optional<PayOwner> findByUserClaimsAndRoles(AuthClaims claims, String roles) {
-        return jpaClaimsRepository.findByClaimsFromOwner(OwnerClaims.of(claims, roles));
     }
 
 
@@ -59,6 +47,18 @@ public class OwnerRepository implements PayOwnerReader, PayOwnerStore {
     }
 
     @Override
+    public List<PaymentCard> findPaymentCardsByUser(AuthClaims user) {
+        return findByUserClaims(OwnerClaims.of(user)).map(PayOwner::getPaymentCards)
+                .orElseThrow(() -> new IllegalArgumentException("결제 카드가 존재하지 않습니다."));
+    }
+
+    @Override
+    public Optional<PaymentCard> findPaymentCardByOwnerAndCard(AuthClaims user, UUID cardId) {
+        return findPaymentCardsByUser(user).stream()
+                .filter(card -> card.getCardId().equals(cardId)).findFirst();
+    }
+
+    @Override
     public Optional<PaymentCard> findPaymentCardByOwnerAndCard(PayOwner payOwner, UUID cardId) {
         List<PaymentCard> cards = findAllPaymentCardsByOwner(payOwner);
 
@@ -68,7 +68,7 @@ public class OwnerRepository implements PayOwnerReader, PayOwnerStore {
 
     @Override
     public void save(PayOwner payOwner) {
-        cashStore.save(payOwner.getCash());
+        jpaClaimsRepository.save(payOwner);
     }
 
     @Override

@@ -31,7 +31,11 @@ public class Product implements Serializable {
         this.quantity = quantity;
     }
 
-    public Integer calculateTotalAmount() {
+    public Integer price() {
+        return price.getBalance().intValue();
+    }
+
+    public Integer totalPrice() {
         return Integer.valueOf(price.toInteger() * quantity);
     }
 

@@ -1,15 +1,28 @@
 package org.bank.pay.dto.service.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.bank.core.dto.response.ResponseDto;
-import org.bank.pay.core.domain.onwer.PaymentCard;
+import lombok.NoArgsConstructor;
+import org.bank.core.dto.response.ResponseDtoV2;
+import org.bank.pay.core.domain.owner.PaymentCard;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
-@AllArgsConstructor
-public class PaymentCardsListResponse extends ResponseDto {
+@NoArgsConstructor
+public class PaymentCardsListResponse extends ResponseDtoV2 {
 
-    List<PaymentCard> cards;
+    List<CardInfo> cards;
+
+    public PaymentCardsListResponse(List<PaymentCard> cards) {
+        this.cards = cards.stream().map(CardInfo::new).toList();
+    }
+
+    public class CardInfo {
+        private UUID cardId;
+
+        CardInfo(PaymentCard card) {
+            this.cardId = card.getCardId();
+        }
+    }
 }
