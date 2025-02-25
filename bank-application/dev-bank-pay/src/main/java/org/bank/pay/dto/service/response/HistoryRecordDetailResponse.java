@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class HistoryRecordDetailResponse extends ResponseDto {
 
     private String payName;
-    private Money payMoney;
+    private Money amount;
     private PayMethod method;
     private LocalDateTime transactionDate;
     private LocalDateTime rollbackDate;
@@ -36,9 +36,9 @@ public class HistoryRecordDetailResponse extends ResponseDto {
 
         public static Order from(OrderPayHistory orderPayHistory) {
             return Order.builder()
-                    .orderId(orderPayHistory.getOrderId())
+                    .orderId(orderPayHistory.getPaymentId())
                     .storeName(orderPayHistory.getStoreName())
-                    .username(orderPayHistory.getUsername())
+                    .username(orderPayHistory.getBuyer().getUsername())
                     .build();
         }
     }
@@ -50,7 +50,6 @@ public class HistoryRecordDetailResponse extends ResponseDto {
 
         public static ReCharge from(ReChargePayHistory rechargePayHistory) {
             return ReCharge.builder()
-                    .cardNumber(rechargePayHistory.getCardNumber())
                     .build();
         }
     }
@@ -72,7 +71,7 @@ public class HistoryRecordDetailResponse extends ResponseDto {
         HistoryRecordDetailResponse.HistoryRecordDetailResponseBuilder builder  = HistoryRecordDetailResponse.builder()
                 .payName(history.getPayName())
                 .method(history.getMethod())
-                .payMoney(history.getPayMoney())
+                .amount(history.getPayMoney())
                 .transactionDate(history.getTransactionDate())
                 .rollbackDate(history.getRollbackDate());
 
