@@ -4,21 +4,15 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import jakarta.annotation.PreDestroy;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import javax.sql.DataSource;
 
-public abstract class AbstractDockerContainerFacotry {
+public abstract class AbstractDockerContainerFacotry extends JpaConfigurationFactory implements StoreConnectionBean {
 
     protected MySQLContainer<?> container;
 
@@ -38,25 +32,6 @@ public abstract class AbstractDockerContainerFacotry {
     }
 
     protected abstract MySQLContainerConfigurer MySQLContainerConfigurer();
-    public abstract LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder, DataSource dataSource, JpaProperties jpaProperties);
-    public abstract PlatformTransactionManager transactionManager(LocalContainerEntityManagerFactoryBean entityManagerFactory);
-
-    @Configuration
-    @PropertySource("classpath:jpa-hibernate.properties")
-    @EnableConfigurationProperties(JpaProperties.class)
-    protected static class JpaManagerConfiguration {
-        @Bean
-        public JpaProperties jpaProperties() {
-            return new JpaProperties();
-        }
-
-
-        @Bean
-        public EntityManagerFactoryBuilder entityManagerFactoryBuilder() {
-            return new EntityManagerFactoryBuilder(new HibernateJpaVendorAdapter(),
-                    jpaProperties().getProperties(), null);
-        }
-    }
 
     protected LocalContainerEntityManagerFactoryBean createEntityManagerFactory(EntityManagerFactoryBuilder builder, DataSource dataSource, String persistenceUnitName, JpaProperties jpaProperties, String... packages) {
         return builder.dataSource(dataSource).packages(packages)
