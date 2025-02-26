@@ -11,6 +11,7 @@ import org.bank.store.source.NamedHikariDataSource;
 import org.bank.store.source.NamedRepositorySource;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Method;
 import java.util.Objects;
 
 
@@ -46,8 +47,9 @@ public class AnnotationDataSourceAspect {
     @Around("namedRepositorySourceOfMethod()")
     public Object routeDataSourceContext(ProceedingJoinPoint joinPoint) throws Throwable {
 
-        NamedRepositorySource namedRepositorySource = ((MethodSignature) joinPoint.getSignature()).getMethod()
-                .getAnnotation(NamedRepositorySource.class);
+        Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
+        Class<?> targetClass = joinPoint.getTarget().getClass();
+        NamedRepositorySource namedRepositorySource = targetClass.getMethod(method.getName(), method.getParameterTypes()).getAnnotation(NamedRepositorySource.class);
 
         try {
 
