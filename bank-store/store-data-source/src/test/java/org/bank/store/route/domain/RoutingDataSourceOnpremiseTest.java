@@ -22,14 +22,15 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = RoutingDataSourceTest.UnitTest.class)
-@ActiveProfiles("test")
-class RoutingDataSourceTest {
+@ActiveProfiles("production")
+class RoutingDataSourceOnpremiseTest {
 
     @Configuration
     @ComponentScan(basePackages = "org.bank.store.route")
     static class UnitTest { }
 
-    @Autowired @Qualifier("userDataSourceProperties")
+    @Autowired
+    @Qualifier("userDataSourceProperties")
     private DataSourceProperties userDataSourceProperties;
     @Autowired @Qualifier("payDataSourceProperties")
     private DataSourceProperties payDataSourceProperties;

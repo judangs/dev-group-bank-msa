@@ -1,6 +1,5 @@
 package org.bank.store.route.domain.pay;
 
-
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,10 +13,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 
+
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = PayDataSourceContainerTest.UnitTest.class)
-@ActiveProfiles("test")
-class PayDataSourceContainerTest {
+@ActiveProfiles("production")
+class PayDataSourceOnpremiseTest {
 
     @Configuration
     @ComponentScan(basePackages = "org.bank.store.domain.pay")
