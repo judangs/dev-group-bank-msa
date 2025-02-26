@@ -1,8 +1,9 @@
-package org.bank.store.source;
+package org.bank.store.domain.user.docker;
 
+import org.bank.store.source.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 
 @ConfigurationProperties(prefix = "spring.datasource.user-readwrite-docker")
-public class UserDataSourceProperties extends DataSourceProperties {
+class UserDataSourceProperties extends DataSourceProperties {
 }
