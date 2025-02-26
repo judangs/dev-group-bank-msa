@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -14,10 +15,11 @@ import java.sql.SQLException;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = UserDataSourceContainerTest.UnitTest.class)
+@ActiveProfiles("test")
 class UserDataSourceContainerTest {
 
     @Configuration
-    @ComponentScan(basePackages = "org.bank.store.route.domain.user")
+    @ComponentScan(basePackages = "org.bank.store.domain.user")
     static class UnitTest { }
 
     @Autowired

@@ -1,5 +1,4 @@
-package org.bank.store.route.domain.pay;
-
+package org.bank.store.route.domain.user;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,12 +14,12 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = PayDataSourceContainerTest.UnitTest.class)
-@ActiveProfiles("test")
-class PayDataSourceContainerTest {
+@ContextConfiguration(classes = UserDataSourceContainerTest.UnitTest.class)
+@ActiveProfiles("production")
+class UserDataSourceOnpremiseTest {
 
     @Configuration
-    @ComponentScan(basePackages = "org.bank.store.domain.pay")
+    @ComponentScan(basePackages = "org.bank.store.domain.user")
     static class UnitTest { }
 
     @Autowired
@@ -31,4 +30,5 @@ class PayDataSourceContainerTest {
         Assertions.assertThat(dataSource).isNotNull();
         Assertions.assertThat(dataSource.getConnection().getMetaData()).isNotNull();
     }
+
 }
