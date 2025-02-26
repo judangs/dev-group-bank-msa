@@ -1,8 +1,8 @@
 package org.bank.store.domain.pay.docker;
 
 import org.bank.core.domain.DomainNames;
-import org.bank.store.source.PayDataSourceProperties;
 import org.bank.store.source.AbstractDockerContainerFacotry;
+import org.bank.store.source.DataSourceProperties;
 import org.bank.store.source.DataSourceProperties.SourceConfig;
 import org.bank.store.source.DataSourceType;
 import org.bank.store.source.NamedHikariDataSource;
@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -25,6 +22,7 @@ import javax.sql.DataSource;
 import java.util.Objects;
 
 @Configuration
+@Profile(value = {"develop", "test"})
 @EnableTransactionManagement
 @EnableJpaRepositories(
         basePackages = "org.bank.store.mysql.core.pay",
@@ -35,17 +33,25 @@ import java.util.Objects;
 @EnableConfigurationProperties(PayDataSourceProperties.class)
 public class PayDataSourceContainer extends AbstractDockerContainerFacotry {
 
-    @Bean(name = "payDataSource")
-    public DataSource payDataSource(PayDataSourceProperties payDataSourceProperties) {
-        container = createContainer(payDataSourceProperties, this.MySQLContainerConfigurer());
-        return createDataSourceFromContainer(container, payDataSourceProperties.getHikari());
+    @Bean(name = "payDataSourceProperties")
+    public DataSourceProperties payDataSourceProperties() {
+        return new PayDataSourceProperties();
     }
 
+
+    @Override
+    @Bean(name = "payDataSource")
+    public DataSource dataSource(@Qualifier("payDataSourceProperties") DataSourceProperties dataSourceProperties) {
+        container = createContainer(dataSourceProperties, this.MySQLContainerConfigurer());
+        return createDataSourceFromContainer(container, dataSourceProperties.getHikari());
+    }
+
+    @Override
     @DependsOn("payDataSource")
     @Bean(name = "payHikariDataSource")
-    public NamedHikariDataSource payHikariDataSource(@Qualifier("payDataSource") DataSource payDataSource, PayDataSourceProperties payDataSourceProperties) {
+    public NamedHikariDataSource namedHikariDataSource(@Qualifier("payDataSource") DataSource payDataSource, @Qualifier("payDataSourceProperties") DataSourceProperties dataSourceProperties) {
 
-        SourceConfig sourceConfig = payDataSourceProperties.getSource();
+        SourceConfig sourceConfig = dataSourceProperties.getSource();
 
         if(sourceConfig.getType().equals(DataSourceType.READONLY)) {
             return NamedHikariDataSource.asReadOnly(payDataSource, sourceConfig.getDomain());
