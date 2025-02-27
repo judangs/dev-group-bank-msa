@@ -1,4 +1,4 @@
-package org.bank.user.global.resolver;
+package org.bank.user.global.http;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.bank.core.auth.AuthConstants;

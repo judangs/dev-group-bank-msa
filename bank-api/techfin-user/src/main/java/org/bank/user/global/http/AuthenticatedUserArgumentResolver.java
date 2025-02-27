@@ -1,4 +1,4 @@
-package org.bank.user.global.resolver;
+package org.bank.user.global.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
