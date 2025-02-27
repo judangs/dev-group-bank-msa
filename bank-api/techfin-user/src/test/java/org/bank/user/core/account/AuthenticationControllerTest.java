@@ -9,13 +9,13 @@ import org.bank.user.core.facade.account.UserAccountAuthenticationFacade;
 import org.bank.user.core.fixture.UserClaimsFixture;
 import org.bank.user.dto.service.request.LoginRequest;
 import org.bank.user.dto.service.response.LoginResponse;
+import org.bank.user.global.http.AuthorizationHeaderResolver;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,8 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
-@WebMvcTest(AuthenticationController.class)
-@ComponentScan(basePackages = "org.bank.user.global.resolver")
+@WebMvcTest({AuthenticationController.class, AuthorizationHeaderResolver.class})
 class AuthenticationControllerTest {
 
 
