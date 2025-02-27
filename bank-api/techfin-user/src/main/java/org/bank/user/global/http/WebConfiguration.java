@@ -1,15 +1,17 @@
-package org.bank.user.global.resolver;
+package org.bank.user.global.http;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
 @Configuration
+@EnableAspectJAutoProxy
 @RequiredArgsConstructor
-public class ResolverConfig implements WebMvcConfigurer {
+public class WebConfiguration implements WebMvcConfigurer {
 
     private final AuthenticatedUserArgumentResolver authenticatedUserArgumentResolver;
 

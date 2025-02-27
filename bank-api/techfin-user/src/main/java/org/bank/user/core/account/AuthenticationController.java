@@ -10,7 +10,7 @@ import org.bank.core.dto.response.ResponseDtoV2;
 import org.bank.user.core.facade.account.UserAccountAuthenticationFacade;
 import org.bank.user.dto.service.request.LoginRequest;
 import org.bank.user.dto.service.response.LoginResponse;
-import org.bank.user.global.resolver.AuthorizationHeaderResolver;
+import org.bank.user.global.http.AuthorizationHeaderResolver;
 import org.bank.user.global.swagger.spec.UserAuthenticationSwaggerSpec;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
