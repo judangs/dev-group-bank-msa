@@ -63,7 +63,7 @@ public class PayDataSourceContainer extends AbstractDockerContainerFacotry {
     @Override
     @Bean(name = "payEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder, @Qualifier("payDataSource") DataSource payDataSource, JpaProperties jpaProperties) {
-        String[] entityPackages = {"org.bank.core.domain", "org.bank.pay.core.domain"};
+        String[] entityPackages = {"org.bank.core.domain", "org.bank.pay.core.domain", "org.bank.pay.core.event"};
         return createEntityManagerFactory(builder, payDataSource, DomainNames.PAY.name(), jpaProperties, entityPackages);
     }
 
