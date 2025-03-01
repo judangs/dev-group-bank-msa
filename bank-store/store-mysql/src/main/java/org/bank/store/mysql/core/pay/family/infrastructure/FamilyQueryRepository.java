@@ -1,9 +1,9 @@
 package org.bank.store.mysql.core.pay.family.infrastructure;
 
 import lombok.RequiredArgsConstructor;
+import org.bank.core.auth.AuthClaims;
 import org.bank.core.domain.DomainNames;
 import org.bank.pay.core.domain.familly.Family;
-import org.bank.pay.core.domain.familly.MemberClaims;
 import org.bank.pay.core.domain.familly.repository.FamilyReader;
 import org.bank.store.mysql.core.pay.family.JpaFamilyRepository;
 import org.bank.store.source.DataSourceType;
@@ -26,7 +26,7 @@ public class FamilyQueryRepository implements FamilyReader {
     }
 
     @Override
-    public Optional<Family> findByUserIsLeader(MemberClaims leader) {
+    public Optional<Family> findByUserIsLeader(AuthClaims leader) {
         return jpaFamilyRepository.findByLeader(leader.getUserid());
     }
 }

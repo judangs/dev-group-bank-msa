@@ -14,7 +14,7 @@ import java.util.UUID;
 @Repository
 public interface JpaClaimsRepository extends JpaBaseRepository<PayOwner, UUID>{
 
-    @Query("SELECT o FROM PayOwner o WHERE o.claims.userid = :#{#claims.userid}")
-    Optional<PayOwner> findByClaimsFromOwner(@Param("claims") OwnerClaims claims);
+    @Query("SELECT o FROM PayOwner o WHERE o.claims.userid = :#{#owner.userid}")
+    Optional<PayOwner> findByClaimsFromOwner(@Param("owner") OwnerClaims owner);
 }
 

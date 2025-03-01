@@ -13,7 +13,6 @@ import org.bank.store.source.DataSourceType;
 import org.bank.store.source.NamedRepositorySource;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -22,10 +21,6 @@ import java.util.UUID;
 public class CashQueryRepository implements CashReader {
 
     private final JpaCashRepository jpaCashRepository;
-
-    public Optional<Cash> findByCash(Cash cash) {
-        return jpaCashRepository.findById(cash.getCashId());
-    }
 
 
     @Override
