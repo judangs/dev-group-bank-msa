@@ -1,79 +1,83 @@
 package org.bank.store.mysql.core.pay.cash.infrastructure;
 
+import org.bank.core.auth.AuthClaims;
 import org.bank.core.cash.Money;
 import org.bank.pay.core.domain.cash.Cash;
-import org.bank.pay.core.domain.onwer.OwnerClaims;
-import org.bank.pay.core.domain.onwer.PayOwner;
-import org.junit.jupiter.api.*;
+import org.bank.pay.core.domain.owner.PayOwner;
+import org.bank.pay.core.domain.owner.PaymentCard;
+import org.bank.pay.fixture.CardFixture;
+import org.bank.pay.fixture.UserFixture;
+import org.bank.pay.global.domain.card.PayCard;
+import org.bank.store.mysql.core.pay.unit.CashRepositoryUnitTest;
+import org.bank.store.mysql.core.pay.unit.init.TestInitializer;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = CashRepositoryTest.TestConfig.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ContextConfiguration(classes = CashRepositoryUnitTest.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CashRepositoryTest {
 
-    @Configuration
-    @ComponentScan(basePackages ={
-            "org.bank.store.mysql.core.pay.config",
-            "org.bank.store.mysql.core.pay.cash"
-    })
-    static class TestConfig {
-
-    }
-
-    private static OwnerClaims claims = new OwnerClaims("fixture", "name", "fixture@bank.com");
-    private static PayOwner owner = new PayOwner(claims);
-    private static Cash cash = new Cash(owner);
-
-    @Autowired @Qualifier("cashCommandRepository")
+    @Autowired
     private CashComandRepository cashCommandRepository;
-
-    @Autowired @Qualifier("cashQueryRepository")
+    @Autowired
     private CashQueryRepository cashQueryRepository;
+    @Autowired
+    private TestInitializer testInitializer;
+
+    private final AuthClaims user = UserFixture.authenticated();
+    private PayCard card;
+
+    @BeforeAll
+    void setup() {
+        testInitializer.card(new PayOwner(user));
+        card = testInitializer.getCard(user);
+    }
 
 
     @Test
-    @DisplayName("[Cash 저장] cash 엔티티를 데이터베이스에 저장할 수 있다.")
-    @Order(1)
-    public void save_success() {
-        Assertions.assertDoesNotThrow(() -> cashCommandRepository.save(cash));
+    public void 데이터베이스에_캐시_엔티티를_저장할_수_있다() {
+        assertThatCode(() -> cashCommandRepository.save(CardFixture.cashable(false).getCash()))
+                .doesNotThrowAnyException();
     }
 
     @Test
-    @DisplayName("[Cash 조회] cash 엔티티를 데이터베이스에서 조회할 수 있다.")
-    public void findByCash_success() {
+    public void 데이터베이스에서_사용자가_가지고_있는_카드의_아이디로_캐시를_조회할_수_있다() {
 
-        Optional<Cash> optionalCash = cashQueryRepository.findByCash(cash);
-        assertTrue(optionalCash.isPresent());
+        Cash cash = cashQueryRepository.findByClaimsAndCardId(user, card.getCardId());
+        assertAll(
+                () -> assertThat(cash).isNotNull(),
+                () -> assertThat(cash.getOwnerId()).isEqualTo(user.getUserid()),
+                () -> assertThat(cash.getCredit()).isEqualTo(new Money(0)),
+                () -> assertThat(cash.getDailyCurrency()).isEqualTo(new Money(0)),
+                () -> assertThat(cash.getLimits().getPerOnce()).isEqualTo(new BigDecimal("99999999999999999999.99")),
+                () -> assertThat(cash.getLimits().getPerDaily()).isEqualTo(new BigDecimal("99999999999999999999.99"))
+
+        );
     }
 
     @Test
-    @DisplayName("[Cash 조회] 사용자 정보에 해당하는 cash 엔티티를 데이터베이스에서 조회할 수 있다.")
-    public void findByClaims_success() {
+    public void 데이터베이스에서_사용자가_가지고_있는_카드로_캐시를_조회할_수_있다() {
 
-        Cash cash = cashQueryRepository.findByOwnerClaims(claims);
-        assertEquals(claims, cash.getPayOwner().getClaims());
-
-    }
-
-    @Test
-    @DisplayName("[Cash 조회] 사용자 정보에 해당 하는 Cash 엔티티의 잔고를 조회할 수 있다.")
-    public void findCreditByClaims_success() {
-
-        Money credit = cashQueryRepository.findBalanceByOwnerClaims(claims);
-        assertEquals(0, credit.getBalance().compareTo(BigDecimal.ZERO));
+        if(card instanceof PaymentCard paymentCard) {
+            Cash cash = cashQueryRepository.findByClaimsAndCard(user, paymentCard);
+            assertAll(
+                    () -> assertThat(cash).isNotNull(),
+                    () -> assertThat(cash.getCredit()).isEqualTo(new Money(0))
+            );
+        }
 
     }
   
