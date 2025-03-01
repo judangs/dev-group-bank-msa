@@ -5,8 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.bank.pay.core.domain.owner.PaymentCard;
+import org.bank.core.cash.Money;
 import org.bank.pay.global.domain.DomainEntity;
+import org.bank.pay.global.domain.card.PayCard;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -24,36 +25,52 @@ public class ReservedCharge extends DomainEntity {
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
-    @OneToOne
-    private Cash cash;
+    private UUID cardId;
 
-    @OneToOne
-    private PaymentCard card;
-
-    private BigDecimal amount;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "balance", column = @Column(name = "credit", precision = 30, scale = 2))
+    })
+    private Money amount;
 
     @Enumerated(EnumType.STRING)
     private ReservationType type;
 
     private LocalDate scheduledDate;
-    private BigDecimal triggerBalance;
+    private Money triggerBalance;
 
-    public static ReservedCharge of(Cash cash, PaymentCard card, BigDecimal amount, ReservationType type, LocalDate scheduledDate) {
+    public static ReservedCharge of(PayCard card, BigDecimal amount, LocalDate scheduledDate) {
         return ReservedCharge.builder()
-                .cash(cash)
-                .card(card)
-                .amount(amount)
-                .type(type)
+                .cardId(card.getCardId())
+                .amount(new Money(amount))
+                .type(ReservationType.DATE)
                 .scheduledDate(scheduledDate)
                 .build();
     }
 
-    public static ReservedCharge of(Cash cash, PaymentCard card, BigDecimal amount, ReservationType type, BigDecimal triggerBalance) {
+    public static ReservedCharge of(PayCard card, Money amount, LocalDate scheduledDate) {
         return ReservedCharge.builder()
-                .cash(cash)
-                .card(card)
+                .cardId(card.getCardId())
                 .amount(amount)
-                .type(type)
+                .type(ReservationType.DATE)
+                .scheduledDate(scheduledDate)
+                .build();
+    }
+
+    public static ReservedCharge of(PayCard card, BigDecimal amount, BigDecimal triggerBalance) {
+        return ReservedCharge.builder()
+                .cardId(card.getCardId())
+                .amount(new Money(amount))
+                .type(ReservationType.BALANCE)
+                .triggerBalance(new Money(triggerBalance))
+                .build();
+    }
+
+    public static ReservedCharge of(PayCard card, Money amount, Money triggerBalance) {
+        return ReservedCharge.builder()
+                .cardId(card.getCardId())
+                .amount(amount)
+                .type(ReservationType.BALANCE)
                 .triggerBalance(triggerBalance)
                 .build();
     }
