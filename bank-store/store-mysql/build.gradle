@@ -11,4 +11,7 @@ dependencies {
     testCompileOnly(project(':bank-domain:techfin-user-domain'))
 
     api(project(':bank-store:store-core'))
+
+    testImplementation(testFixtures(project(':bank-domain:bank-pay-domain')))
+    testRuntimeOnly('com.h2database:h2')
 }

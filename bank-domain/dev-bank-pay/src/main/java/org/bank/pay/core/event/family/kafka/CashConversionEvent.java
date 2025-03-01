@@ -10,11 +10,13 @@ import java.util.UUID;
 public class CashConversionEvent extends FamilyEvent {
 
     private MemberClaims from;
+    private UUID cardId;
     private Money amount;
 
 
-    public CashConversionEvent(UUID familyId, MemberClaims from, Money amount) {
+    public CashConversionEvent(UUID familyId, UUID cardId, MemberClaims from, Money amount) {
         super(familyId);
+        this.cardId = cardId;
         this.from = from;
         this.amount = amount;
     }

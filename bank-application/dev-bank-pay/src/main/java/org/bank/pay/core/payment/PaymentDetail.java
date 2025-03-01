@@ -1,7 +1,7 @@
 package org.bank.pay.core.payment;
 
 import lombok.Data;
-import org.bank.pay.core.payment.product.Category.CategoryType;
+import org.bank.pay.core.event.product.Category.CategoryType;
 
 @Data
 public class PaymentDetail {

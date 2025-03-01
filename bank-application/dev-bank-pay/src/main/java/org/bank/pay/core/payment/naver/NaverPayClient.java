@@ -5,7 +5,7 @@ import org.bank.core.auth.AuthClaims;
 import org.bank.core.cash.PaymentProcessingException;
 import org.bank.core.dto.response.ResponseCodeV2;
 import org.bank.core.payment.Product;
-import org.bank.pay.core.payment.product.Category.CategoryType;
+import org.bank.pay.core.event.product.Category.CategoryType;
 import org.bank.pay.core.payment.PaymentCallbackProperties;
 import org.bank.pay.core.payment.PaymentDetail;
 import org.bank.pay.core.payment.client.PaymentClient;

@@ -15,20 +15,15 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @SuperBuilder
 @Table(name = "pay_family_payment_tb")
+@DiscriminatorValue("payment")
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 public class FamilyPayment extends FamilyEventEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "request-payment-id", columnDefinition = "BINARY(16)")
-    private UUID id;
 
     @Embedded
     private MemberClaims from;
@@ -40,7 +35,7 @@ public class FamilyPayment extends FamilyEventEntity {
     )
     @AttributeOverrides({
             @AttributeOverride(name = "name", column = @Column(name = "name", columnDefinition = "TEXT")),
-            @AttributeOverride(name = "price.balance", column = @Column(name = "price", precision = 30, scale = 10)),
+            @AttributeOverride(name = "price.balance", column = @Column(name = "price", precision = 30, scale = 2)),
             @AttributeOverride(name = "quantity", column = @Column(name = "quantity"))
     })
     @Cascade(CascadeType.ALL)

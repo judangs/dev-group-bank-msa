@@ -60,7 +60,7 @@ public class PayDataSourceConnector extends JpaConfigurationFactory implements S
     @Override
     @Bean(name = "payEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder, @Qualifier("payDataSource") DataSource dataSource, JpaProperties jpaProperties) {
-        String[] entityPackages = {"org.bank.core.domain", "org.bank.pay.core.domain"};
+        String[] entityPackages = {"org.bank.core.domain", "org.bank.pay.core.domain", "org.bank.pay.core.event"};
 
         return builder.dataSource(dataSource).packages(entityPackages)
                 .persistenceUnit(DomainNames.USER.name())

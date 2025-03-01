@@ -11,6 +11,7 @@ import java.util.UUID;
 public class CardFixture {
 
     public static final AuthClaims user = new AuthClaims.ConcreteAuthClaims("user", "fixture", "user@email.com");
+    private static final PayOwner owner = new PayOwner(user);
 
 
 
@@ -23,21 +24,38 @@ public class CardFixture {
     public static PaymentCard cashable() {
         return PaymentCard.builder()
                 .cardId(UUID.randomUUID())
+                .cardName("카드 별칭")
                 .cardNumber("1111-2222-3333-4444")
                 .cvc("111")
                 .passwordStartwith("12")
                 .expireDate(LocalDate.now().plusYears(5).toString())
-                .cash(new Cash(new PayOwner(user)))
+                .cash(new Cash(owner))
+                .payOwner(owner)
+                .build();
+    }
+
+    public static PaymentCard cashable(PayOwner owner, boolean id) {
+        return PaymentCard.builder()
+                .cardId(id ? UUID.randomUUID() : null)
+                .cardName("카드 별칭")
+                .cardNumber("1111-2222-3333-4444")
+                .cvc("111")
+                .passwordStartwith("12")
+                .expireDate(LocalDate.now().plusYears(5).toString())
+                .cash(new Cash(owner))
+                .payOwner(owner)
                 .build();
     }
 
     public static PaymentCard cashable(boolean id) {
         return PaymentCard.builder()
+                .cardName("카드 별칭")
                 .cardNumber("1111-2222-3333-4444")
                 .cvc("111")
                 .passwordStartwith("12")
                 .expireDate(LocalDate.now().plusYears(5).toString())
-                .cash(new Cash(new PayOwner(user)))
+                .cash(new Cash(owner))
+                .payOwner(owner)
                 .build();
     }
 
@@ -50,7 +68,8 @@ public class CardFixture {
                 .cvc("111")
                 .passwordStartwith("12")
                 .expireDate(LocalDate.now().plusYears(5).toString())
-                .cash(new Cash(new PayOwner(user)))
+                .cash(new Cash(owner))
+                .payOwner(owner)
                 .build();
     }
 
@@ -61,7 +80,8 @@ public class CardFixture {
                 .cvc("111")
                 .passwordStartwith("12")
                 .expireDate(LocalDate.now().plusYears(5).toString())
-                .cash(new Cash(new PayOwner(user)))
+                .cash(new Cash(owner))
+                .payOwner(owner)
                 .build();
     }
 }

@@ -1,10 +1,14 @@
 package org.bank.pay.core.domain.owner;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.bank.pay.core.domain.cash.Cash;
-import org.bank.pay.global.domain.DomainEntity;
+import org.bank.pay.global.domain.card.CardType;
+import org.bank.pay.global.domain.card.PayCard;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -15,28 +19,15 @@ import java.util.UUID;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "pay_payment_card_tb")
+@Table(name = "owner_pay_card_tb")
 @Entity
-public class PaymentCard extends DomainEntity {
+public class PaymentCard extends PayCard {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @EqualsAndHashCode.Include
-    private UUID cardId;
 
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
     private PayOwner payOwner;
 
-    @EqualsAndHashCode.Include
-    private String cardNumber;
-    private String cvc;
-    private String passwordStartwith;
-    private String expireDate;
-    private String cardName;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    private Cash cash;
 
 
     public static PaymentCard of(String cardName, String cardNumber, String cVC, String passwordStartwith, LocalDate dateOfExpiry) {
@@ -50,8 +41,9 @@ public class PaymentCard extends DomainEntity {
 
     }
 
-    public void create(PayOwner payOwner) {
+    public void create(PayOwner payOwner, CardType type) {
         this.cash = new Cash(payOwner);
+        this.type = type;
         this.payOwner = payOwner;
     }
 
@@ -61,6 +53,7 @@ public class PaymentCard extends DomainEntity {
 
 
     public void alias(String newCardName) {
+        super.alias(newCardName);
         this.cardName = newCardName;
     }
 

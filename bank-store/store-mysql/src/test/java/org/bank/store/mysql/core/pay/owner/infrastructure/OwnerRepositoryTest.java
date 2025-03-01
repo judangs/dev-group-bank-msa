@@ -1,75 +1,88 @@
 package org.bank.store.mysql.core.pay.owner.infrastructure;
 
-import org.bank.pay.core.domain.onwer.OwnerClaims;
-import org.bank.pay.core.domain.onwer.PayOwner;
-import org.bank.pay.core.domain.onwer.PaymentCard;
+import org.bank.core.auth.AuthClaims;
+import org.bank.core.cash.Money;
+import org.bank.pay.core.domain.owner.OwnerClaims;
+import org.bank.pay.core.domain.owner.PayOwner;
+import org.bank.pay.core.domain.owner.PaymentCard;
+import org.bank.pay.core.domain.owner.repository.PayOwnerReader;
+import org.bank.pay.fixture.UserFixture;
+import org.bank.pay.global.domain.card.PayCard;
+import org.bank.store.mysql.core.pay.unit.OwnerRepositoryUnitTest;
+import org.bank.store.mysql.core.pay.unit.init.TestInitializer;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = OwnerRepositoryTest.TestConfig.class)
+@ContextConfiguration(classes = OwnerRepositoryUnitTest.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class OwnerRepositoryTest {
 
-    @Configuration
-    @ComponentScan(basePackages ={
-            "org.bank.store.mysql.core.pay.config",
-            "org.bank.store.mysql.core.pay.owner",
-            "org.bank.store.mysql.core.pay.cash"
-    })
-    static class TestConfig {
-
-    }
-
-    private static OwnerClaims claims = new OwnerClaims("fixture", "name", "fixture@bank.com");
-    private static PayOwner owner = new PayOwner(claims);
-
     @Autowired
-    private OwnerRepository ownerRepository;
+    private PayOwnerReader payOwnerReader;
+    @Autowired
+    private TestInitializer testInitializer;
+
+    private final AuthClaims user = UserFixture.authenticated();
+
+    private PayOwner owner;
+    private PayCard card;
 
     @BeforeAll
     public void setUp() {
-        owner.addPaymentCard(PaymentCard.of("first card", "1414 2000 1010 1000", "000", "12", LocalDate.of(2025, 03, 31)));
-        owner.addPaymentCard(PaymentCard.of("second card", "1414 2000 1010 1001", "000", "12", LocalDate.of(2025, 03, 31)));
-        owner.addPaymentCard(PaymentCard.of("third card", "1414 2000 1010 1002", "000", "12", LocalDate.of(2025, 03, 31)));
-        ownerRepository.save(owner);
+        testInitializer.init(user);
+
+        owner = testInitializer.getPayOwner(user);
+        card = testInitializer.getCard(user);
     }
 
     @Test
-    @DisplayName("[PayOwner 조회] PayOwner 엔티티의 Claims와 동일한 정보를 데이터베이스에서 조회할 수 있습니다.")
-    public void findByClaims_success() {
-        Optional<PayOwner> owner = ownerRepository.findByUserClaims(claims);
-        assertTrue(owner.isPresent());
+    public void 데이터베이스에서_유저_정보와_일치하는_payOnwer를_조회합니다() {
+
+        assertThat(payOwnerReader.findByUserClaims(user)).isPresent();
+
+        payOwnerReader.findByUserClaims(user).ifPresent(payOwner -> {
+            assertAll(
+                    () -> assertThat(payOwner).isNotNull(),
+                    () -> assertThat(payOwner.getClaims()).isEqualTo(OwnerClaims.of(user)),
+                    () -> assertThat(payOwner.getPaymentCards().isEmpty()).isFalse()
+            );
+        });
     }
 
     @Test
-    @DisplayName("[PayOwner 조회] PayOwner 엔티티에 등록된 결제 카드 정보를 데이터베이스에서 조회할 수 있습니다.")
-    public void findPaymentCardsByClaims_success() {
-        List<PaymentCard> cards = ownerRepository.findAllPaymentCardsByOwner(owner);
-        assertEquals(3, cards.size());
+    public void 데이터베이스에서_유저가_등록한_결제_카드_정보를_조회할_수_있습니다() {
+
+        assertThat(payOwnerReader.findPaymentCardByOwnerAndCard(user, card.getCardId())).isPresent();
+
+        payOwnerReader.findPaymentCardByOwnerAndCard(user, card.getCardId()).ifPresent(payCard -> {
+
+                assertAll(
+                        () -> assertThat(payCard.getCardName()).isEqualTo(card.getCardName()),
+                        () -> assertThat(payCard.getCardNumber()).isEqualTo(card.getCardNumber()),
+                        () -> assertThat(payCard.getCvc()).isEqualTo(card.getCvc()),
+                        () -> assertThat(payCard.getPayOwner().getClaims()).isEqualTo(OwnerClaims.of(user)),
+                        () -> assertThat(payCard.getCash().getCredit()).isEqualTo(new Money(0))
+                );
+        });
     }
 
     @Test
-    @DisplayName("[PayOwner 조회] PayOwner 엔티티에 등록된 결제 카드 정보 중 id가 일치하는 카드를 데이터베이스에서 조회할 수 있습니다.")
-    public void findPaymentCardByClaimsAndId_success() {
-        UUID paymentCardId = ownerRepository.findAllPaymentCardsByOwner(owner).get(0).getCardId();
-        Optional<PaymentCard> card = ownerRepository.findPaymentCardByOwnerAndCard(owner, paymentCardId);
-        assertTrue(card.isPresent());
+    public void 데이터베이스에서_유저가_등록한_결제_카드를_정보를_모두_조회할_수_있습니다() {
+
+        assertThat(payOwnerReader.findPaymentCardsByUser(user).isEmpty()).isFalse();
+
+        if(card instanceof PaymentCard paymentCard) {
+            assertThat(payOwnerReader.findPaymentCardsByUser(user).stream())
+                    .contains(paymentCard);
+        }
     }
 }

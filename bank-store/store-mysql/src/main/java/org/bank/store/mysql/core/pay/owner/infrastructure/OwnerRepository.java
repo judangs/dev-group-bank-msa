@@ -12,8 +12,8 @@ import org.bank.store.mysql.core.pay.owner.JpaClaimsRepository;
 import org.bank.store.source.DataSourceType;
 import org.bank.store.source.NamedRepositorySource;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,25 +26,10 @@ public class OwnerRepository implements PayOwnerReader, PayOwnerStore {
     private final JpaClaimsRepository jpaClaimsRepository;
 
     @Override
-    public Optional<PayOwner> findByUserClaims(OwnerClaims claims) {
-        return jpaClaimsRepository.findByClaimsFromOwner(claims);
+    public Optional<PayOwner> findByUserClaims(AuthClaims user) {
+        return jpaClaimsRepository.findByClaimsFromOwner(OwnerClaims.of(user));
     }
 
-    @Override
-    public Optional<PayOwner> findByUserClaims(AuthClaims claims) {
-        return findByUserClaims(OwnerClaims.of(claims));
-    }
-
-
-    @Override
-    public List<PaymentCard> findAllPaymentCardsByOwner(PayOwner payOwner) {
-        Optional<PayOwner> optionalPayOwner = findByUserClaims(payOwner.getClaims());
-        if(optionalPayOwner.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        return optionalPayOwner.get().getPaymentCards();
-    }
 
     @Override
     public List<PaymentCard> findPaymentCardsByUser(AuthClaims user) {
@@ -58,22 +43,16 @@ public class OwnerRepository implements PayOwnerReader, PayOwnerStore {
                 .filter(card -> card.getCardId().equals(cardId)).findFirst();
     }
 
-    @Override
-    public Optional<PaymentCard> findPaymentCardByOwnerAndCard(PayOwner payOwner, UUID cardId) {
-        List<PaymentCard> cards = findAllPaymentCardsByOwner(payOwner);
-
-        return cards.stream()
-                .filter(card -> card.getCardId().equals(cardId)).findFirst();
-    }
 
     @Override
+    @Transactional
     public void save(PayOwner payOwner) {
         jpaClaimsRepository.save(payOwner);
     }
 
     @Override
     public void deleteByOwnerAndCard(PayOwner payOwner, UUID cardId) {
-        List<PaymentCard> cards = findAllPaymentCardsByOwner(payOwner);
-        cards.removeIf(card -> card.getCardId().equals(cardId));
+        payOwner.getPaymentCards()
+                .removeIf(card -> card.getCardId().equals(cardId));
     }
 }

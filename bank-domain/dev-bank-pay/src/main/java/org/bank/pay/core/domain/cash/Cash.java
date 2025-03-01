@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.bank.core.cash.Money;
 import org.bank.pay.core.domain.owner.PayOwner;
 import org.bank.pay.global.domain.DomainEntity;
@@ -14,20 +13,20 @@ import java.util.UUID;
 
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "pay_cash_tb")
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 public class Cash extends DomainEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "BINARY(16)", unique = true)
     @EqualsAndHashCode.Include
     private UUID cashId;
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "balance", column = @Column(name = "credit"))
+            @AttributeOverride(name = "balance", column = @Column(name = "credit", precision = 30, scale = 2))
     })
     private Money credit;
 
@@ -44,15 +43,17 @@ public class Cash extends DomainEntity {
     })
     private PayLimit limits;
 
-    private String userid;
+    private String ownerId;
 
-    public Cash(PayOwner payOwner) {
-
-        this.userid = payOwner.getClaims().getUserid();
-
+    public Cash() {
         credit = new Money();
         dailyCurrency = new Money();
         limits = new PayLimit();
+    }
+
+    public Cash(PayOwner payOwner) {
+        this();
+        this.ownerId = payOwner.getClaims().getUserid();
     }
 
     public void charge(Money amount) {

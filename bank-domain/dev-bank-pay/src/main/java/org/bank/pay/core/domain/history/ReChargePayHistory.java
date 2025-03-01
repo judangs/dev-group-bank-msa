@@ -9,6 +9,7 @@ import org.bank.core.auth.AuthClaims;
 import org.bank.core.cash.Money;
 import org.bank.core.cash.PayMethod;
 import org.bank.core.payment.Product;
+import org.bank.pay.core.domain.familly.MemberClaims;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,9 +22,9 @@ import java.time.LocalDateTime;
 public class ReChargePayHistory extends PayHistory {
 
 
-    public static ReChargePayHistory of(AuthClaims authClaims, String paymentId, Product product, PayMethod method) {
+    public static ReChargePayHistory of(AuthClaims user, String paymentId, Product product, PayMethod method) {
         return ReChargePayHistory.builder()
-                .userId(authClaims.getUserid())
+                .buyer(MemberClaims.of(user))
                 .paymentId(paymentId)
                 .payName(product.getName())
                 .method(method)

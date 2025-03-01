@@ -21,36 +21,25 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = FamilyRepositoryTest.TestConfig.class)
+@ContextConfiguration(classes = FamilyRepositoryUnitTest.class)
 class FamilyRepositoryTest {
 
-    @Configuration
-    @ComponentScan(basePackages ={
-            "org.bank.store.mysql.core.pay.config",
-            "org.bank.store.mysql.core.pay.family"
-    })
-    static class TestConfig {
 
-    }
-
-    @Autowired @Qualifier("familyCommandRepository")
+    @Autowired
     private FamilyCommandRepository familyCommandRepository;
-
-    @Autowired @Qualifier("familyQueryRepository")
+    @Autowired
     private FamilyQueryRepository familyQueryRepository;
+    @Autowired
+    private TestInitializer testInitializer;
 
-    private static OwnerClaims owner;
-    private static MemberClaims leader;
-    private static Family family;
+
+    private AuthClaims leader = UserFixture.authenticated();
+    private Family family;
 
     @BeforeEach
     public void setUp() {
-
-        owner = new OwnerClaims("fixture", "fixture", "fixture@bank.com");
-        leader = MemberClaims.of(owner);
-
-        family = new Family();
-        family.createFamilly(leader);
+        testInitializer.owner(leader);
+        family = new Family(leader);
 
         familyCommandRepository.saveFamily(family);
     }
@@ -61,28 +50,29 @@ class FamilyRepositoryTest {
     }
 
     @Test
-    @DisplayName("[family 캐시] 캐시를 공유할 그룹을 저장합니다.")
-    void save_success() {
+    void 캐시를_공유할_그룹을_생성합니다() {
 
-
-        Family family = new Family();
-        family.createFamilly(MemberClaims.of(new OwnerClaims("fixture2", "fixture", "fixture@bank.com")));
-
-        assertDoesNotThrow(() -> familyCommandRepository.saveFamily(family));
+        Family family = new Family(FamilyFixture.leader("leader", "family-leader"));
+        Assertions.assertThatCode(() -> familyCommandRepository.saveFamily(family))
+                        .doesNotThrowAnyException();
     }
 
     @Test
-    @DisplayName("[family 캐시] 캐시를 공유할 그룹을 찾을 수 있습니다.")
-    void findById() {
+    void 캐시를_공유할_그룹을_찾을_수_있습니다() {
+        assertThat(familyQueryRepository.findById(family.getFamilyId())).isPresent();
 
-        Optional<Family> optionalFamily = familyQueryRepository.findById(family.getFamilyId());
-        assertTrue(optionalFamily.isPresent());
+        familyQueryRepository.findById(family.getFamilyId()).ifPresent(family -> {
+            assertAll(
+                    () -> assertThat(family.getLeader()).isEqualTo(MemberClaims.of(leader)),
+                    () -> assertThat(family.getParticipants().isEmpty()).isFalse(),
+                    () -> assertThat(family.getFamilyCard()).isNotNull(),
+                    () -> assertThat(family.getFamilyCard().getCash().getCredit()).isEqualTo(new Money(0))
+            );
+        });
     }
 
     @Test
-    @DisplayName("[family 캐시] 리더의 역할을 맡고 있는 그룹을 찾습니다.")
-    void findByUserIsLeader() {
-        Optional<Family> optionalFamily = familyQueryRepository.findByUserIsLeader(leader);
-        assertTrue(optionalFamily.isPresent());
+    void 데이터베이스에서_리더_유저가_속한_패밀리를_조회할_수_있습니다() {
+        assertThat(familyQueryRepository.findByUserIsLeader(leader).isPresent()).isTrue();
     }
 }

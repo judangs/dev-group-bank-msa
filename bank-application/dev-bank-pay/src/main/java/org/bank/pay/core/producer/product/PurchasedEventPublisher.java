@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.bank.core.auth.AuthClaims;
 import org.bank.core.kafka.KafkaEvent;
 import org.bank.pay.core.event.product.PurchasedEvent;
-import org.bank.pay.core.payment.product.Category.CategoryType;
+import org.bank.pay.core.event.product.Category.CategoryType;
 import org.bank.pay.core.payment.PaymentDetail;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Async;

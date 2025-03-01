@@ -1,43 +1,31 @@
 package org.bank.pay.core.onwer;
 
 import org.bank.core.auth.AuthClaims;
-import org.bank.pay.core.domain.owner.service.PayCardService;
 import org.bank.pay.core.domain.owner.PayOwner;
 import org.bank.pay.core.domain.owner.PaymentCard;
-import org.bank.pay.core.domain.owner.repository.PayOwnerReader;
+import org.bank.pay.core.domain.owner.service.PayCardService;
+import org.bank.pay.core.unit.CardUnitTest;
 import org.bank.pay.fixture.CardFixture;
+import org.bank.pay.fixture.UserFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = CardServiceTest.UnitTest.class)
-public class CardServiceTest {
 
-    @Configuration
-    @ComponentScan(basePackages = "org.bank.pay.core.domain.owner")
-    static class UnitTest {}
+public class CardServiceTest extends CardUnitTest {
 
-    private final AuthClaims user = new AuthClaims.ConcreteAuthClaims("user-01", "fixture", "user@email.com");
 
+    private final AuthClaims user = UserFixture.authenticated();
 
     @Autowired
     private PayCardService payCardService;
-    @MockBean
-    private PayOwnerReader payOwnerReader;
 
-    private final PayOwner owner = new PayOwner();
+    private final PayOwner owner = new PayOwner(user);
 
     @BeforeEach
     void setup() {

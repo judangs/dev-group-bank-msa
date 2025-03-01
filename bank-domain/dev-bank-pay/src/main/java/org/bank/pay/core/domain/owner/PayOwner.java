@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bank.core.auth.AuthClaims;
 import org.bank.pay.global.domain.DomainEntity;
+import org.bank.pay.global.domain.card.CardType;
+import org.bank.pay.global.domain.card.PayCard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +36,7 @@ public class PayOwner extends DomainEntity {
         this.claims = OwnerClaims.of(user);
     }
 
-    public Optional<PaymentCard> match(PaymentCard card) {
+    public Optional<PaymentCard> match(PayCard card) {
         return paymentCards.stream().filter(paymentCard -> paymentCard.equals(card))
                 .findFirst();
     }
@@ -46,7 +48,7 @@ public class PayOwner extends DomainEntity {
 
     public void addPaymentCard(PaymentCard card) {
         getPaymentCards().add(card);
-        card.create(this);
+        card.create(this, CardType.PERSONAL);
     }
 
     public void close(UUID cardId) {

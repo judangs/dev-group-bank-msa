@@ -9,6 +9,7 @@ import org.bank.core.auth.AuthClaims;
 import org.bank.core.cash.Money;
 import org.bank.core.cash.PayMethod;
 import org.bank.core.payment.Product;
+import org.bank.pay.core.domain.familly.MemberClaims;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,7 +26,7 @@ public class OrderPayHistory extends PayHistory {
 
     public static OrderPayHistory of(AuthClaims user, String paymentId, Product product) {
         return OrderPayHistory.builder()
-                .userId(user.getUserid())
+                .buyer(MemberClaims.of(user))
                 .paymentId(paymentId)
                 .payName(product.getName())
                 .method(PayMethod.CARD)
