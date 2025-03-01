@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bank.core.auth.AuthClaims;
-import org.bank.core.cash.Money;
 import org.bank.pay.global.domain.DomainEntity;
+import org.bank.pay.global.domain.card.CardType;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
@@ -25,10 +25,10 @@ public class Family extends DomainEntity {
     @Column(name = "family_id", columnDefinition = "BINARY(16)")
     private UUID familyId;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "pay_family_participant_tb", joinColumns = @JoinColumn(name = "family_id"),
-            uniqueConstraints = @UniqueConstraint(columnNames = {"family_id, userid"})
+            uniqueConstraints = @UniqueConstraint(columnNames = {"family_id", "userid"})
     )
     @Cascade(CascadeType.ALL)
     private Set<MemberClaims> participants = new HashSet<>();
@@ -37,25 +37,27 @@ public class Family extends DomainEntity {
     @Embedded
     private MemberClaims leader;
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "balance", column = @Column(name = "credit", precision = 30, scale = 10))
-    })
-    private Money familyCredit;
+    @OneToOne(cascade = jakarta.persistence.CascadeType.PERSIST)
+    private FamilyCard familyCard;
 
     private void create(AuthClaims leader) {
 
         this.leader = MemberClaims.of(leader);
         participants.add(this.leader);
-        familyCredit = new Money();
+        familyCard.create(CardType.FAMILY);
     }
 
     public Family(AuthClaims leader) {
+        familyCard = new FamilyCard();
         create(leader);
     }
 
     public MemberClaims find(String userId) {
         return participants.stream().filter(participant -> participant.getUserid().equals(userId))
                 .findFirst().orElseThrow(() -> new EntityNotFoundException("해당 사용자는 그룹원이 아닙니다."));
+    }
+
+    public int count() {
+        return participants.size();
     }
 }
