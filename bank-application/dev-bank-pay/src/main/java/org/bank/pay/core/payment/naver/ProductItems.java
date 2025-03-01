@@ -3,8 +3,8 @@ package org.bank.pay.core.payment.naver;
 import lombok.Builder;
 import lombok.Data;
 import org.bank.core.payment.Product;
-import org.bank.pay.core.payment.product.Category;
-import org.bank.pay.core.payment.product.Category.CategoryType;
+import org.bank.pay.core.event.product.Category;
+import org.bank.pay.core.event.product.Category.CategoryType;
 
 @Data
 @Builder

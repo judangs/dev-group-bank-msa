@@ -1,4 +1,4 @@
-package org.bank.pay.core.payment.product;
+package org.bank.pay.core.event.product;
 
 import lombok.Getter;
 
