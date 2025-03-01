@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.bank.core.cash.Money;
 import org.bank.core.cash.PayMethod;
-import org.bank.pay.core.domain.owner.OwnerClaims;
+import org.bank.pay.core.domain.familly.MemberClaims;
 import org.bank.pay.global.domain.DomainEntity;
 
 import java.time.LocalDateTime;
@@ -27,8 +27,9 @@ public abstract class PayHistory extends DomainEntity {
 
     protected String paymentId;
 
-    protected OwnerClaims buyer;
-    protected String userId;
+    @Embedded
+    protected MemberClaims buyer;
+
     protected String payName;
 
     @Embedded

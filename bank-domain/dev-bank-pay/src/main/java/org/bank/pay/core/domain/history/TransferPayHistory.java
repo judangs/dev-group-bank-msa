@@ -26,7 +26,7 @@ public class TransferPayHistory extends PayHistory {
                 .payMoney(event.getAmount())
                 .transactionDate(LocalDateTime.now())
                 .method(PayMethod.TRANSFER)
-                .userId(event.getFrom().getUserid())
+                .buyer(event.getFrom())
                 .build();
     }
     public static TransferPayHistory of(CashConversionEvent event, boolean rollback) {
@@ -36,7 +36,7 @@ public class TransferPayHistory extends PayHistory {
                 .payMoney(event.getAmount())
                 .transactionDate(LocalDateTime.now())
                 .method(PayMethod.TRANSFER)
-                .userId(event.getFrom().getUserid())
+                .buyer(event.getFrom())
                 .build();
 
         if(rollback)
