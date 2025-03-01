@@ -1,12 +1,12 @@
 package org.bank.pay.core.domain.cash;
 
-import org.bank.pay.core.domain.owner.PaymentCard;
+import org.bank.pay.global.domain.card.PayCard;
 
 import java.math.BigDecimal;
 
 public class ChargeConstraints {
 
-    public static void validate(PaymentCard card, BigDecimal amount) {
+    public static void validate(PayCard card, BigDecimal amount) {
         if (card == null) {
             throw new IllegalArgumentException("유효하지 않은 카드입니다.");
         }
@@ -17,7 +17,7 @@ public class ChargeConstraints {
     }
 
     public static void validate(ReservedCharge reservedCharge) {
-        if(reservedCharge.getCard() == null || reservedCharge.getCash() == null) {
+        if(reservedCharge.getCardId() == null || reservedCharge.getAmount() == null) {
             throw new IllegalArgumentException("카드와 사용자 정보가 필요합니다.");
         }
         if(reservedCharge.getTriggerBalance() == null && reservedCharge.getScheduledDate() == null) {
