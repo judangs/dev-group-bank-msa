@@ -3,7 +3,6 @@ package org.bank.pay.core.domain.familly;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.bank.core.auth.AuthClaims;
-import org.bank.core.cash.Money;
 import org.bank.pay.core.domain.familly.repository.FamilyReader;
 import org.bank.pay.core.domain.familly.repository.FamilyStore;
 import org.springframework.stereotype.Service;
@@ -68,21 +67,6 @@ public class FamilyService {
         FamilyConstraints.validateParticipantContaining(family, leader);
 
         family.setLeader(leader);
-    }
-
-    @Transactional
-    public void depositCashToFamily(UUID familyId, AuthClaims from, Money cash) {
-
-        Money familyCredit = isExist(familyId).getFamilyCredit();
-        familyCredit.deposit(cash);
-    }
-
-    @Transactional
-    public void withdrawCashFromFamily(UUID familyId, Money cashToTransfer) {
-        Family family = isExist(familyId);
-        Money familyCredit = family.getFamilyCredit();
-
-        familyCredit.withdraw(cashToTransfer);
     }
 
     public Family isExist(UUID familyId) {
