@@ -9,26 +9,19 @@ import org.bank.pay.core.domain.familly.MemberClaims;
 import org.bank.pay.core.event.family.kafka.InviteEvent;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @SuperBuilder
 @Table(name = "pay_family_invitation_tb")
-@Entity
+@DiscriminatorValue("invitation")
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class FamilyInvitation extends FamilyEventEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID id;
 
     @Embedded
     private MemberClaims to;
 
-    @Enumerated(EnumType.STRING)
-    private FamilyEventStatus status;
     private LocalDateTime expiryDate;
 
     public boolean isExpired() {
