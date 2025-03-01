@@ -2,21 +2,12 @@ package org.bank.pay.core.cash;
 
 
 import org.bank.pay.core.domain.cash.Cash;
-import org.bank.pay.core.domain.cash.repository.CashReader;
-import org.bank.pay.core.domain.cash.repository.CashStore;
-import org.bank.pay.core.domain.cash.repository.ReservedCashReader;
-import org.bank.pay.core.domain.cash.repository.ReservedCashStore;
 import org.bank.pay.core.domain.cash.service.CashLimitService;
+import org.bank.pay.core.unit.CashUnitTest;
 import org.bank.pay.fixture.CardFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
 
@@ -25,26 +16,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = CashLimitServiceTest.UnitTest.class)
-public class CashLimitServiceTest {
 
-    @Configuration
-    @ComponentScan(basePackages = "org.bank.pay.core.domain.cash")
-    static class UnitTest {
-        @MockBean
-        private CashReader cashReader;
-        @MockBean
-        private ReservedCashStore reservedCashStore;
-        @MockBean
-        private ReservedCashReader reservedCashReader;
-    }
+public class CashLimitServiceTest extends CashUnitTest {
 
-    @MockBean
-    private CashStore cashStore;
 
     @Autowired
     private CashLimitService cashLimitService;
+
     private static final BigDecimal MAX_PAYMENT_LIMIT = new BigDecimal("99999999999999999999.99");
 
     private final Cash cash = CardFixture.cashable().getCash();
