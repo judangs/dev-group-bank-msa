@@ -1,5 +1,6 @@
 package org.bank.user.core.domain.fixture;
 
+import org.bank.core.auth.AuthClaims;
 import org.bank.core.common.Address;
 import org.bank.core.common.Role;
 import org.bank.user.core.domain.account.Credential;
@@ -16,6 +17,14 @@ public class AccountFixture {
         return Credential.builder()
                 .userid(userid)
                 .username("username")
+                .password(passwordEncoder.encode(password))
+                .build();
+    }
+
+    public static Credential authenticated(AuthClaims user) {
+        return Credential.builder()
+                .userid(user.getUserid())
+                .username(user.getUsername())
                 .password(passwordEncoder.encode(password))
                 .build();
     }
