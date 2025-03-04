@@ -14,6 +14,7 @@ import org.bank.store.source.NamedRepositorySource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -45,5 +46,10 @@ public class FamilyEventRepository implements FamilyEventStore, FamilyEventReade
     @Override
     public Optional<FamilyPayment> findPaymentRequestEventByFamilyAndId(UUID familyId, UUID id) {
         return jpaFamilyEventRepository.findPaymentRequestEventByFamilyIdAndEventId(familyId, id);
+    }
+
+    @Override
+    public List<FamilyPayment> findPaymentRequestEventsByFamily(UUID familyId) {
+        return jpaFamilyEventRepository.findPaymentRequestEventsByFamilyId(familyId);
     }
 }

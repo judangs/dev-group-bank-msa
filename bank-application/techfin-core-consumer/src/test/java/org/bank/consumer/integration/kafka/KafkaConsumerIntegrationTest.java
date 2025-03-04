@@ -1,4 +1,4 @@
-package org.bank.consumer.integration;
+package org.bank.consumer.integration.kafka;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.bank.core.kafka.KafkaEvent;
@@ -17,7 +17,7 @@ import java.util.Map;
 @TestConfiguration
 @PropertySource("classpath:/application-test.properties")
 @EnableConfigurationProperties(KafkaProperties.class)
-public class KafkaIntegrationTest extends IntegrationTest {
+public class KafkaConsumerIntegrationTest extends ConsumerIntegrationTest {
     @Bean
     public ProducerFactory<String, KafkaEvent> producerFactory(KafkaProperties kafkaProperties) {
 

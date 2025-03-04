@@ -54,7 +54,7 @@ public class Family extends DomainEntity {
 
     public MemberClaims find(String userId) {
         return participants.stream().filter(participant -> participant.getUserid().equals(userId))
-                .findFirst().orElseThrow(() -> new EntityNotFoundException("해당 사용자는 그룹원이 아닙니다."));
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("해당 사용자는 그룹원이 아닙니다."));
     }
 
     public int count() {

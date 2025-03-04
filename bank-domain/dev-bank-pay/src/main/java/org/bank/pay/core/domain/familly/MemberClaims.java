@@ -1,5 +1,6 @@
 package org.bank.pay.core.domain.familly;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@JsonDeserialize(converter = AuthToMemberConverter.class)
 public class MemberClaims extends AuthClaims {
 
 

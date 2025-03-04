@@ -8,6 +8,7 @@ import org.bank.pay.core.domain.familly.FamilyService;
 import org.bank.pay.core.domain.familly.repository.FamilyEventReader;
 import org.bank.pay.core.event.family.FamilyInvitation;
 import org.bank.pay.core.event.family.FamilyPayment;
+import org.bank.pay.core.producer.family.payment.FamilyPurchaseEventPublisher;
 import org.bank.pay.dto.service.request.FamilyEventRequest;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class  RoleBasedFamilyEventFacade {
 
     private final FamilyService familyService;
     private final KafkaTemplate<String, KafkaEvent> kafkaTemplate;
+    private final FamilyPurchaseEventPublisher familyPurchaseEventPublisher;
 
     private final FamilyEventReader familyEventReader;
 
@@ -59,7 +61,7 @@ public class  RoleBasedFamilyEventFacade {
             ResponseDto response = switch (request.getDecision()) {
                 case ACCEPT -> {
                     payment.accept();
-                    kafkaTemplate.send("family.payment.approval", FamilyPayment.to(payment));
+                    familyPurchaseEventPublisher.approval(payment);
                     yield ResponseDto.success("결제를 승인했습니다.");
                 }
                 case REJECT -> {

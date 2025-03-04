@@ -7,7 +7,7 @@ import org.bank.pay.core.domain.familly.FamilyService;
 import org.bank.pay.core.domain.familly.MemberClaims;
 import org.bank.pay.core.domain.familly.repository.FamilyEventReader;
 import org.bank.pay.core.domain.familly.repository.FamilyStore;
-import org.bank.pay.core.domain.onwer.OwnerClaims;
+import org.bank.pay.core.domain.owner.OwnerClaims;
 import org.bank.pay.core.event.family.FamilyEventStatus;
 import org.bank.pay.core.event.family.FamilyInvitation;
 import org.bank.pay.core.event.family.FamilyPayment;

@@ -3,7 +3,6 @@ package org.bank.store.mysql.core.pay.owner.infrastructure;
 import org.bank.core.auth.AuthClaims;
 import org.bank.core.cash.Money;
 import org.bank.pay.core.domain.owner.OwnerClaims;
-import org.bank.pay.core.domain.owner.PayOwner;
 import org.bank.pay.core.domain.owner.PaymentCard;
 import org.bank.pay.core.domain.owner.repository.PayOwnerReader;
 import org.bank.pay.fixture.UserFixture;
@@ -33,15 +32,25 @@ class OwnerRepositoryTest {
 
     private final AuthClaims user = UserFixture.authenticated();
 
-    private PayOwner owner;
     private PayCard card;
 
     @BeforeAll
     public void setUp() {
         testInitializer.init(user);
-
-        owner = testInitializer.getPayOwner(user);
         card = testInitializer.getCard(user);
+    }
+
+    @Test
+    public void 데이터베이스에서_유저_아이디_정보와_일치하는_payOnwer를_조회합니다() {
+        assertThat(payOwnerReader.findByUserId(user.getUserid())).isPresent();
+
+        payOwnerReader.findByUserId(user.getUserid()).ifPresent(payOwner -> {
+            assertAll(
+                    () -> assertThat(payOwner).isNotNull(),
+                    () -> assertThat(payOwner.getClaims()).isEqualTo(OwnerClaims.of(user)),
+                    () -> assertThat(payOwner.getPaymentCards().isEmpty()).isFalse()
+            );
+        });
     }
 
     @Test

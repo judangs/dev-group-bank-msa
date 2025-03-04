@@ -1,24 +1,24 @@
 package org.bank.store.mysql.core.pay.family.infrastructure;
 
+import org.assertj.core.api.Assertions;
+import org.bank.core.auth.AuthClaims;
+import org.bank.core.cash.Money;
 import org.bank.pay.core.domain.familly.Family;
 import org.bank.pay.core.domain.familly.MemberClaims;
-import org.bank.pay.core.domain.onwer.OwnerClaims;
+import org.bank.pay.fixture.FamilyFixture;
+import org.bank.pay.fixture.UserFixture;
+import org.bank.store.mysql.core.pay.unit.FamilyRepositoryUnitTest;
+import org.bank.store.mysql.core.pay.unit.init.TestInitializer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = FamilyRepositoryUnitTest.class)
@@ -54,7 +54,7 @@ class FamilyRepositoryTest {
 
         Family family = new Family(FamilyFixture.leader("leader", "family-leader"));
         Assertions.assertThatCode(() -> familyCommandRepository.saveFamily(family))
-                        .doesNotThrowAnyException();
+                .doesNotThrowAnyException();
     }
 
     @Test

@@ -1,6 +1,5 @@
 package org.bank.pay.core.domain.familly;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.bank.core.auth.AuthClaims;
 import org.bank.pay.core.domain.familly.repository.FamilyReader;
@@ -72,7 +71,7 @@ public class FamilyService {
     public Family isExist(UUID familyId) {
         Optional<Family> ownerFamily = familyReader.findById(familyId);
         if(ownerFamily.isEmpty()) {
-            throw new EntityNotFoundException("생성된 패밀리가 없습니다.");
+            throw new IllegalArgumentException("생성된 패밀리가 없습니다.");
         }
 
         return ownerFamily.get();

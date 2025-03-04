@@ -1,19 +1,25 @@
 package org.bank.pay.core.event.family.kafka;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.bank.core.auth.AuthClaims;
-import org.bank.pay.core.domain.familly.MemberClaims;
 
 import java.util.UUID;
 
 @Getter
+@JsonIgnoreProperties(ignoreUnknown = true)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@JsonTypeName(value = "INVITE")
 public class InviteEvent extends FamilyEvent {
 
-    private MemberClaims to;
+    private AuthClaims to;
 
 
     public InviteEvent(UUID familyId, AuthClaims to) {
-        super(familyId);
-        this.to = MemberClaims.of(to);
+        super(InviteEvent.class, familyId);
+        this.to = to;
     }
 }

@@ -10,6 +10,7 @@ import java.util.UUID;
 
 public interface PayOwnerReader {
 
+    Optional<PayOwner> findByUserId(String userid);
     Optional<PayOwner> findByUserClaims(AuthClaims claims);
     List<PaymentCard> findPaymentCardsByUser(AuthClaims user);
     Optional<PaymentCard> findPaymentCardByOwnerAndCard(AuthClaims user, UUID cardId);

@@ -5,7 +5,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.bank.core.kafka.KafkaEvent;
 import org.bank.pay.core.domain.familly.MemberClaims;
 import org.bank.pay.core.event.family.kafka.InviteEvent;
-import org.bank.pay.global.kafka.KafkaEventSerializer;
+import org.bank.pay.core.producer.KafkaEventSerializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

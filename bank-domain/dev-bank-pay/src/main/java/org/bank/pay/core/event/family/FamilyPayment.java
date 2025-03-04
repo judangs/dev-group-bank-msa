@@ -41,8 +41,6 @@ public class FamilyPayment extends FamilyEventEntity {
     @Cascade(CascadeType.ALL)
     private List<PaymentProduct> products;
 
-    @Enumerated(EnumType.STRING)
-    private FamilyEventStatus status;
     private LocalDateTime requestDate;
 
     public boolean isPending() {
@@ -60,7 +58,7 @@ public class FamilyPayment extends FamilyEventEntity {
 
         return FamilyPayment.builder()
                 .familyId(event.getFamilyId())
-                .from(event.getFrom())
+                .from(MemberClaims.of(event.getFrom()))
                 .products(paymentProducts)
                 .status(FamilyEventStatus.PENDING)
                 .requestDate(requestDate)

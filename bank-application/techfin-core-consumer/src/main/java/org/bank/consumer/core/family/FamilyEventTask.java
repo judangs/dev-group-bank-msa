@@ -1,19 +1,16 @@
-package org.bank.consumer.pay;
+package org.bank.consumer.core.family;
 
 import lombok.RequiredArgsConstructor;
 import org.bank.core.cash.PaymentProcessingException;
-import org.bank.pay.core.domain.cash.Cash;
-import org.bank.pay.core.domain.familly.FamilyService;
+import org.bank.pay.core.domain.familly.repository.FamilyEventStore;
+import org.bank.pay.core.domain.history.HistoryService;
+import org.bank.pay.core.domain.history.TransferPayHistory;
+import org.bank.pay.core.domain.owner.repository.PayOwnerReader;
 import org.bank.pay.core.event.family.FamilyInvitation;
 import org.bank.pay.core.event.family.FamilyPayment;
 import org.bank.pay.core.event.family.kafka.CashConversionEvent;
 import org.bank.pay.core.event.family.kafka.InviteEvent;
 import org.bank.pay.core.event.family.kafka.PaymentEvent;
-import org.bank.pay.core.domain.familly.repository.FamilyEventStore;
-import org.bank.pay.core.domain.history.HistoryService;
-import org.bank.pay.core.domain.history.TransferPayHistory;
-import org.bank.pay.core.domain.onwer.PayOwner;
-import org.bank.pay.core.domain.onwer.repository.PayOwnerReader;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class FamilyEventTask {
 
-    private final FamilyService familyService;
+    private final FamilyPaymentService familyPaymentService;
     private final HistoryService historyService;
 
     private final PayOwnerReader payOwnerReader;
@@ -33,14 +30,12 @@ public class FamilyEventTask {
     }
 
     @Transactional
-    public void processConversion(CashConversionEvent event) {
+    public void processConversion(CashConversionEvent event) throws PaymentProcessingException{
 
         try {
-            PayOwner remitter = payOwnerReader.findByUserClaims(event.getFrom()).orElseThrow();
-            Cash remitterCredit = remitter.getCash();
-            remitterCredit.pay(event.getAmount());
+            payOwnerReader.findPaymentCardByOwnerAndCard(event.getFrom(), event.getCardId())
+                    .ifPresent(card -> familyPaymentService.depositCashToFamily(event.getFamilyId(), event.getFrom(), card, event.getAmount()));
 
-            familyService.depositCashToFamily(event.getFamilyId(), event.getFrom(), event.getAmount());
 
             TransferPayHistory history = TransferPayHistory.of(event);
             historyService.saveHistory(history);
@@ -49,7 +44,7 @@ public class FamilyEventTask {
 
             TransferPayHistory rollbackHistory = TransferPayHistory.of(event, true);
             historyService.saveHistory(rollbackHistory);
-
+            throw e;
         }
     }
 

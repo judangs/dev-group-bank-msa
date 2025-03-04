@@ -63,7 +63,7 @@ class FamilyEventRepositoryTest {
                 .ifPresent(event -> {
                     assertAll(
                             () -> assertThat(event).isExactlyInstanceOf(FamilyInvitation.class),
-                            () -> assertThat(event.getFamilyId()).isEqualTo(FamilyEventFixture.invite().getFamilyId()),
+                            () -> assertThat(event.getFamilyId()).isEqualTo(family.getFamilyId()),
                             () -> assertThat(event.getStatus()).isEqualTo(FamilyEventStatus.PENDING)
                     );
                 });
