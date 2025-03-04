@@ -3,7 +3,7 @@ package org.bank.pay.core.payment;
 import org.bank.core.auth.AuthClaims;
 import org.bank.core.cash.Money;
 import org.bank.core.payment.Product;
-import org.bank.pay.core.payment.product.Category.CategoryType;
+import org.bank.pay.core.event.product.Category.CategoryType;
 import org.bank.pay.core.producer.product.PurchasedEventPublisher;
 import org.bank.pay.fixture.CardFixture;
 import org.bank.pay.global.exception.PaymentException;

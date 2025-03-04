@@ -86,7 +86,7 @@ class CardFacadeTest {
         payCardService.register(user, card);
 
         cardFacade.updateCardAlias(user, card.getCardId(), "카드 이름 변경");
-        payOwnerReader.findPaymentCardByOwnerAndCard(owner, card.getCardId())
+        payOwnerReader.findPaymentCardByOwnerAndCard(user, card.getCardId())
                 .ifPresent(payCard -> assertThat(payCard.getCardName()).isNotEqualTo(card.getCardName()));
     }
 
