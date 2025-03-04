@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.bank.core.cash.PayMethod;
+import org.bank.pay.core.domain.familly.MemberClaims;
 import org.bank.pay.core.event.family.kafka.CashConversionEvent;
 
 import java.time.LocalDateTime;
@@ -26,7 +27,7 @@ public class TransferPayHistory extends PayHistory {
                 .payMoney(event.getAmount())
                 .transactionDate(LocalDateTime.now())
                 .method(PayMethod.TRANSFER)
-                .buyer(event.getFrom())
+                .buyer(MemberClaims.of(event.getFrom()))
                 .build();
     }
     public static TransferPayHistory of(CashConversionEvent event, boolean rollback) {
@@ -36,7 +37,7 @@ public class TransferPayHistory extends PayHistory {
                 .payMoney(event.getAmount())
                 .transactionDate(LocalDateTime.now())
                 .method(PayMethod.TRANSFER)
-                .buyer(event.getFrom())
+                .buyer(MemberClaims.of(event.getFrom()))
                 .build();
 
         if(rollback)
