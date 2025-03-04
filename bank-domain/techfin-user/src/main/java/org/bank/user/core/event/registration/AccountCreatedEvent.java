@@ -1,6 +1,7 @@
 package org.bank.user.core.event.registration;
 
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bank.core.auth.AuthClaims;
@@ -10,7 +11,7 @@ import org.bank.user.core.domain.mail.AccountVerificationMail;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class AccountCreatedEvent extends KafkaEvent {
 
     private AuthClaims credential;
