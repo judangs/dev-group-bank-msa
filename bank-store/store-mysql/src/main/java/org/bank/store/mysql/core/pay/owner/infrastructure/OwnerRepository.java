@@ -26,6 +26,11 @@ public class OwnerRepository implements PayOwnerReader, PayOwnerStore {
     private final JpaClaimsRepository jpaClaimsRepository;
 
     @Override
+    public Optional<PayOwner> findByUserId(String userid) {
+        return jpaClaimsRepository.findByUserIdOfClaims(userid);
+    }
+
+    @Override
     public Optional<PayOwner> findByUserClaims(AuthClaims user) {
         return jpaClaimsRepository.findByClaimsFromOwner(OwnerClaims.of(user));
     }
