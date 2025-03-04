@@ -18,7 +18,7 @@ import java.util.UUID;
 
 public class FamilyEventFixture {
 
-    private static Family family = FamilyFixture.family();
+    private static Family family = new Family(FamilyFixture.leader());
     private static PayCard card = CardFixture.cashable();
 
     private static InviteEvent inviteEvent = new InviteEvent(family.getFamilyId(), FamilyFixture.follower());;

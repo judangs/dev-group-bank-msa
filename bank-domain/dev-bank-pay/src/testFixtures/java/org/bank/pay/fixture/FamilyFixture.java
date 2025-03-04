@@ -13,6 +13,10 @@ public class FamilyFixture {
         return new Family(leader);
     }
 
+    public static Family family(AuthClaims leader) {
+        return new Family(MemberClaims.of(leader));
+    }
+
     public static MemberClaims leader() {
         return leader;
     }
