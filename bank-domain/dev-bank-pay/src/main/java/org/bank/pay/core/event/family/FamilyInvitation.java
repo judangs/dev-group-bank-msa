@@ -35,7 +35,7 @@ public class FamilyInvitation extends FamilyEventEntity {
     public static FamilyInvitation of(InviteEvent event) {
         return FamilyInvitation.builder()
                 .familyId(event.getFamilyId())
-                .to(event.getTo())
+                .to(MemberClaims.of(event.getTo()))
                 .status(FamilyEventStatus.PENDING)
                 .expiryDate(LocalDateTime.now().plusDays(7))
                 .build();
