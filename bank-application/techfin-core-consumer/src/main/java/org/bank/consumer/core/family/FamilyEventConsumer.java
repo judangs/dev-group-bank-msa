@@ -1,8 +1,9 @@
-package org.bank.consumer.pay;
+package org.bank.consumer.core.family;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.bank.consumer.global.kafka.EventTypeCaster;
+import org.bank.core.cash.PaymentProcessingException;
 import org.bank.core.kafka.KafkaEvent;
 import org.bank.pay.core.event.family.kafka.CashConversionEvent;
 import org.bank.pay.core.event.family.kafka.InviteEvent;
@@ -17,14 +18,16 @@ import org.springframework.stereotype.Service;
 public class FamilyEventConsumer {
 
     private final FamilyEventTask familyEventTask;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final EventTypeCaster eventTypeCaster;
+
     private final Logger log = LoggerFactory.getLogger(FamilyEventConsumer.class);
 
-    @KafkaListener(topics = "family.invitation",
-            groupId = "invitation-group")
-    public void invitation(ConsumerRecord<String, KafkaEvent> record) {
+    @KafkaListener(topics = {"family.invitation"} ,
+            groupId = "family-event-group")
+    public void consume(ConsumerRecord<String, KafkaEvent> record) {
         try {
-            InviteEvent event = objectMapper.convertValue(record.value(), InviteEvent.class);
+
+            InviteEvent event = eventTypeCaster.cast(record.value(), InviteEvent.class);
             familyEventTask.processInvitation(event);
 
         } catch (Exception e) {
@@ -34,25 +37,24 @@ public class FamilyEventConsumer {
     }
 
     @KafkaListener(topics = "family.cash.conversion",
-            groupId = "conversion-group")
+            groupId = "family-event-group")
     public void conversion(ConsumerRecord<String, KafkaEvent> record) {
         try {
-            CashConversionEvent event = objectMapper.convertValue(record.value(), CashConversionEvent.class);
+
+            CashConversionEvent event = eventTypeCaster.cast(record.value(), CashConversionEvent.class);
             familyEventTask.processConversion(event);
-        } catch (Exception e) {
-            log.error("Failed to process family cash event: {}", e.getMessage(), e);
+        } catch (PaymentProcessingException e) {
         }
     }
 
 
-    @KafkaListener(topics = "family.payment",
-            groupId = "request-payment-group")
-    public void requestPayment(ConsumerRecord<String, KafkaEvent> record) {
+    @KafkaListener(topics = "family.payment.request",
+            groupId = "family-event-group")
+    public void request(ConsumerRecord<String, KafkaEvent> record) {
         try {
-            PaymentEvent event = objectMapper.convertValue(record.value(), PaymentEvent.class);
+            PaymentEvent event = eventTypeCaster.cast(record.value(), PaymentEvent.class);
             familyEventTask.processRequestPayment(event);
-
-        } catch (Exception e) {
+        } catch (PaymentProcessingException e) {
 
         }
     }
