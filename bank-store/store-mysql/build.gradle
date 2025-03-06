@@ -5,13 +5,13 @@ dependencies {
     compileOnly(project(':bank-core'))
     testCompileOnly(project(':bank-core'))
 
-    compileOnly(project(':bank-domain:bank-pay-domain'))
-    testCompileOnly(project(':bank-domain:bank-pay-domain'))
+    compileOnly(project(':bank-domain:techfin-pay-domain'))
+    testCompileOnly(project(':bank-domain:techfin-pay-domain'))
     compileOnly(project(':bank-domain:techfin-user-domain'))
     testCompileOnly(project(':bank-domain:techfin-user-domain'))
 
     api(project(':bank-store:store-core'))
 
-    testImplementation(testFixtures(project(':bank-domain:bank-pay-domain')))
+    testImplementation(testFixtures(project(':bank-domain:techfin-pay-domain')))
     testRuntimeOnly('com.h2database:h2')
 }

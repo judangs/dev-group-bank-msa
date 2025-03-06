@@ -8,5 +8,5 @@ ext {
 }
 
 dependencies {
-    implementation(project(':bank-application:bank-pay-application'))
+    implementation(project(':bank-application:techfin-pay-application'))
 }
