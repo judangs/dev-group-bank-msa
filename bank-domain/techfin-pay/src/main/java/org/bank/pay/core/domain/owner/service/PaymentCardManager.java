@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.bank.core.auth.AuthClaims;
 import org.bank.core.auth.AuthenticationException;
 import org.bank.pay.core.domain.owner.PayOwner;
-import org.bank.pay.core.domain.owner.PaymentCard;
+import org.bank.pay.core.domain.card.PaymentCard;
 import org.bank.pay.core.domain.owner.repository.PayOwnerReader;
 import org.bank.pay.core.domain.owner.repository.PayOwnerStore;
 import org.springframework.stereotype.Service;

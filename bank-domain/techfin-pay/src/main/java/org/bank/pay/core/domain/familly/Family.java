@@ -5,8 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bank.core.auth.AuthClaims;
+import org.bank.pay.core.domain.card.FamilyCard;
 import org.bank.pay.global.domain.DomainEntity;
-import org.bank.pay.global.domain.card.CardType;
+import org.bank.pay.core.domain.card.CardType;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 

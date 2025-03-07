@@ -2,7 +2,7 @@ package org.bank.pay.core.domain.owner.repository;
 
 import org.bank.core.auth.AuthClaims;
 import org.bank.pay.core.domain.owner.PayOwner;
-import org.bank.pay.core.domain.owner.PaymentCard;
+import org.bank.pay.core.domain.card.PaymentCard;
 
 import java.util.List;
 import java.util.Optional;

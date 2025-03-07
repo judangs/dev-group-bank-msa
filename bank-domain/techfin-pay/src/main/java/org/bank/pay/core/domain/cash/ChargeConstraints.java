@@ -1,6 +1,6 @@
 package org.bank.pay.core.domain.cash;
 
-import org.bank.pay.global.domain.card.PayCard;
+import org.bank.pay.core.domain.card.PayCard;
 
 import java.math.BigDecimal;
 

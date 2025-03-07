@@ -5,9 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bank.core.auth.AuthClaims;
+import org.bank.pay.core.domain.card.PaymentCard;
 import org.bank.pay.global.domain.DomainEntity;
-import org.bank.pay.global.domain.card.CardType;
-import org.bank.pay.global.domain.card.PayCard;
+import org.bank.pay.core.domain.card.CardType;
+import org.bank.pay.core.domain.card.PayCard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,11 @@ public class PayOwner extends DomainEntity {
 
     public Optional<PaymentCard> match(UUID cardId) {
         return paymentCards.stream().filter(card -> card.match(cardId))
+                .findFirst();
+    }
+
+    public Optional<PaymentCard> match(String cardNumber) {
+        return paymentCards.stream().filter(card -> card.getCardNumber().equals(cardNumber))
                 .findFirst();
     }
 

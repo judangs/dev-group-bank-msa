@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bank.core.cash.Money;
 import org.bank.pay.global.domain.DomainEntity;
-import org.bank.pay.global.domain.card.PayCard;
+import org.bank.pay.core.domain.card.PayCard;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

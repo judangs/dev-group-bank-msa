@@ -3,7 +3,7 @@ package org.bank.pay.core.domain.cash.service;
 import org.bank.core.auth.AuthClaims;
 import org.bank.core.cash.Money;
 import org.bank.pay.core.domain.cash.Cash;
-import org.bank.pay.global.domain.card.PayCard;
+import org.bank.pay.core.domain.card.PayCard;
 
 import java.math.BigDecimal;
 
