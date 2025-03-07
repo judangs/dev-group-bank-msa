@@ -1,4 +1,4 @@
-package org.bank.pay.core.domain.owner;
+package org.bank.pay.core.domain.card;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,8 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.bank.pay.core.domain.cash.Cash;
-import org.bank.pay.global.domain.card.CardType;
-import org.bank.pay.global.domain.card.PayCard;
+import org.bank.pay.core.domain.owner.PayOwner;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

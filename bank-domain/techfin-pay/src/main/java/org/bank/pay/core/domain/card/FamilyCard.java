@@ -1,4 +1,4 @@
-package org.bank.pay.core.domain.familly;
+package org.bank.pay.core.domain.card;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
-import org.bank.pay.global.domain.card.CardType;
-import org.bank.pay.global.domain.card.PayCard;
 
 @Getter
 @SuperBuilder

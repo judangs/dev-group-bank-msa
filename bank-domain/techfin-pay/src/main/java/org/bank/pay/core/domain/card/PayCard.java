@@ -1,4 +1,4 @@
-package org.bank.pay.global.domain.card;
+package org.bank.pay.core.domain.card;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
