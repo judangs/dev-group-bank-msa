@@ -6,7 +6,7 @@ import org.bank.pay.core.domain.cash.ReservationType;
 import org.bank.pay.core.domain.cash.ReservedCharge;
 import org.bank.pay.core.domain.owner.PayOwner;
 import org.bank.pay.fixture.UserFixture;
-import org.bank.pay.global.domain.card.PayCard;
+import org.bank.pay.core.domain.card.PayCard;
 import org.bank.store.mysql.core.pay.unit.CashRepositoryUnitTest;
 import org.bank.store.mysql.core.pay.unit.init.TestInitializer;
 import org.junit.jupiter.api.BeforeAll;

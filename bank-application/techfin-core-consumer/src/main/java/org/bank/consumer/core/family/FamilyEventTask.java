@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class FamilyEventTask {
 
-    private final FamilyPaymentService familyPaymentService;
+    private final FamilyPaymentConsumerSupportService familyPaymentConsumerSupportService;
     private final HistoryService historyService;
 
     private final PayOwnerReader payOwnerReader;
@@ -34,7 +34,7 @@ public class FamilyEventTask {
 
         try {
             payOwnerReader.findPaymentCardByOwnerAndCard(event.getFrom(), event.getCardId())
-                    .ifPresent(card -> familyPaymentService.depositCashToFamily(event.getFamilyId(), event.getFrom(), card, event.getAmount()));
+                    .ifPresent(card -> familyPaymentConsumerSupportService.deposit(event.getFamilyId(), event.getFrom(), card, event.getAmount()));
 
 
             TransferPayHistory history = TransferPayHistory.of(event);

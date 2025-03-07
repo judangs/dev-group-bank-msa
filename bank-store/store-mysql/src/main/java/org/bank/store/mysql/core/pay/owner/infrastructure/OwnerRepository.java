@@ -5,7 +5,7 @@ import org.bank.core.auth.AuthClaims;
 import org.bank.core.domain.DomainNames;
 import org.bank.pay.core.domain.owner.OwnerClaims;
 import org.bank.pay.core.domain.owner.PayOwner;
-import org.bank.pay.core.domain.owner.PaymentCard;
+import org.bank.pay.core.domain.card.PaymentCard;
 import org.bank.pay.core.domain.owner.repository.PayOwnerReader;
 import org.bank.pay.core.domain.owner.repository.PayOwnerStore;
 import org.bank.store.mysql.core.pay.owner.JpaClaimsRepository;

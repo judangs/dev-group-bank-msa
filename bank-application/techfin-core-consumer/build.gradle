@@ -3,11 +3,11 @@ dependencies {
     compileOnly(project(':bank-core'))
     testCompileOnly(project(':bank-core'))
 
-    implementation(project(':bank-domain:bank-pay-domain'))
+    implementation(project(':bank-domain:techfin-pay-domain'))
     implementation(project(':bank-domain:techfin-user-domain'))
 
     testImplementation(testFixtures(project(':bank-domain:techfin-user-domain')))
-    testImplementation(testFixtures(project(':bank-domain:bank-pay-domain')))
+    testImplementation(testFixtures(project(':bank-domain:techfin-pay-domain')))
 
     runtimeOnly(project(':bank-store:store-data-source'))
 

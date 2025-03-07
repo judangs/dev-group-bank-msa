@@ -7,7 +7,7 @@ import org.bank.core.domain.DomainNames;
 import org.bank.pay.core.domain.cash.Cash;
 import org.bank.pay.core.domain.cash.repository.CashReader;
 import org.bank.pay.core.domain.owner.OwnerClaims;
-import org.bank.pay.core.domain.owner.PaymentCard;
+import org.bank.pay.core.domain.card.PaymentCard;
 import org.bank.store.mysql.core.pay.cash.JpaCashRepository;
 import org.bank.store.source.DataSourceType;
 import org.bank.store.source.NamedRepositorySource;

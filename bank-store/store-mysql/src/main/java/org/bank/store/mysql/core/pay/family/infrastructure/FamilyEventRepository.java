@@ -12,7 +12,6 @@ import org.bank.store.mysql.core.pay.family.JpaFamilyEventRepository;
 import org.bank.store.source.DataSourceType;
 import org.bank.store.source.NamedRepositorySource;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +26,6 @@ public class FamilyEventRepository implements FamilyEventStore, FamilyEventReade
     private final JpaFamilyEventRepository jpaFamilyEventRepository;
 
     @Override
-    @Transactional
     public void store(FamilyEventEntity event) {
         jpaFamilyEventRepository.save(event);
     }
