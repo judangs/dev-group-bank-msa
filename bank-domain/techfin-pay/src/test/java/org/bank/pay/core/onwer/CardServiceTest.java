@@ -2,7 +2,7 @@ package org.bank.pay.core.onwer;
 
 import org.bank.core.auth.AuthClaims;
 import org.bank.pay.core.domain.owner.PayOwner;
-import org.bank.pay.core.domain.owner.PaymentCard;
+import org.bank.pay.core.domain.card.PaymentCard;
 import org.bank.pay.core.domain.owner.service.PayCardService;
 import org.bank.pay.core.unit.CardUnitTest;
 import org.bank.pay.fixture.CardFixture;

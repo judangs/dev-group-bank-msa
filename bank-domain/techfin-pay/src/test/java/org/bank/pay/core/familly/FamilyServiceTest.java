@@ -1,7 +1,7 @@
 package org.bank.pay.core.familly;
 
 import org.bank.pay.core.domain.familly.Family;
-import org.bank.pay.core.domain.familly.FamilyService;
+import org.bank.pay.core.domain.familly.service.FamilyService;
 import org.bank.pay.core.domain.familly.MemberClaims;
 import org.bank.pay.core.unit.FamilyUnitTest;
 import org.bank.pay.fixture.FamilyFixture;

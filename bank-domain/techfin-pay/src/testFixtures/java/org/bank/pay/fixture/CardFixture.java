@@ -3,7 +3,7 @@ package org.bank.pay.fixture;
 import org.bank.core.auth.AuthClaims;
 import org.bank.pay.core.domain.cash.Cash;
 import org.bank.pay.core.domain.owner.PayOwner;
-import org.bank.pay.core.domain.owner.PaymentCard;
+import org.bank.pay.core.domain.card.PaymentCard;
 
 import java.time.LocalDate;
 import java.util.UUID;

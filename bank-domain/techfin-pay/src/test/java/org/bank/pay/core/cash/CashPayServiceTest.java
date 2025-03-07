@@ -3,7 +3,7 @@ package org.bank.pay.core.cash;
 
 import org.bank.core.cash.Money;
 import org.bank.pay.core.domain.cash.service.CashPayService;
-import org.bank.pay.core.domain.owner.PaymentCard;
+import org.bank.pay.core.domain.card.PaymentCard;
 import org.bank.pay.core.unit.CashUnitTest;
 import org.bank.pay.fixture.CardFixture;
 import org.junit.jupiter.api.BeforeEach;

@@ -7,7 +7,7 @@ import org.bank.consumer.integration.init.TestInitializer;
 import org.bank.core.auth.AuthClaims;
 import org.bank.core.cash.Money;
 import org.bank.core.kafka.KafkaEvent;
-import org.bank.pay.core.domain.owner.PaymentCard;
+import org.bank.pay.core.domain.card.PaymentCard;
 import org.bank.pay.core.domain.owner.repository.PayOwnerReader;
 import org.bank.pay.core.event.product.PurchasedEvent;
 import org.bank.pay.fixture.UserFixture;

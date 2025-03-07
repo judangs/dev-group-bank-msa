@@ -2,7 +2,7 @@ package org.bank.pay.fixture;
 
 import org.bank.core.cash.Money;
 import org.bank.pay.core.domain.cash.ReservedCharge;
-import org.bank.pay.global.domain.card.PayCard;
+import org.bank.pay.core.domain.card.PayCard;
 
 import java.time.LocalDate;
 

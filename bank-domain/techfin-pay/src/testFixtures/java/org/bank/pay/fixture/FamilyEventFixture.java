@@ -10,7 +10,7 @@ import org.bank.pay.core.event.family.FamilyPayment;
 import org.bank.pay.core.event.family.kafka.CashConversionEvent;
 import org.bank.pay.core.event.family.kafka.InviteEvent;
 import org.bank.pay.core.event.family.kafka.PaymentEvent;
-import org.bank.pay.global.domain.card.PayCard;
+import org.bank.pay.core.domain.card.PayCard;
 
 import java.util.Arrays;
 import java.util.List;

@@ -7,7 +7,7 @@ import org.bank.pay.core.domain.familly.Family;
 import org.bank.pay.core.domain.familly.repository.FamilyReader;
 import org.bank.pay.core.domain.familly.repository.FamilyStore;
 import org.bank.pay.core.domain.owner.PayOwner;
-import org.bank.pay.core.domain.owner.PaymentCard;
+import org.bank.pay.core.domain.card.PaymentCard;
 import org.bank.pay.core.domain.owner.repository.PayOwnerReader;
 import org.bank.pay.core.domain.owner.repository.PayOwnerStore;
 import org.bank.pay.fixture.CardFixture;
