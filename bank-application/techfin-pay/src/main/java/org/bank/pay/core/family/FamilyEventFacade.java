@@ -1,18 +1,12 @@
 package org.bank.pay.core.family;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.bank.core.auth.AuthClaims;
 import org.bank.core.cash.Money;
 import org.bank.core.dto.response.ResponseCodeV2;
+import org.bank.core.dto.response.ResponseDtoV2;
 import org.bank.core.payment.Product;
-import org.bank.pay.core.domain.familly.Family;
-import org.bank.pay.core.domain.familly.FamilyConstraints;
-import org.bank.pay.core.domain.familly.FamilyService;
-import org.bank.pay.core.domain.familly.MemberClaims;
-import org.bank.pay.core.domain.owner.repository.PayOwnerReader;
-import org.bank.pay.core.producer.family.leader.FollowerEventPublisher;
-import org.bank.pay.core.producer.family.payment.FamilyPurchaseEventPublisher;
+import org.bank.pay.core.event.family.service.FamilyEventService;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -21,57 +15,33 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FamilyEventFacade {
 
-    private final FamilyService familyService;
-    private final PayOwnerReader payOwnerReader;
+    private final FamilyEventService familyEventService;
 
-    private final FollowerEventPublisher followerEventPublisher;
-    private final FamilyPurchaseEventPublisher familyPurchaseEventPublisher;
+    public ResponseDtoV2 invite(UUID familyId, AuthClaims leader, String userid) {
 
-    public ResponseCodeV2 invite(UUID familyId, AuthClaims leader, String userid) {
-
-        try {
-            Family family = familyService.isExist(familyId);
-            FamilyConstraints.isEligibleForInvitation(family, MemberClaims.of(leader));
-
-            payOwnerReader.findByUserId(userid)
-                    .ifPresent(follower -> followerEventPublisher.invite(family, follower.getClaims()));
-
-            return ResponseCodeV2.SUCCESS;
-
-        } catch (IllegalArgumentException e) {
-            return ResponseCodeV2.NOT_FOUND;
-        }
-
+        ResponseCodeV2 code = familyEventService.invite(familyId, leader, userid);
+        return switch (code) {
+            case SUCCESS -> ResponseDtoV2.success("패밀리에 초대를 요청했습니다.");
+            case NOT_FOUND -> ResponseDtoV2.of(code, "유저를 찾을 수 없습니다. 다시 시도해주세요.");
+            default -> ResponseDtoV2.fail("멤버 초대에 실패했습니다.");
+        };
     }
 
-    public ResponseCodeV2 purchaseProductToFamilyLeader(UUID familyId, String userId, Product product) {
-
-        try {
-            Family family = familyService.isExist(familyId);
-            MemberClaims from = family.find(userId);
-
-            familyPurchaseEventPublisher.request(family, from, product);
-
-            return ResponseCodeV2.SUCCESS;
-
-        } catch (IllegalArgumentException e) {
-            return ResponseCodeV2.NOT_FOUND;
-        }
+    public ResponseDtoV2 purchaseProductToFamilyLeader(UUID familyId, String userid, Product product) {
+        ResponseCodeV2 code = familyEventService.order(familyId, userid, product);
+        return switch (code) {
+            case SUCCESS -> ResponseDtoV2.success("패밀리에 초대를 요청했습니다.");
+            case NOT_FOUND -> ResponseDtoV2.of(code, "해당 유저는 패밀리 멤버가 아닙니다.");
+            default -> ResponseDtoV2.fail("패밀리 결제 요청에 실패했습니다.");
+        };
     }
 
-    public ResponseCodeV2 convertPersonalCashToFamilyCash(AuthClaims user, UUID familyId, UUID cardId, Money amount) {
-
-        try {
-            Family family = familyService.isExist(familyId);
-            MemberClaims from = family.find(user.getUserid());
-
-            payOwnerReader.findPaymentCardByOwnerAndCard(user, cardId)
-                    .ifPresent(card -> familyPurchaseEventPublisher.conversion(family, from, card, amount));
-
-            return ResponseCodeV2.SUCCESS;
-
-        } catch (EntityNotFoundException e) {
-            return ResponseCodeV2.NOT_FOUND;
-        }
+    public ResponseDtoV2 convertPersonalCashToFamilyCash(AuthClaims user, UUID familyId, UUID cardId, Money amount) {
+        ResponseCodeV2 code = familyEventService.charge(user, familyId, cardId, amount);
+        return switch (code) {
+            case SUCCESS -> ResponseDtoV2.success("온라인 캐시를 패밀리 캐시로 전환합니다.");
+            case NOT_FOUND -> ResponseDtoV2.of(code, "해당 유저는 패밀리 멤버가 아닙니다.");
+            default -> ResponseDtoV2.fail("패밀리 캐시 충전에 실패했습니다.");
+        };
     }
 }

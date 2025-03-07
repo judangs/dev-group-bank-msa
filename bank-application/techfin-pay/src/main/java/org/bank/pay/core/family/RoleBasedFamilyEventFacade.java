@@ -3,14 +3,12 @@ package org.bank.pay.core.family;
 import lombok.RequiredArgsConstructor;
 import org.bank.core.auth.AuthClaims;
 import org.bank.core.dto.response.ResponseDto;
-import org.bank.core.kafka.KafkaEvent;
-import org.bank.pay.core.domain.familly.FamilyService;
 import org.bank.pay.core.domain.familly.repository.FamilyEventReader;
+import org.bank.pay.core.domain.familly.service.FamilyService;
 import org.bank.pay.core.event.family.FamilyInvitation;
 import org.bank.pay.core.event.family.FamilyPayment;
-import org.bank.pay.core.producer.family.payment.FamilyPurchaseEventPublisher;
+import org.bank.pay.core.infrastructure.FamilyPurchaseEventClient;
 import org.bank.pay.dto.service.request.FamilyEventRequest;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,15 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class  RoleBasedFamilyEventFacade {
 
     private final FamilyService familyService;
-    private final KafkaTemplate<String, KafkaEvent> kafkaTemplate;
-    private final FamilyPurchaseEventPublisher familyPurchaseEventPublisher;
+    private final FamilyPurchaseEventClient familyPurchaseEventClient;
 
     private final FamilyEventReader familyEventReader;
 
     @Transactional
     public ResponseDto handleInvitation(AuthClaims follower, FamilyEventRequest request) {
 
-        FamilyInvitation invitation = familyEventReader.findInvitationEventById(request.getFamilyId())
+        FamilyInvitation invitation = familyEventReader.findInvitationEventByUser(follower)
                 .orElseThrow(IllegalArgumentException::new);
 
         if(invitation.isExpired()) {
@@ -61,7 +58,7 @@ public class  RoleBasedFamilyEventFacade {
             ResponseDto response = switch (request.getDecision()) {
                 case ACCEPT -> {
                     payment.accept();
-                    familyPurchaseEventPublisher.approval(payment);
+                    familyPurchaseEventClient.approval(payment);
                     yield ResponseDto.success("결제를 승인했습니다.");
                 }
                 case REJECT -> {
