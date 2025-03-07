@@ -3,7 +3,7 @@ package org.bank.pay.dto.service.response;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bank.core.dto.response.ResponseDtoV2;
-import org.bank.pay.core.domain.owner.PaymentCard;
+import org.bank.pay.core.domain.card.PaymentCard;
 
 import java.util.List;
 import java.util.UUID;

@@ -7,7 +7,7 @@ import org.bank.core.cash.PaymentProcessingException;
 import org.bank.core.dto.response.ResponseDto;
 import org.bank.core.dto.response.ResponseDtoV2;
 import org.bank.pay.core.domain.cash.service.CashChargeSerivce;
-import org.bank.pay.core.domain.owner.PaymentCard;
+import org.bank.pay.core.domain.card.PaymentCard;
 import org.bank.pay.core.domain.owner.service.PayCardService;
 import org.bank.pay.core.payment.PaymentService;
 import org.bank.pay.dto.service.request.ChargeRequest;

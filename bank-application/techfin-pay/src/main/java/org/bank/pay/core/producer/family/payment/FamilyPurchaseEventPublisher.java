@@ -7,9 +7,10 @@ import org.bank.core.payment.Product;
 import org.bank.pay.core.domain.familly.Family;
 import org.bank.pay.core.domain.familly.MemberClaims;
 import org.bank.pay.core.event.family.FamilyPayment;
+import org.bank.pay.core.infrastructure.FamilyPurchaseEventClient;
 import org.bank.pay.core.event.family.kafka.CashConversionEvent;
 import org.bank.pay.core.event.family.kafka.PaymentEvent;
-import org.bank.pay.global.domain.card.PayCard;
+import org.bank.pay.core.domain.card.PayCard;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ import java.util.Arrays;
 
 @Component
 @RequiredArgsConstructor
-public class FamilyPurchaseEventPublisher {
+public class FamilyPurchaseEventPublisher implements FamilyPurchaseEventClient {
 
 
     private final String PAYMENT_REQUEST_TOPIC = "family.payment.request";

@@ -3,7 +3,7 @@ package org.bank.pay.core.card;
 import lombok.RequiredArgsConstructor;
 import org.bank.core.auth.AuthClaims;
 import org.bank.core.dto.response.ResponseDtoV2;
-import org.bank.pay.core.domain.owner.PaymentCard;
+import org.bank.pay.core.domain.card.PaymentCard;
 import org.bank.pay.core.domain.owner.service.PayCardService;
 import org.bank.pay.dto.service.request.CardPaymentRequest;
 import org.bank.pay.dto.service.response.PaymentCardsListResponse;
