@@ -23,7 +23,7 @@ public class PurchasedEventTask {
 
     private final HistoryService historyService;
 
-    @Transactional
+    @Transactional(transactionManager = "payTransactionManager")
     public void processCharge(PurchasedEvent event) {
 
         if(event.getProduct() instanceof VirtualCash virtualCash) {

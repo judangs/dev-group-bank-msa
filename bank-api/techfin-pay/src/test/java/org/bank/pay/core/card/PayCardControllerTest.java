@@ -6,7 +6,7 @@ import org.bank.core.auth.AuthConstants;
 import org.bank.core.dto.response.ResponseCodeV2;
 import org.bank.core.dto.response.ResponseDtoV2;
 import org.bank.pay.core.fixture.UserClaimsFixture;
-import org.bank.pay.dto.service.request.CardPaymentRequest;
+import org.bank.pay.dto.service.request.PaymentCardRegisterRequest;
 import org.bank.pay.global.http.HttpResponseEntityStatusConverter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,12 +40,12 @@ class PayCardControllerTest {
 
     @Test
     void 사용자_결제_카드_등록을_요청하고_완료되었다는_응답을_받습니다() throws Exception {
-        when(cardFacade.registerCard(any(AuthClaims.class), any(CardPaymentRequest.class)))
+        when(cardFacade.registerCard(any(AuthClaims.class), any(PaymentCardRegisterRequest.class)))
                 .thenReturn(ResponseDtoV2.success("결제 카드 등록에 성공했습니다."));
 
         mockMvc.perform(post("/pay/card")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new CardPaymentRequest("1111-2222-3333-4444", "111", "12", LocalDate.now().plusYears(5), "카드 별칭")))
+                .content(objectMapper.writeValueAsString(new PaymentCardRegisterRequest("1111-2222-3333-4444", "111", "12", LocalDate.now().plusYears(5), "카드 별칭")))
                 .header(HttpHeaders.AUTHORIZATION, "access-token")
                 .header(AuthConstants.HeaderField.X_AUTH_CLAIMS, UserClaimsFixture.header())
         )
@@ -55,12 +55,12 @@ class PayCardControllerTest {
 
     @Test
     void 부적절한_사용자가_결제_카드_등록을_요청하고_인증에_실패했다는_응답을_받습니다() throws Exception {
-        when(cardFacade.registerCard(any(AuthClaims.class), any(CardPaymentRequest.class)))
+        when(cardFacade.registerCard(any(AuthClaims.class), any(PaymentCardRegisterRequest.class)))
                 .thenReturn(ResponseDtoV2.success("결제 카드 등록에 성공했습니다."));
 
         mockMvc.perform(post("/pay/card")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CardPaymentRequest("1111-2222-3333-4444", "111", "12", LocalDate.now().plusYears(5), "카드 별칭")))
+                        .content(objectMapper.writeValueAsString(new PaymentCardRegisterRequest("1111-2222-3333-4444", "111", "12", LocalDate.now().plusYears(5), "카드 별칭")))
                         .header(HttpHeaders.AUTHORIZATION, "access-token")
                 )
                 .andExpect(status().isUnauthorized())

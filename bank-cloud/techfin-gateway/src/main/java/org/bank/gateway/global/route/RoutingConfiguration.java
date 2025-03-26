@@ -18,13 +18,13 @@ public class RoutingConfiguration implements RoutingBeanService {
 
     @Override
     @Bean
-    public RouteLocator userRouteLocator(
+    public RouteLocator routeLocator(
             RouteLocatorBuilder builder, ServiceServerProperties serviceServerProperties,
             JwtAuthenticationFilter jwtAuthenticationFilter, JwtClaimsToHeaderFilter jwtClaimsToHeaderFilter
-            ) {
+    ) {
         return builder.routes()
                 .route("private-user-service", r -> r
-                        .path("/api/**")
+                        .path("/api/user/**")
                         .filters(f -> f
                                 .filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config()))
                                 .filter(jwtClaimsToHeaderFilter.apply(new JwtClaimsToHeaderFilter.Config()))
@@ -35,29 +35,18 @@ public class RoutingConfiguration implements RoutingBeanService {
                         .filters(f -> f
                                 .rewritePath("/public/api/(?<segment>.*)", "/${segment}"))
                         .uri(serviceServerProperties.url(DomainNames.USER)))
-                .build();
-    }
-
-    @Override
-    @Bean
-    public RouteLocator payRouteLocator(
-            RouteLocatorBuilder builder, ServiceServerProperties serviceServerProperties,
-            JwtAuthenticationFilter jwtAuthenticationFilter, JwtClaimsToHeaderFilter jwtClaimsToHeaderFilter
-    ) {
-        return builder.routes()
                 .route("private-pay-service", r -> r
-                        .path("/api/**")
+                        .path("/api/pay/**")
                         .filters(f -> f
                                 .filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config()))
                                 .filter(jwtClaimsToHeaderFilter.apply(new JwtClaimsToHeaderFilter.Config()))
                                 .rewritePath("/api/(?<segment>.*)", "/${segment}"))
                         .uri(serviceServerProperties.url(DomainNames.PAY)))
                 .route("public-pay-service", r -> r
-                        .path("/public/api/user/**")
+                        .path("/public/api/pay/**")
                         .filters(f -> f
                                 .rewritePath("/public/api/(?<segment>.*)", "/${segment}"))
                         .uri(serviceServerProperties.url(DomainNames.PAY)))
                 .build();
     }
-
 }

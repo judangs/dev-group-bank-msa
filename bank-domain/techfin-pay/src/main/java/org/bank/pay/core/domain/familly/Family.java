@@ -58,6 +58,11 @@ public class Family extends DomainEntity {
                 .findFirst().orElseThrow(() -> new IllegalArgumentException("해당 사용자는 그룹원이 아닙니다."));
     }
 
+    public MemberClaims find(UUID memberId) {
+        return participants.stream().filter(participant -> participant.getMemberId().equals(memberId))
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("해당 사용자는 그룹원이 아닙니다."));
+    }
+
     public int count() {
         return participants.size();
     }

@@ -11,7 +11,6 @@ import org.bank.pay.dto.service.request.CashLimitRequest;
 import org.bank.pay.dto.service.response.CashBalanceResponse;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @Service
@@ -25,12 +24,7 @@ public class CashOptionFacade {
 
         try {
             Cash cash = cashReader.findByClaimsAndCardId(user, cardId);
-            if(request.getDaily().equals(BigDecimal.ZERO) && request.getEach().equals(BigDecimal.ZERO)) {
-                cashLimitService.clear(cash);
-            }
-            else {
-                cashLimitService.limit(cash, request.getEach(), request.getDaily());
-            }
+            cashLimitService.limit(cash, request.getEach(), request.getDaily());
 
             return ResponseDtoV2.success("한도 설정을 완료했습니다.");
         } catch (IllegalArgumentException e) {

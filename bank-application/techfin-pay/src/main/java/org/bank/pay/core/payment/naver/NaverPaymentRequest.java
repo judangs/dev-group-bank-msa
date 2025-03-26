@@ -43,7 +43,7 @@ class NaverPaymentRequest {
 				.productCount(product.getQuantity())
 				.taxExScopeAmount(product.totalPrice())
 				.taxScopeAmount(0)
-				.returnUrl(url + purchaseId)
+				.returnUrl(url + "/" + purchaseId)
 				.build();
 	}
 

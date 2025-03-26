@@ -29,7 +29,7 @@ public class FamilyEventTask {
         familyEventStore.store(invitation);
     }
 
-    @Transactional
+    @Transactional(transactionManager = "payTransactionManager")
     public void processConversion(CashConversionEvent event) throws PaymentProcessingException{
 
         try {

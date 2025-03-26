@@ -7,7 +7,7 @@ include ':bank-domain'
 include ':bank-store'
 include ':bank-cloud'
 
-include 'bank-api:dev-bank-pay'
+include 'bank-api:techfin-pay'
 findProject(':bank-api:techfin-pay')?.name = 'techfin-pay-api'
 include 'bank-api:techfin-user'
 findProject(':bank-api:techfin-user')?.name = 'techfin-user-api'

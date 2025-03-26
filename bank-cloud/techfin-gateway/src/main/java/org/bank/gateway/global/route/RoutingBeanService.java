@@ -5,13 +5,9 @@ import org.bank.gateway.global.filter.JwtClaimsToHeaderFilter;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 
-
 public interface RoutingBeanService {
-    RouteLocator userRouteLocator(
+    RouteLocator routeLocator(
             RouteLocatorBuilder builder, ServiceServerProperties serviceServerProperties,
             JwtAuthenticationFilter jwtAuthenticationFilter, JwtClaimsToHeaderFilter jwtClaimsToHeaderFilter);
 
-    RouteLocator payRouteLocator(
-            RouteLocatorBuilder builder, ServiceServerProperties serviceServerProperties,
-            JwtAuthenticationFilter jwtAuthenticationFilter, JwtClaimsToHeaderFilter jwtClaimsToHeaderFilter);
 }

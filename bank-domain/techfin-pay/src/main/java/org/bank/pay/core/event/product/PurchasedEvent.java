@@ -1,5 +1,6 @@
 package org.bank.pay.core.event.product;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bank.core.auth.AuthClaims;
@@ -13,6 +14,8 @@ public class PurchasedEvent extends KafkaEvent {
     private String paymentId;
     private String payHistId;
     private AuthClaims user;
+
+    @JsonDeserialize(as = VirtualCash.class)
     private Product product;
     private String admissionState; // 결제/취소 시도에 대한 최종 결과
     private String primaryPayMeans; // 주 결제 수단
@@ -20,7 +23,7 @@ public class PurchasedEvent extends KafkaEvent {
 
 
     public PurchasedEvent(String paymentId, String payHistId, AuthClaims user, String admissionState, String primaryPayMeans, Product product, int totalPayAmount) {
-        super();
+        super(PurchasedEvent.class);
         this.paymentId = paymentId;
         this.payHistId = payHistId;
         this.user = user;

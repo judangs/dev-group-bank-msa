@@ -1,5 +1,6 @@
 package org.bank.pay.core.domain.cash;
 
+import org.bank.core.cash.Money;
 import org.bank.core.cash.PaymentProcessingException;
 
 import java.math.BigDecimal;
@@ -8,11 +9,12 @@ public class CashConstraints {
 
     // 결제 한도 조건을 체크합니다.
     public static void validatePayLimits(PayLimit payLimit, BigDecimal amount) {
-        if (amount.compareTo(payLimit.getPerOnce()) > 0) {
+
+        Money payAmount = new Money(amount);
+        if(payAmount.isGreaterThan(payLimit.getPerOnce())) {
             throw new PaymentProcessingException("1회 결제 한도를 초과했습니다.");
         }
-
-        if (amount.compareTo(payLimit.getPerDaily()) > 0) {
+        if (payAmount.isGreaterThan(payLimit.getPerDaily())) {
             throw new PaymentProcessingException("1일 결제 한도를 초과했습니다.");
         }
     }

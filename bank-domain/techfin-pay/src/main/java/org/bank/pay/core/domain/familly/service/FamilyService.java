@@ -10,10 +10,7 @@ import org.bank.pay.core.domain.familly.repository.FamilyStore;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -31,11 +28,15 @@ public class FamilyService {
         return family;
     }
 
+
     public boolean isLeader(AuthClaims leader, UUID familyId) {
         Family family = familyReader.findById(familyId).orElseThrow(IllegalArgumentException::new);
         return family.getLeader().equals(leader);
     }
 
+    public Family getFamily(AuthClaims user) {
+        return familyReader.findByContainUser(user).orElseThrow(IllegalArgumentException::new);
+    }
 
     @Transactional
     public void addMemberToFamily(UUID familyId, AuthClaims member) {
@@ -52,23 +53,28 @@ public class FamilyService {
     }
 
     @Transactional
-    public void ejectMemberFromFamily(UUID familyId, AuthClaims member) {
+    public void ejectMemberFromFamily(AuthClaims leader, UUID familyId, String userid) {
         Family family = isExist(familyId);
 
+        if(!family.getLeader().equals(leader)) {
+            throw new IllegalArgumentException("패밀리 리더만이 멤버를 추방할 수 있습니다.");
+        }
+
         Set<MemberClaims> participants = family.getParticipants();
-        participants.remove(member);
+        participants.remove(family.find(userid));
+
     }
 
     @Transactional
-    public void changeFamilyLeader(UUID familyId, AuthClaims newLeader) {
+    public void changeFamilyLeader(AuthClaims leader, UUID familyId, String userid) {
         Family family = isExist(familyId);
 
-        Set<MemberClaims> participants = family.getParticipants();
-        MemberClaims leader = participants.stream().filter(participant -> participant.equals(newLeader))
-                .findFirst().orElseThrow(NoSuchElementException::new);
-        FamilyConstraints.validateParticipantContaining(family, leader);
+        if(!family.getLeader().equals(leader)) {
+            throw new IllegalArgumentException("패밀리 리더만이 멤버를 추방할 수 있습니다.");
+        }
 
-        family.setLeader(leader);
+        FamilyConstraints.validateParticipantContaining(family, family.find(userid));
+        family.setLeader(family.find(userid));
     }
 
     public Family isExist(UUID familyId) {

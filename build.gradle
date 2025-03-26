@@ -79,3 +79,10 @@ project(':bank-cloud').subprojects {
     }
 
 }
+
+project(':bank-application').subprojects {
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+    }
+}

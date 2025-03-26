@@ -6,6 +6,22 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
     ports:
       - "2181:2181"
+    networks:
+      - kafka-net
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:7.3.10
+    container_name: schema-registry
+    ports:
+      - "9091:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
+      SCHEMA_REGISTRY_LISTENER_HTTP: 0.0.0.0:9091
+      SCHEMA_REGISTRY_KAFKA_URL: kafka:9092
+    networks:
+      - kafka-net
+
 
   kafka:
     image: confluentinc/cp-kafka:7.3.10
@@ -21,8 +37,14 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     volumes:
-      - ./kafka:/opt/kafka
+      - ./bash:/opt/kafka
     entrypoint: >
       /etc/confluent/docker/run &&
       dockerize -wait tcp://localhost:9092 -timeout 60s &&
       bash /opt/kafka/docker-kafka-evn.sh
+    networks:
+      - kafka-net
+
+networks:
+  kafka-net:
+    driver: bridge

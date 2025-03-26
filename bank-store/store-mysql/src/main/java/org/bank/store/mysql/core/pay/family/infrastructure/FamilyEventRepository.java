@@ -50,4 +50,9 @@ public class FamilyEventRepository implements FamilyEventStore, FamilyEventReade
     public List<FamilyPayment> findPaymentRequestEventsByFamily(UUID familyId) {
         return jpaFamilyEventRepository.findPaymentRequestEventsByFamilyId(familyId);
     }
+
+    @Override
+    public List<FamilyEventEntity> findAllEventsByUser(AuthClaims user) {
+        return jpaFamilyEventRepository.findAllEventsByUser(user);
+    }
 }

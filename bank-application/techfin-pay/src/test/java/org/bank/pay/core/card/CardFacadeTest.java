@@ -6,7 +6,7 @@ import org.bank.core.dto.response.ResponseDtoV2;
 import org.bank.pay.core.domain.card.PaymentCard;
 import org.bank.pay.core.domain.owner.service.PayCardService;
 import org.bank.pay.core.integration.IntegrationTest;
-import org.bank.pay.dto.service.request.CardPaymentRequest;
+import org.bank.pay.dto.service.request.PaymentCardRegisterRequest;
 import org.bank.pay.dto.service.response.PaymentCardsListResponse;
 import org.bank.pay.fixture.CardFixture;
 import org.bank.pay.fixture.UserFixture;
@@ -40,7 +40,7 @@ class CardFacadeTest extends IntegrationTest {
 
     @Test
     void 사용자_소유의_카드를_등록합니다() {
-        CardPaymentRequest request = new CardPaymentRequest("1234-1111-1432-1234", "123", "1122", LocalDate.now().plusYears(5), "카드 별칭");
+        PaymentCardRegisterRequest request = new PaymentCardRegisterRequest("1234-1111-1432-1234", "123", "1122", LocalDate.now().plusYears(5), "카드 별칭");
         assertThat(cardFacade.registerCard(user, request).getCode())
                 .isEqualTo(ResponseCodeV2.SUCCESS);
 
