@@ -37,10 +37,6 @@ public class Cash extends DomainEntity {
     private Money dailyCurrency;
 
     @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "perOnce", column = @Column(name = "perOnce", precision = 30, scale = 2)),
-            @AttributeOverride(name = "perDaily", column = @Column(name = "perDaily", precision = 30, scale = 2))
-    })
     private PayLimit limits;
 
     private String ownerId;
