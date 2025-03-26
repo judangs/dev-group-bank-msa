@@ -5,7 +5,7 @@ import org.bank.core.auth.AuthClaims;
 import org.bank.core.dto.response.ResponseDtoV2;
 import org.bank.pay.core.domain.card.PaymentCard;
 import org.bank.pay.core.domain.owner.service.PayCardService;
-import org.bank.pay.dto.service.request.CardPaymentRequest;
+import org.bank.pay.dto.service.request.PaymentCardRegisterRequest;
 import org.bank.pay.dto.service.response.PaymentCardsListResponse;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class CardFacade {
     private final PayCardService payCardService;
 
 
-    public ResponseDtoV2 registerCard(AuthClaims user, CardPaymentRequest request) {
+    public ResponseDtoV2 registerCard(AuthClaims user, PaymentCardRegisterRequest request) {
         payCardService.register(user, card(request));
         return ResponseDtoV2.success("결제 카드 등록에 성공했습니다.");
     }
@@ -40,7 +40,7 @@ public class CardFacade {
     }
 
 
-    private PaymentCard card(CardPaymentRequest request) {
+    private PaymentCard card(PaymentCardRegisterRequest request) {
         return PaymentCard.of(request.getCardName(), request.getCardNumber(), request.getCVC(), request.getPassstartWith(), request.getDateOfExpiry());
     }
 }
