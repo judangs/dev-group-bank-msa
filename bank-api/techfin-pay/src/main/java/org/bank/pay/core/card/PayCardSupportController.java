@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.bank.core.auth.AuthClaims;
 import org.bank.core.auth.AuthenticatedUser;
 import org.bank.core.dto.response.ResponseDtoV2;
-import org.bank.pay.dto.service.request.CardPaymentRequest;
+import org.bank.pay.dto.service.request.PaymentCardRegisterRequest;
 import org.bank.pay.dto.service.request.UpdateCardAliasRequest;
 import org.bank.pay.global.http.HttpResponseEntityStatusConverter;
 import org.bank.pay.global.swagger.spec.PayCardSupportSwaggerSpec;
@@ -30,7 +30,7 @@ public class PayCardSupportController implements PayCardSupportSwaggerSpec {
 
     @PostMapping
     public ResponseEntity<? extends ResponseDtoV2> register(@AuthenticatedUser AuthClaims user,
-                                                        CardPaymentRequest request) {
+                                                        @RequestBody PaymentCardRegisterRequest request) {
         ResponseDtoV2 response = cardFacade.registerCard(user, request);
         return httpResponseEntityStatusConverter.convert(response);
     }
@@ -38,7 +38,7 @@ public class PayCardSupportController implements PayCardSupportSwaggerSpec {
     @PutMapping("{cardId}/alias")
     public ResponseEntity<? extends ResponseDtoV2> alias(@AuthenticatedUser AuthClaims user,
                                                      @PathVariable UUID cardId,
-                                                     UpdateCardAliasRequest request) {
+                                                     @RequestBody UpdateCardAliasRequest request) {
         ResponseDtoV2 response = cardFacade.updateCardAlias(user, cardId, request.getCardName());
         return httpResponseEntityStatusConverter.convert(response);
     }
