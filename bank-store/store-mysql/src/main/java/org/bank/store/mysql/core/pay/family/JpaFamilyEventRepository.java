@@ -26,4 +26,7 @@ public interface JpaFamilyEventRepository extends JpaBaseRepository<FamilyEventE
     @Query("SELECT fp FROM FamilyPayment fp WHERE fp.familyId = :familyId")
     List<FamilyPayment> findPaymentRequestEventsByFamilyId(@Param("familyId") UUID familyId);
 
+
+    @Query("SELECT fi FROM FamilyInvitation fi, FamilyPayment fp WHERE fi.to.userid = :#{#user.userid} OR fp.familyId = (SELECT f.familyId FROM Family f WHERE f.leader.userid = :#{#user.userid})")
+    List<FamilyEventEntity> findAllEventsByUser(@Param("user") AuthClaims user);
 }

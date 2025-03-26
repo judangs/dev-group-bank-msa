@@ -29,4 +29,9 @@ public class FamilyQueryRepository implements FamilyReader {
     public Optional<Family> findByUserIsLeader(AuthClaims leader) {
         return jpaFamilyRepository.findByLeader(leader.getUserid());
     }
+
+    @Override
+    public Optional<Family> findByContainUser(AuthClaims user) {
+        return jpaFamilyRepository.findByContainUser(user);
+    }
 }

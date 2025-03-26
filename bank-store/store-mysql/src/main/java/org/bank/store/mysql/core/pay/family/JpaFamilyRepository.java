@@ -1,5 +1,6 @@
 package org.bank.store.mysql.core.pay.family;
 
+import org.bank.core.auth.AuthClaims;
 import org.bank.pay.core.domain.familly.Family;
 import org.bank.store.mysql.global.jpa.JpaBaseRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -21,4 +22,7 @@ public interface JpaFamilyRepository extends JpaBaseRepository<Family, UUID> {
     @Transactional
     @Query(value = "DELETE FROM participant p WHERE p.family_id = :familyId", nativeQuery = true)
     void deleteParticipantsByFamilyId(@Param("familyId") UUID familyId);
+
+    @Query("SELECT f FROM Family f WHERE element(f.participants).userid = :#{#user.userid}")
+    Optional<Family> findByContainUser(@Param("user") AuthClaims user);
 }
