@@ -63,7 +63,7 @@ public class PayDataSourceConnector extends JpaConfigurationFactory implements S
         String[] entityPackages = {"org.bank.core.domain", "org.bank.pay.core.domain", "org.bank.pay.core.event"};
 
         return builder.dataSource(dataSource).packages(entityPackages)
-                .persistenceUnit(DomainNames.USER.name())
+                .persistenceUnit(DomainNames.PAY.name())
                 .properties(jpaProperties.getProperties())
                 .build();
     }
