@@ -10,9 +10,7 @@ import org.bank.pay.core.domain.owner.repository.PayOwnerStore;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +38,10 @@ public class PaymentCardManager implements PayCardService {
         try {
             return payOwnerReader.findPaymentCardsByUser(user);
         } catch (IllegalArgumentException e) {
+            if(e.getMessage().equals("결제 카드가 존재하지 않습니다.")) {
+                return Collections.emptyList();
+            }
+
             throw new AuthenticationException("사용자가 존재하지 않습니다.");
         }
     }
