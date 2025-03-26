@@ -10,11 +10,11 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Parameter(
-        name = "cardId",
+        name = "familyId",
         in = ParameterIn.PATH,
-        description = "카드의 ID",
+        description = "패밀리 아이디",
         required = true
         ,schema = @Schema(type = "string", format = "uuid"),
-        example = "123e4567-e89b-12d3-a456-426614174000")
-public @interface SwaggerPayCardPath {
+        example = "d4e5f6a7-8b9c-4a3e-b2f1-c2d3e4f5a6b7")
+public @interface SwaggerFamilyPath {
 }
