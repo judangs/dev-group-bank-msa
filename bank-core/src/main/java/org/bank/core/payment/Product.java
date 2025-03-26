@@ -7,23 +7,20 @@ import lombok.NoArgsConstructor;
 import org.bank.core.cash.Money;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 @Getter
 @MappedSuperclass
-@EqualsAndHashCode
 @NoArgsConstructor
+@EqualsAndHashCode
 public class Product implements Serializable {
 
     @EqualsAndHashCode.Include
-    private String name;
+    protected String name;
     @EqualsAndHashCode.Include
-    private Money price;
+    protected Money price;
     @EqualsAndHashCode.Include
-    private Integer quantity;
+    protected Integer quantity;
 
-    // not usaGE
-    private UUID cardId;
 
     public Product(String name, Integer price, Integer quantity) {
         this.name = name;
