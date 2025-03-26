@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-public class CardPaymentRequest {
+public class PaymentCardRegisterRequest {
 	private String cardNumber;
 	private String cVC;
 	private String passstartWith;

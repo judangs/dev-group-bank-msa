@@ -18,6 +18,7 @@ public class PaymentCardsListResponse extends ResponseDtoV2 {
         this.cards = cards.stream().map(CardInfo::new).toList();
     }
 
+    @Data
     public class CardInfo {
         private UUID cardId;
 
