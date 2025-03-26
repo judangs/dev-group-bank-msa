@@ -65,10 +65,10 @@ class FamilyServiceTest extends FamilyUnitTest {
     @DisplayName("멤버를 패밀리에서 추방합니다.")
     void 멤버를_패밀리에서_추방합니다() {
 
-        familyService.addMemberToFamily(family.getFamilyId(), FamilyFixture.follower());
+        familyService.addMemberToFamily(family.getFamilyId(), follower);
         int prevSize = family.getParticipants().size();
 
-        familyService.ejectMemberFromFamily(family.getFamilyId(), follower);
+        familyService.ejectMemberFromFamily(leader, family.getFamilyId(), follower.getUserid());
         assertThat(family.getParticipants().size()).isEqualTo(prevSize - 1);
     }
 
@@ -77,8 +77,7 @@ class FamilyServiceTest extends FamilyUnitTest {
     void 패밀리의_리더를_변경합니다() {
 
         familyService.addMemberToFamily(family.getFamilyId(), follower);
-        familyService.changeFamilyLeader(family.getFamilyId(), follower);
-        System.out.println(family.getLeader().getUserid());
+        familyService.changeFamilyLeader(leader, family.getFamilyId(), follower.getUserid());
         assertThat(family.getLeader()).isEqualTo(follower);
     }
 }
