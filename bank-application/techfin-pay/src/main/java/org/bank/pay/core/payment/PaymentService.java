@@ -7,8 +7,8 @@ import org.bank.core.cash.PaymentProcessingException;
 import org.bank.core.dto.response.ResponseCodeV2;
 import org.bank.core.dto.response.ResponseDtoV2;
 import org.bank.core.payment.Product;
-import org.bank.pay.core.event.product.VirtualCash;
 import org.bank.pay.core.event.product.Category.CategoryType;
+import org.bank.pay.core.event.product.VirtualCash;
 import org.bank.pay.core.payment.client.PaymentClient;
 import org.bank.pay.core.producer.product.PurchasedEventPublisher;
 import org.bank.pay.global.exception.PaymentException;
@@ -38,22 +38,31 @@ public class PaymentService {
 
     public ResponseDtoV2 process(AuthClaims user, String paymentId) {
         try {
-            ResponseCodeV2 code = paymentClient.apply(paymentId);
 
-            if(code.equals(ResponseCodeV2.SUCCESS)) {
+            PaymentDetail detail = paymentClient.history(paymentId);
+            purchasedEventPublisher.purchased(user, detail);
+            return ResponseDtoV2.success("결제를 진행하고 상품 구입을 완료합니다.");
 
+        } catch (PaymentProcessingException | PaymentException e) {
+            return ResponseDtoV2.fail(e.getMessage());
+        }
+    }
+
+    public ResponseDtoV2 process(AuthClaims user, UUID cardId, String paymentId) {
+        try {
+
+            if(paymentClient.apply(paymentId).equals(ResponseCodeV2.SUCCESS)) {
                 PaymentDetail detail = paymentClient.history(paymentId);
                 if(detail.type(CategoryType.CHARGE)) {
-                    purchasedEventPublisher.charged(user, detail, CategoryType.CHARGE);
+                    CashChargeDetail cashChargeDetail = CashChargeDetail.of(cardId, detail);
+                    purchasedEventPublisher.charged(user, cashChargeDetail, CategoryType.CASHABLE);
                     return ResponseDtoV2.success("결제를 진행하고 온라인 캐시를 충전합니다.");
                 }
 
-                purchasedEventPublisher.purchased(user, detail);
-                return ResponseDtoV2.success("결제를 진행하고 상품 구입을 완료합니다.");
-
+                return this.process(user, paymentId);
             }
 
-            return ResponseDtoV2.fail("결제에 실패했습니다. 다시 시도해주세요.");
+            return ResponseDtoV2.fail("결제가 승인되지 않았습니다. 다시 확인해주세요.");
 
         } catch (PaymentProcessingException | PaymentException e) {
             return ResponseDtoV2.fail(e.getMessage());

@@ -1,11 +1,14 @@
 package org.bank.pay.core.payment.naver;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.bank.core.auth.AuthClaims;
 import org.bank.core.cash.PaymentProcessingException;
 import org.bank.core.dto.response.ResponseCodeV2;
 import org.bank.core.payment.Product;
 import org.bank.pay.core.event.product.Category.CategoryType;
+import org.bank.pay.core.event.product.VirtualCash;
 import org.bank.pay.core.payment.PaymentCallbackProperties;
 import org.bank.pay.core.payment.PaymentDetail;
 import org.bank.pay.core.payment.client.PaymentClient;
@@ -26,10 +29,19 @@ public class NaverPayClient implements PaymentClient {
     private final RestClient naverPayRestClient;
     private final NaverPayClientProperties naverPayClientProperties;
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @SneakyThrows
     @Override
     public String payment(AuthClaims user, Product product, CategoryType categoryType, PaymentCallbackProperties payment) {
 
-        NaverPaymentRequest request = NaverPaymentRequest.of(user, product, categoryType, payment.callback());
+        NaverPaymentRequest request;
+        if(product instanceof VirtualCash virtualCash) {
+            request = NaverPaymentRequest.of(user, product, categoryType, payment.callback(objectMapper.writeValueAsString(user), virtualCash.getCardId()));
+        }
+        else {
+            request = NaverPaymentRequest.of(user, product, categoryType, payment.callback());
+        }
 
         ResponseEntity<NaverPaymentReserveResponse> response = naverPayRestClient.post()
                 .accept(MediaType.APPLICATION_JSON)
@@ -60,11 +72,8 @@ public class NaverPayClient implements PaymentClient {
                     .toEntity(NaverPaymentApplyResponse.class);
 
 
-            if (response.getBody().getCode().equals("Success")) {
-                return ResponseCodeV2.SUCCESS;
-            }
-
-            throw new PaymentException(response.getBody().getMessage());
+            if (response.getBody().getCode().equals("Success")) return ResponseCodeV2.SUCCESS;
+            else return ResponseCodeV2.FAIL;
 
         } catch (PaymentException e) {
             throw new PaymentProcessingException(e.getMessage());
@@ -76,14 +85,13 @@ public class NaverPayClient implements PaymentClient {
 
         NaverPaymentHistoryResponse response = naverPayRestClient.post()
                 .uri(naverPayClientProperties.history(paymentId))
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .contentType(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .toEntity(NaverPaymentHistoryResponse.class).getBody();
 
         if (Objects.requireNonNull(response).getCode().equals("Success")) {
             return response.detail().orElseThrow(IllegalAccessError::new);
         }
-
-        throw new IllegalArgumentException("결과를 조회하는데 문제가 발생했습니다.");
+        throw new PaymentProcessingException("결제 과정 중 문제가 발생했습니다. 결제 내역을 확인해주세요.");
     }
 }
