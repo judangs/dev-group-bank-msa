@@ -10,4 +10,5 @@ public interface FamilyReader {
 
     Optional<Family> findById(UUID familyId);
     Optional<Family> findByUserIsLeader(AuthClaims leader);
+    Optional<Family> findByContainUser(AuthClaims user);
 }

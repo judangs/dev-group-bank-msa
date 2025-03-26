@@ -1,6 +1,7 @@
 package org.bank.pay.core.domain.familly.repository;
 
 import org.bank.core.auth.AuthClaims;
+import org.bank.pay.core.event.family.FamilyEventEntity;
 import org.bank.pay.core.event.family.FamilyInvitation;
 import org.bank.pay.core.event.family.FamilyPayment;
 
@@ -14,4 +15,6 @@ public interface FamilyEventReader {
     Optional<FamilyInvitation> findInvitationEventById(UUID id);
     Optional<FamilyPayment> findPaymentRequestEventByFamilyAndId(UUID familyId, UUID id);
     List<FamilyPayment> findPaymentRequestEventsByFamily(UUID familyId);
+
+    List<FamilyEventEntity> findAllEventsByUser(AuthClaims user);
 }
