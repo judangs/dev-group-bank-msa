@@ -9,7 +9,7 @@ import org.bank.user.core.domain.account.repository.CredentialRepository;
 import org.bank.user.core.domain.auth.TokenContents;
 import org.bank.user.core.domain.crypto.PasswordProvider;
 import org.bank.user.core.domain.jwt.service.JwtProvider;
-import org.bank.user.core.domain.auth.repository.TokenRedisRepository;
+import org.bank.user.core.domain.auth.repository.SessionTokenRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,7 +18,7 @@ public class SessionManager implements AuthenticationService {
 
 
     private final CredentialRepository credentialRepository;
-    private final TokenRedisRepository tokenRedisRepository;
+    private final SessionTokenRepository sessionTokenRepository;
 
     private final JwtProvider jwtProvider;
     private final PasswordProvider passwordProvider;
@@ -38,13 +38,13 @@ public class SessionManager implements AuthenticationService {
         String refreshToken = jwtProvider.generate(userCredential, AuthConstants.TokenType.REFRESH);
         String accessToken = jwtProvider.generate(userCredential, AuthConstants.TokenType.ACCESS);
 
-        tokenRedisRepository.save(accessToken, refreshToken);
+        sessionTokenRepository.save(accessToken, refreshToken);
         return accessToken;
     }
 
     @Override
     public void logout(AuthClaims user, String token) {
-        tokenRedisRepository.deleteByTokenAndUser(token, user.getUserid());
+        sessionTokenRepository.deleteByTokenAndUser(token, user.getUserid());
     }
 
     @Override

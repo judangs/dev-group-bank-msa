@@ -5,7 +5,7 @@ import org.bank.core.auth.AuthenticationException;
 import org.bank.core.auth.TokenExpiredException;
 import org.bank.user.core.domain.auth.TokenContents;
 import org.bank.user.core.domain.jwt.service.JwtValidator;
-import org.bank.user.core.domain.auth.repository.TokenRedisRepository;
+import org.bank.user.core.domain.auth.repository.SessionTokenRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -18,11 +18,11 @@ public class SessionRenewalService {
     private final AuthenticationService authenticationService;
     private final JwtValidator jwtValidator;
 
-    private final TokenRedisRepository tokenRedisRepository;
+    private final SessionTokenRepository sessionTokenRepository;
 
     public String validateAndRenewTokenIfNotExpired(String token) throws AuthenticationException{
 
-        Optional<String> refreshToken = tokenRedisRepository.findByToken(token);
+        Optional<String> refreshToken = sessionTokenRepository.findByToken(token);
         if (refreshToken.isEmpty()) {
             throw new AuthenticationException("로그인 인증이 필요합니다.");
         }
@@ -32,7 +32,7 @@ public class SessionRenewalService {
                     .orElse(null);
 
             String access = optionalTokenContents.map(tokenContents -> {
-                tokenRedisRepository.deleteByTokenAndUser(token, tokenContents.getSubject());
+                sessionTokenRepository.deleteByTokenAndUser(token, tokenContents.getSubject());
                 return authenticationService.issueAccessToken(tokenContents);
             }).orElse(null);
 
@@ -40,7 +40,7 @@ public class SessionRenewalService {
                 throw new AuthenticationException("인증 기간이 만료되었습니다. 사용자 인증이 필요합니다.");
             }
 
-            refreshToken.ifPresent(refresh -> tokenRedisRepository.save(access, refresh));
+            refreshToken.ifPresent(refresh -> sessionTokenRepository.save(access, refresh));
             return access;
 
         } catch (TokenExpiredException e) {
