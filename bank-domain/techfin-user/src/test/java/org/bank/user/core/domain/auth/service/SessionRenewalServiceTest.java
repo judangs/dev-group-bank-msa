@@ -3,7 +3,7 @@ package org.bank.user.core.domain.auth.service;
 import org.bank.core.auth.AuthConstants;
 import org.bank.user.core.domain.account.repository.CredentialRepository;
 import org.bank.user.core.domain.auth.TokenContents;
-import org.bank.user.core.domain.auth.repository.TokenRedisRepository;
+import org.bank.user.core.domain.auth.repository.SessionTokenRepository;
 import org.bank.user.core.domain.fixture.TokenContentsFixture;
 import org.bank.user.core.domain.jwt.service.JwtProvider;
 import org.junit.jupiter.api.DisplayName;
@@ -38,7 +38,7 @@ class SessionRenewalServiceTest {
     @Autowired
     private SessionRenewalService sessionRenewalService;
     @MockBean
-    private TokenRedisRepository tokenRedisRepository;
+    private SessionTokenRepository tokenRedisRepository;
     @MockBean
     private CredentialRepository credentialRepository;
 

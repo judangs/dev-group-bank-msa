@@ -9,7 +9,10 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
         scanBasePackages = {
                 "org.bank.user",
                 "org.bank.store.domain.user",
-                "org.bank.store.mysql.core.user"
+                "org.bank.store.mysql.core.user",
+                "org.bank.store.source",
+                "org.bank.store.session",
+                "org.bank.store.mail"
         },
         exclude = {DataSourceAutoConfiguration.class}
 )
