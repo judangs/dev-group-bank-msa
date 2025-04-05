@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@org.springframework.context.annotation.Profile(value = {"develop"})
 @Repository
 @RequiredArgsConstructor
 public class AccountMailQueryRepository implements AccountMailStore {

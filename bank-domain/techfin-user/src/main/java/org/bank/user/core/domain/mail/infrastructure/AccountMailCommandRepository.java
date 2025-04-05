@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.bank.user.core.domain.mail.AccountVerificationMail;
 import org.bank.user.core.domain.mail.VerificationReason;
 import org.bank.user.core.domain.mail.repository.AccountMailReader;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.TimeoutException;
 
+@Profile(value = {"develop"})
 @Repository
 @RequiredArgsConstructor
 public class AccountMailCommandRepository implements AccountMailReader {
