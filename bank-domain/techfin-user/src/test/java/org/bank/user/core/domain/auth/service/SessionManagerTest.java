@@ -3,7 +3,7 @@ package org.bank.user.core.domain.auth.service;
 import org.bank.core.auth.AuthenticationException;
 import org.bank.user.core.domain.account.Credential;
 import org.bank.user.core.domain.account.repository.CredentialRepository;
-import org.bank.user.core.domain.auth.repository.TokenRedisRepository;
+import org.bank.user.core.domain.auth.repository.SessionTokenRepository;
 import org.bank.user.core.domain.fixture.AccountFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +39,7 @@ class SessionManagerTest {
     @MockBean
     private CredentialRepository credentialRepository;
     @MockBean
-    private TokenRedisRepository tokenRedisRepository;
+    private SessionTokenRepository tokenRedisRepository;
 
     private Credential credential;
 
