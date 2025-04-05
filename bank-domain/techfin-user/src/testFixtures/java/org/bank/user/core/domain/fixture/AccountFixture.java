@@ -18,6 +18,7 @@ public class AccountFixture {
                 .userid(userid)
                 .username("username")
                 .password(passwordEncoder.encode(password))
+                .profile(profile("username", "000111-1011111", "fixture@bank.com"))
                 .build();
     }
 
